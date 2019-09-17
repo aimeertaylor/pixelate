@@ -1,5 +1,5 @@
 Package: pixelate
-Title: What the Package Does (One Line, Title Case)
+Title: Pixelate and plot as per average uncertainty 
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "First",
@@ -7,7 +7,17 @@ Authors@R:
            role = c("aut", "cre"),
            email = "first.last@example.com",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Description: Pixelate and plot point estimates as per their averaged uncertainties. 
+    Let a dot denote a set of coordinates associated with a point estimate and its uncertainty, 
+    which is represented by a single value, e.g. the width of the estimate's credible interval.
+    Let a pixel refer to a square or rectangle comprising one or more dots.  
+    Uncertainties are averaged over a limited number of large pixels (many dots per pixel). 
+    Average uncertainties are classified as high, intermediate or low. 
+    If the average uncertainty is high, point estimates plotted within the large pixel are averaged. 
+    If the average uncertainty is intermediate, point estimates plotted within the large pixel are 
+    averaged over smaller pixels (fewer dots per pixel) that are nested within the large pixel.
+    There may be one or more intermediate classifications, corresponding to one or more nested pixel sizes. 
+    If the average uncertainty is low, point estimates are not averaged. 
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
