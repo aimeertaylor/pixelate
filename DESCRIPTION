@@ -25,5 +25,8 @@ Depends: R (>= 3.6.1)
 Imports:
     dplyr (>= 0.8.3)
 Suggests:
-    malariaAtlas (>= 0.0.4)
+    malariaAtlas (>= 0.0.4),
+    knitr,
+    rmarkdown
 RoxygenNote: 6.1.1
+VignetteBuilder: knitr
