@@ -54,7 +54,8 @@ CentralAfrica_Pf_incidence = data.frame(x=pf_incid_median$x,
                         UCI = pf_incid_UCI$z,
                         LCI = pf_incid_LCI$z)
 
-save(CentralAfrica_Pf_incidence, file = '~/Documents/Pixel/RData/CentralAfrica_Pf_incidence.RData')
+# Save example data
+usethis::use_data(CentralAfrica_Pf_incidence, overwrite = TRUE)
 
 # Sub-Saharan Africa ----------------------------------
 
@@ -90,4 +91,5 @@ SubSaharanAfrica_Pf_incidence = data.frame(x=pf_incid_median$x,
                         UCI = pf_incid_UCI$z,
                         LCI = pf_incid_LCI$z)
 
-save(SubSaharanAfrica_Pf_incidence, file = '../RData/SubSaharanAfrica_Pf_incidence.RData')
+# Save example data
+usethis::use_data(SubSaharanAfrica_Pf_incidence, overwrite = TRUE)
