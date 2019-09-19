@@ -191,9 +191,8 @@ expand_dot_matrix <- function(dpp, dot_matrix) {
   }
 
   # Add extra colunms: this step assumes dot matrix has these columns
-  extra$Median <- NA
-  extra$UCI <- NA
-  extra$LCI <- NA
+  extra$z <- NA
+  extra$u <- NA
 
   # Return expanded matrix
   expanded_dot_matrix <- rbind(dot_matrix, extra)
@@ -255,7 +254,7 @@ allocate_dot_mem <- function(dpp, dot_matrix_dim) {
 # distribution of CI widths averaged at the bigk-th pixel size and
 # no smaller.
 #============================================================
-pixelate_by_CI_width <- function(dot_matrix, dot_mem, dpp, no.free_cores) {
+pixelate_by_u <- function(dot_matrix, dot_mem, dpp, no.free_cores) {
 
   # Arrange s.t. compatible with membership allocation
   dot_matrix <- dplyr::arrange(dot_matrix, y, x)
@@ -264,42 +263,39 @@ pixelate_by_CI_width <- function(dot_matrix, dot_mem, dpp, no.free_cores) {
   num_pix <- apply(dot_mem, 2, function(p) {length(unique(p))})
   bigk <- length(num_pix)
 
-  # Compute CI widths for all dots
-  dot_matrix$CI_width <- dot_matrix$UCI - dot_matrix$LCI
-
   # Temporarily remove dots where the median value is zero with certainty
   # to prevent biases to the pixelation process
-  # Aside, typically there are no Median > 0 with CI_width == 0; check by:
-  # any(dot_matrix$Median > 0 & dot_matrix$CI_width == 0, na.rm = T)
-  dot_certain_zero <- which(dot_matrix$Median == 0 & dot_matrix$CI_width == 0)
-  dot_matrix$Median[dot_certain_zero] <- NA
-  dot_matrix$CI_width[dot_certain_zero] <- NA
+  # Aside, typically there are no z > 0 with u == 0; check by:
+  # any(dot_matrix$z > 0 & dot_matrix$u == 0, na.rm = T)
+  dot_certain_zero <- which(dot_matrix$z == 0 & dot_matrix$u == 0)
+  dot_matrix$z[dot_certain_zero] <- NA
+  dot_matrix$u[dot_certain_zero] <- NA
 
   # Compute CI widths for pixels where k = bigk
   writeLines("\nComputing CI widths averaged over dpp for k = bigk")
-  dot_matrix$CI_width_bigk <- NA
+  dot_matrix$u_bigk <- NA
   # Sort by dot_mem: allows vectorisation via temp_matrix since all pixels have the same dpp
   sorted_dot_mem_bigk <- sort.int(dot_mem[, bigk], index.return = T)
   # Create a temporary matrix with pixel entries per column
-  temp_matrix <- matrix(dot_matrix$CI_width[sorted_dot_mem_bigk$ix], nrow = prod(dpp[bigk, ]))
-  # temp_matrix enables calculation of CI_widths_bigk using colMeans(), which calls C code directly
-  CI_widths_bigk <- colMeans(temp_matrix, na.rm = T)
-  # Expand CI_widths_bigk such that there is one per dot and allocate using indices
-  dot_matrix$CI_width_bigk[sorted_dot_mem_bigk$ix] <- rep(CI_widths_bigk, each = prod(dpp[bigk, ]))
+  temp_matrix <- matrix(dot_matrix$u[sorted_dot_mem_bigk$ix], nrow = prod(dpp[bigk, ]))
+  # temp_matrix enables calculation of us_bigk using colMeans(), which calls C code directly
+  us_bigk <- colMeans(temp_matrix, na.rm = T)
+  # Expand us_bigk such that there is one per dot and allocate using indices
+  dot_matrix$u_bigk[sorted_dot_mem_bigk$ix] <- rep(us_bigk, each = prod(dpp[bigk, ]))
 
   # Compute breaks based on quantiles of CI width for k = bigk
-  uncertainty_breaks <- quantile(dot_matrix$CI_width_bigk,
+  uncertainty_breaks <- quantile(dot_matrix$u_bigk,
                                  probs = seq(0, 1, length.out = bigk + 1),
                                  na.rm = TRUE)
 
   # Allocate pixel types (.bincode is fast for assigning numeric bins)
-  dot_matrix$bins <- .bincode(dot_matrix$CI_width_bigk, breaks = uncertainty_breaks, include.lowest = T)
+  dot_matrix$bins <- .bincode(dot_matrix$u_bigk, breaks = uncertainty_breaks, include.lowest = T)
 
   # First populate with NA
-  dot_matrix$Pix_z <- NA
+  dot_matrix$pix_z <- NA
 
   # For k = 1, use dot estimate. Note that which(.) excludes NA bins
-  dot_matrix$Pix_z[which(dot_matrix$bins == 1)] <- dot_matrix$Median[which(dot_matrix$bins == 1)]
+  dot_matrix$pix_z[which(dot_matrix$bins == 1)] <- dot_matrix$z[which(dot_matrix$bins == 1)]
 
   writeLines("\nComputing point estimates for k = 2,...,bigk")
 
@@ -319,20 +315,20 @@ pixelate_by_CI_width <- function(dot_matrix, dot_mem, dpp, no.free_cores) {
     # all(colMeans(temp_matrix, na.rm = T) == unique(dot_mem[,k][which(dot_matrix$bins == k)]))
     #----------------------------------------
     # Create a temporary matrix with pixel entries per column
-    temp_matrix <- matrix(dot_matrix$Median[dot_inds_k][sorted_dot_mem_k$ix], nrow = prod(dpp[k, ]))
+    temp_matrix <- matrix(dot_matrix$z[dot_inds_k][sorted_dot_mem_k$ix], nrow = prod(dpp[k, ]))
     # temp_matrix enables calculation of pixelated point estimates using colMeans(), which calls C code directly
-    pix_z <- colMeans(temp_matrix, na.rm = T)
-    # Expand CI_widths_bigk such that there is one per dot and allocate using indices
-    dot_matrix$Pix_z[dot_inds_k][sorted_dot_mem_k$ix] <- rep(pix_z, each = prod(dpp[k, ]))
+    pix_z_temp <- colMeans(temp_matrix, na.rm = T)
+    # Expand us_bigk such that there is one per dot and allocate using indices
+    dot_matrix$pix_z[dot_inds_k][sorted_dot_mem_k$ix] <- rep(pix_z_temp, each = prod(dpp[k, ]))
   }
 
-  # Reset NAs: some NA dots have non NA values due to mean(CI_widths, na.rm = T)
-  dot_matrix$Pix_z[is.na(dot_matrix$Median)] <- NA
+  # Reset NAs: some NA dots have non NA values due to mean(us, na.rm = T)
+  dot_matrix$pix_z[is.na(dot_matrix$z)] <- NA
 
   # Re-addition of certain zeros
-  dot_matrix$Median[dot_certain_zero] <- 0
-  dot_matrix$CI_width[dot_certain_zero] <- 0
-  dot_matrix$Pix_z[dot_certain_zero] <- 0
+  dot_matrix$z[dot_certain_zero] <- 0
+  dot_matrix$u[dot_certain_zero] <- 0
+  dot_matrix$pix_z[dot_certain_zero] <- 0
 
   # Return unercetainty breaks as well as pixelated matrix
   to_return <- list(pix_matrix = dot_matrix,
