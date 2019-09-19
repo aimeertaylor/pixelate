@@ -1,7 +1,6 @@
 # Documenting datasets
 # R packages by Hadley Wickham (http://r-pkgs.had.co.nz/data.html)
 # use devtools::load_all() to load during package development
-# enables ?data("datasetname")
 
 #' Plasmodium falciparum parasite rate in 2-10 year olds in 2000-2017 in Sub-Saharan Africa
 #'
@@ -30,4 +29,3 @@
 #' }
 #' @source Obtained using malariaAtlas::getShp (see data-raw/get_shape_files.R)
 "SubSaharanAfrica_shp"
-
