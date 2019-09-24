@@ -2,7 +2,7 @@ library(raster)
 library(dplyr)
 rm(list=ls())
 
-load(file = "data-raw/lat_log_intervals.RData")
+load(file = "data-raw/lat_long_intervals.RData")
 
 # Import point estimates and lower and upper credible interval bounds
 pf_incid_med <- raster::raster('data-raw/Pf_Incidence/Raster Data/Pf_incidence_rate_median/incidence_rate_median_Global_admin0_2017.tif')
@@ -14,27 +14,28 @@ pf_incid_med <- as.data.frame(pf_incid_med, xy = TRUE)
 pf_incid_LCI <- as.data.frame(pf_incid_LCI, xy = TRUE)
 pf_incid_UCI <- as.data.frame(pf_incid_UCI, xy = TRUE)
 
-# Take the convention that the outcome variable is denoted z (nanually check column names first)
+# Take the convention that the outcome variable is denoted z
+# (manually check column names first)
 colnames(pf_incid_med)[3] <- 'z'
 colnames(pf_incid_LCI)[3] <- 'z'
 colnames(pf_incid_UCI)[3] <- 'z'
 
 # Filter by lat long intervals
 pf_incid_med = dplyr::filter(pf_incid_med,
-                                x > lat_long_intervals[1],
-                                x < lat_long_intervals[2],
-                                y > lat_long_intervals[3],
-                                y < lat_long_intervals[4])
+                                x > lat_long_intervals$lon_min,
+                                x < lat_long_intervals$lon_max,
+                                y > lat_long_intervals$lat_min,
+                                y < lat_long_intervals$lat_max)
 pf_incid_LCI = dplyr::filter(pf_incid_LCI,
-                             x> lat_long_intervals[1],
-                             x< lat_long_intervals[2],
-                             y> lat_long_intervals[3],
-                             y< lat_long_intervals[4])
+                             x> lat_long_intervals$lon_min,
+                             x< lat_long_intervals$lon_max,
+                             y> lat_long_intervals$lat_min,
+                             y< lat_long_intervals$lat_max)
 pf_incid_UCI = dplyr::filter(pf_incid_UCI,
-                             x> lat_long_intervals[1],
-                             x< lat_long_intervals[2],
-                             y> lat_long_intervals[3],
-                             y< lat_long_intervals[4])
+                             x> lat_long_intervals$lon_min,
+                             x< lat_long_intervals$lon_max,
+                             y> lat_long_intervals$lat_min,
+                             y< lat_long_intervals$lat_max)
 
 # Check they all match
 writeLines('check all are zeros..')
