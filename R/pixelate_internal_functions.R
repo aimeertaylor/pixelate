@@ -254,7 +254,7 @@ allocate_dot_mem <- function(dpp, dot_matrix_dim) {
 # distribution of CI widths averaged at the bigk-th pixel size and
 # no smaller.
 #============================================================
-pixelate_by_u <- function(dot_matrix, dot_mem, dpp, no.free_cores) {
+pixelate_by_u <- function(dot_matrix, dot_mem, dpp) {
 
   # Arrange s.t. compatible with membership allocation
   dot_matrix <- dplyr::arrange(dot_matrix, y, x)
