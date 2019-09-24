@@ -39,8 +39,8 @@
 #'   pixel sizes).
 #' @export
 #============================================================
-pixelate <- function(dot_matrix, num_pix_xy_bigk = c(10, 10), bigk = 3L, scale = "linear",
-                     scale_factor = 1L, no.free_cores = 2) {
+pixelate <- function(dot_matrix, num_pix_xy_bigk = c(20, 20), bigk = 5L, scale = "linear",
+                     scale_factor = 1L) {
 
   # Calculate dot dimensions of dot matrix
   dot_matrix_dim <- apply(dot_matrix[, c("x", "y")], 2, function(j) {length(unique(j))})
@@ -61,7 +61,7 @@ pixelate <- function(dot_matrix, num_pix_xy_bigk = c(10, 10), bigk = 3L, scale =
   dot_mem <- allocate_dot_mem(dpp, expanded_dot_matrix_dim)
 
   # Pixelate
-  pix_output <- pixelate_by_CI_width(expanded_dot_matrix, dot_mem, dpp, no.free_cores)
+  pix_output <- pixelate_by_u(expanded_dot_matrix, dot_mem, dpp)
 
   # Unpackage results
   pix_matrix <- pix_output$pix_matrix
