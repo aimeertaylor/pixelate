@@ -1,54 +1,51 @@
-library(raster) # Suggests
-library(dplyr) # Imports
-# library(rgdal) # James, is this really needed?
+library(raster)
+library(dplyr)
 rm(list=ls())
 
+load(file = "data-raw/lat_log_intervals.RData")
+
 # Import point estimates and lower and upper credible interval bounds
-pf_incid_median = raster::raster('incidence_rate_median_Global_admin0_2017.tif')
-pf_incid_LCI = raster::raster('pf_incidence_rate_LCI_Global_admin0_2017.tif')
-pf_incid_UCI = raster::raster('pf_incidence_rate_UCI_Global_admin0_2017.tif')
+pf_incid_med <- raster::raster('data-raw/Pf_Incidence/Raster Data/Pf_incidence_rate_median/incidence_rate_median_Global_admin0_2017.tif')
+pf_incid_LCI <- raster::raster('data-raw/Pf_Incidence/Raster Data/Pf_incidence_rate_LCI/pf_incidence_rate_LCI_Global_admin0_2017.tif')
+pf_incid_UCI <- raster::raster('data-raw/Pf_Incidence/Raster Data/Pf_incidence_rate_UCI/pf_incidence_rate_UCI_Global_admin0_2017.tif')
 
 # Convert to data.frame
-pf_incid_median <- as.data.frame(pf_incid_median, xy = TRUE)
+pf_incid_med <- as.data.frame(pf_incid_med, xy = TRUE)
 pf_incid_LCI <- as.data.frame(pf_incid_LCI, xy = TRUE)
 pf_incid_UCI <- as.data.frame(pf_incid_UCI, xy = TRUE)
 
-# Take the convention that the outcome variable is denoted z
-colnames(pf_incid_median)[3] = 'z'
-colnames(pf_incid_LCI)[3] = 'z'
-colnames(pf_incid_UCI)[3] = 'z'
-
-# The lat-log intervals of interest
-lat_long_intervals = c(-17,52,-26,21)
+# Take the convention that the outcome variable is denoted z (nanually check column names first)
+colnames(pf_incid_med)[3] <- 'z'
+colnames(pf_incid_LCI)[3] <- 'z'
+colnames(pf_incid_UCI)[3] <- 'z'
 
 # Filter by lat long intervals
-pf_incid_median = dplyr::filter(pf_incid_median,
-                         x > lat_long_intervals[1],
-                         x < lat_long_intervals[2],
-                         y > lat_long_intervals[3],
-                         y < lat_long_intervals[4])
+pf_incid_med = dplyr::filter(pf_incid_med,
+                                x > lat_long_intervals[1],
+                                x < lat_long_intervals[2],
+                                y > lat_long_intervals[3],
+                                y < lat_long_intervals[4])
 pf_incid_LCI = dplyr::filter(pf_incid_LCI,
-                      x> lat_long_intervals[1],
-                      x< lat_long_intervals[2],
-                      y> lat_long_intervals[3],
-                      y< lat_long_intervals[4])
+                             x> lat_long_intervals[1],
+                             x< lat_long_intervals[2],
+                             y> lat_long_intervals[3],
+                             y< lat_long_intervals[4])
 pf_incid_UCI = dplyr::filter(pf_incid_UCI,
-                      x> lat_long_intervals[1],
-                      x< lat_long_intervals[2],
-                      y> lat_long_intervals[3],
-                      y< lat_long_intervals[4])
+                             x> lat_long_intervals[1],
+                             x< lat_long_intervals[2],
+                             y> lat_long_intervals[3],
+                             y< lat_long_intervals[4])
 
 # Check they all match
 writeLines('check all are zeros..')
-sum((pf_incid_median$x != pf_incid_LCI$x) & (pf_incid_median$x != pf_incid_UCI$x))
-sum((pf_incid_median$y != pf_incid_LCI$y) & (pf_incid_median$y != pf_incid_UCI$y))
+any((pf_incid_med$x != pf_incid_LCI$x) & (pf_incid_med$x != pf_incid_UCI$x))
+any((pf_incid_med$y != pf_incid_LCI$y) & (pf_incid_med$y != pf_incid_UCI$y))
 
 # Create and save data frame
-SubSaharanAfrica_Pf_incidence = data.frame(x=pf_incid_median$x,
-                        y = pf_incid_median$y,
-                        Median = pf_incid_median$z,
-                        UCI = pf_incid_UCI$z,
-                        LCI = pf_incid_LCI$z)
-
+SubSaharanAfrica_Pf_incidence = data.frame(x = pf_incid_med$x,
+                                           y = pf_incid_med$y,
+                                           z = pf_incid_med$z,
+                                           u = pf_incid_UCI$z - pf_incid_LCI$z)
 # Save example data
 usethis::use_data(SubSaharanAfrica_Pf_incidence, overwrite = TRUE)
+
