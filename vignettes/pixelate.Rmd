@@ -138,13 +138,14 @@ The default values will fail if there are fewer than xxx predictions in the dot_
 
 If the dot_matrix has more than xxx predictions, you can increase the number of large pixels and the number of different pixel sizes. It is also possible to explore pixels that scale in size (dots per pixel) more rapidly and/or exponentially by increasing the scale_factor argument and increasing the scale argument from linear to exponential. However, because dots per pixel scale extremely rapidly when the default pixelation arguments are increased, even seemingly modest combinations may throw in an error because there are incompatible with the number of available predictions, e.g. 
 
-```{r}
-# # Need to find a 
-# pix_output <- pixelate(dot_matrix = SubSaharanAfrica_Pf_incidence, 
-#                        num_pix_xy_K = c(11L,11L), 
-#                        K = 3L, 
-#                        scale = "exponential", 
-#                        scale_factor = 2L)
+<!-- Note that purl = FALSE is essential in the following code block since it ensures this code block, which throws an error, is excluded from the vignette code document, allowing R to source and build the vignette without errors.  -->
+
+```{r, error = TRUE, purl = FALSE}
+pix_output <- pixelate(dot_matrix = SubSaharanAfrica_Pf_incidence,
+                       num_pix_xy_K = c(10L,10L),
+                       K = 3L,
+                       scale = "exponential",
+                       scale_factor = 2L)
 ```
 
 
