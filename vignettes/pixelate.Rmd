@@ -26,11 +26,6 @@ knitr::opts_chunk$set(
 library(pixelate)
 ```
 
-# To-do list
-
-* Should arguements and parameter variables by in code? 
-* relax integer requirement
-
 # Introduction 
 
 This R package centres around a single function, `pixelate`, designed to pixelate spatially continuous point estimates (i.e./e.g. spatial predictions made by a geostatistical model on any topic) as per their average uncertainty. 
@@ -39,16 +34,32 @@ In brief, the function `pixelate` groups point estimates into a specified number
 
 The resulting map is deliberately and selectively pixelated, similar to a photo that is selectively pixelated to disguise a person's identity. Areas of high average uncertainty in the pixelated map are unresolved, while areas with low average uncertainty are resolved, similar to information poor versus rich regions of a satellite image. 
 
-For full details of the function `pixelate`, see its documentation, which is accessed by `?pixelate` or `help(pixelate)`, and the code for the functions on which it depends, which can be found in pixelate_internal_functions.R under the R/ directory of the installed package (use `find.package('pixelate')` to locate the installed package) or online [github.com/artaylor85/pixelate](https://github.com/artaylor85/pixelate). 
+For full details of the function `pixelate` see its documentation, which is accessed by `?pixelate` or `help(pixelate)`, and the code for the functions on which it depends, which can be found in pixelate_internal_functions.R under the R/ directory of the installed package (use `find.package('pixelate')` to locate the installed package) or online [github.com/artaylor85/pixelate](https://github.com/artaylor85/pixelate). 
 
-The function `pixelate` supports spatially continuous point estimates on any topic providing that they have associated measures of uncertainty. Its output could be plotted using any of the various geographic information systems available. We illustrate its utility using predicted *Plasmodium falciparum* incidence [REF paper] available at the Malaria Atlas Project (MAP) website [map.ox.ac.uk](https://map.ox.ac.uk/), and plot the output of `pixelate` using functions from packages gglpot2 @ggplot2 and sf @sf. 
+The function `pixelate` supports spatially continuous point estimates on any topic providing that they have associated measures of uncertainty. We illustrate its utility using predicted *Plasmodium falciparum* incidence [REF paper] and plot the output using functions from packages gglpot2 @ggplot2 and sf @sf: 
 
-# Step-by-step quick example
+<!-- Its output could be plotted using any of the various geographic information systems available. -->
+<!-- available at the Malaria Atlas Project (MAP) website [map.ox.ac.uk](https://map.ox.ac.uk/) -->
+
+
+```{r Quick example}
+# To use pixelate, simply input some spatial predictions and plot the output; see code below. 
+# To better understand the versatility of `pixelate` and reproduce the plots in the README file, 
+# follow the step-by-step detailed example in the next section.  
+
+pixd <- pixelate(SubSaharanAfrica_Pf_incidence)
+ggplot2::ggplot() + ggplot2::geom_raster(pixd$pix_matrix, 
+                                         mapping = ggplot2::aes(x = x, 
+                                                                y = y, 
+                                                                fill = pix_z))
+```
 
 
 # Step-by-step detailed example
 
-In the example that follows we plot spatial predictions before and after `pixelate` using functions from the gglpot2 package @ggplot2. Before we beging, let us define a function, `plot_spatial_predictions`, to avoid duplicating code over multiple plots. 
+# Before we begin: plotting 
+
+To avoid duplicating code over multiple plots in the following example, let us define a function, `plot_spatial_predictions`, which wraps together functions from packages gglpot2 @ggplot2 and sf @sf. 
 
 To enhance plots, we add country borders using shape file data that are cropped to the extent of the spatial predictions using bbox.sf. Country borders not essential. Nonethless, to ensure full reproducability of the code in this vignette, the shape file data and bbox.sf are included in the installed package (see `?SubSaharanAfrica_shp` or `help(SubSaharanAfrica_shp)`, and `?bbox.sf` or `help(bbox.sf)`, respectively). The shape file data were obtained using the function `malariaAtlas::getShp` from the malariaAtlas package @malariaAtlas; see get_shape_files.R in data-raw/ available online. The object bbox.sf was generated using code xxxl see XXX.R in data-raw/ available online. An alternative approach for plotting partial shape files within the confines of a raster images uses geom_tile, but is very slow.
 
@@ -60,8 +71,8 @@ To enhance plots, we add country borders using shape file data that are cropped 
 # see link: https://github.com/tidyverse/ggplot2/issues/2252
 #============================================================
 plot_spatial_predictions = function(spatial_predictions, shape_file, bbox.sf, 
-                                    gradient.colors = c("white","red"), # Red since malaria parasites infect red blood cells
-                                    na.color = "lightblue", # Blue since most NAs represent water 
+                                    gradient.colors = c("white","red"), 
+                                    na.color = "lightblue", 
                                     legend.positions = c(0.01,0.01), 
                                     legend.text.size = 8,
                                     legend.title.text = "Predicted \nincidence rate"){
@@ -175,7 +186,6 @@ pix_legend <- pix_legend_matrix[!is.na(pix_legend_matrix$pix_z), ]
 ```
 
 ```{r SubSaharanAfrica_Pixelated}
-
 # Re-create a temp matrix using pix_output
 temp_sp <- pix_output$pix_matrix
 temp_sp$z <- temp_sp$pix_z
