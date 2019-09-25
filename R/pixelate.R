@@ -1,4 +1,4 @@
-#============================================================
+#==============================================================================
 #' Pixelate as per average uncertainty
 #'
 #' Pixelate point estimates as per their average uncertainties.
@@ -38,15 +38,56 @@
 #'   memberships (the index of the pixel each dot belongs to for k = 1,...,bigk
 #'   pixel sizes).
 #' @export
-#============================================================
-pixelate <- function(dot_matrix, num_pix_xy_bigk = c(20, 20), bigk = 5L, scale = "linear",
+#=============================================================================
+pixelate <- function(dot_matrix,
+                     num_pix_xy_bigk = 25,
+                     bigk = 5L,
+                     scale = "linear",
                      scale_factor = 1L) {
 
-  # Calculate dot dimensions of dot matrix
+  warning("\nPixelate works by averaging uncertainty across predictions and ranking averaged uncertainty.
+           \nAveraging uncertainty is valid only if generated under a joint model.
+           \nWhen measures of uncertainty are generated assuming independence between spatial coordinates,
+           \ne.g., by simulating from the 'per-pixel' posterior predictive distribution as in XXX.
+           \nuncertainty due to covariance between spatial coordinates is neglected.
+           \nThis is liable to impact pixelation only if it has a bearing on the ranks of average uncertainty.")
+
+  # Set num_pix_xy_bigk in both x and y direction if not already
+  if (is.na(num_pix_xy_bigk[2])) {num_pix_xy_bigk[2] <- num_pix_xy_bigk[1]}
+
+  # Calculate dot dimensions of dot matrix -------------------------------------
   dot_matrix_dim <- apply(dot_matrix[, c("x", "y")], 2, function(j) {length(unique(j))})
 
-  # Calculate size in dots for pixel k = 2
+  # Initial checks ------------------------------------------------------------
+  errors = c(dmat = ifelse (all(dot_matrix_dim >= c(2,4)) | all(dot_matrix_dim >= c(4,2)), FALSE, TRUE),
+             npix = ifelse (all(num_pix_xy_bigk < 2) | nz_remainder(num_pix_xy_bigk), TRUE, FALSE),
+             bigk = ifelse (bigk < 2 | nz_remainder(bigk), TRUE, FALSE),
+             scale = ifelse (!scale %in% c("linear", "exponential"), TRUE, FALSE),
+             scale_factor = ifelse(scale_factor < 1 | nz_remainder(scale_factor), TRUE, FALSE))
+
+  error_mgs = c(dmat = "\nThe dot matrix must have at least two and four predictions in the x and y direction or vice versa.",
+                npix = "\nThe number of bigK pixels must be integer and exceed one in a least one direction x or y.",
+                bigk = "\nThe number of pixel sizes, bigK, must be an integer and exceed two.",
+                scale = "\nUnrecognised scale: please provide either 'linear' or 'exponential'.",
+                scale_factor = "\nThe scale_factor needs to be an integer and exceed zero.")
+
+  if (any(errors)) stop(error_mgs[errors])
+
+  # Calculate size in dots for pixel k = 2 -------------------------------------
   dpp_2 <- compute_dpp_2(num_pix_xy_bigk, bigk, scale, scale_factor, dot_matrix_dim)
+
+  # Dot matrix compatibility check ---------------------------------------------
+  dpp_min <- compute_dpp(2, bigk, scale, scale_factor)
+  dot_req <- dpp_min[bigk,] * num_pix_xy_bigk
+
+  if (any(dpp_2 < 2) | any(dot_matrix_dim < dot_req)) {
+    stop(sprintf("
+    \nTogether, arguments num_pix_xy_bigk, bigk, scale and scale_factor are incompatible with the dot matrix dimensions.
+    \nAt least %s spatial predictions are required in the x and y direction for the arguments as currently specified.
+    \nThe dot matrix has %s in the x and y direction.
+    \nConsider reducing num_pix_xy_bigk, bigk, scale_factor and/or using a linear scale.",
+                 paste0(dot_req, collapse = ' and '), paste0(dot_matrix_dim, collapse = ' and ')))
+  }
 
   # Calculate size in dots for pixel k = 1,...,bigk
   dpp <- compute_dpp(min(dpp_2), bigk, scale, scale_factor)
@@ -80,3 +121,6 @@ pixelate <- function(dot_matrix, num_pix_xy_bigk = c(20, 20), bigk = 5L, scale =
 
   return(to_return)
 }
+
+
+

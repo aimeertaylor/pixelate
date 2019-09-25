@@ -29,12 +29,6 @@ compute_dpp_2 <- function(num_pix_xy_bigk, # bigk pixels in x and y direction
     stop("Scale must either be 'linear' or 'exponential'")
   }
 
-  # Compatibility check
-  if (any(dpp_2 < 2)) {
-    stop("Inputs (num_pix_xy_bigk, bigk, scale, scale_factor) are incompatible with the dot matrix.
-          Consider a linear scale if not already, and/or reducing num_pix_xy_bigk, bigk, scale_factor.")
-  }
-
   return(sapply(dpp_2, as.integer))
 }
 
@@ -61,27 +55,7 @@ compute_dpp <- function(dpp_2, # Dots per pixel for k = 2
 
   if (is.null(dpp_2[2])) {dpp_2[2] <- dpp_2[1]} # Set dpp_2 in y direction
 
-  #----------------------------------------------------------
-  # Checks
-  #----------------------------------------------------------
-  if (!scale %in% c("linear", "exponential")) {
-    stop("Unrecognised scale: please provide either 'linear' or 'exponential'")
-  }
-  if (bigk < 2 | !is.integer(bigk)) {
-    stop("bigk needs to be an integer greater than or equal to two, e.g. 2L")
-  }
-  if (any(dpp_2 < 2) | any(!sapply(dpp_2, is.integer))) {
-    stop("dots per pixel for k = 2 in the x and y direction need to be integers
-         greater than or equal to two, e.g. c(2L,2L)")
-  }
-  if (scale_factor < 1 | !is.integer(scale_factor)) {
-    stop("scale_factor needs to be an integer greater than or equal to one, e.g. lL")
-  }
-
-
-  #----------------------------------------------------------
   # Compute dpp for k = 1,...,bigk
-  #----------------------------------------------------------
   dpp <- array(NA, dim = c(bigk, 2), dimnames = list(1:bigk, c("x", "y"))) # Create matrix
   dpp[1, ] <- c(1, 1) # Always set dpp for k = 1 to one
   dpp[2, ] <- dpp_2 # Set dpp for k = 2 (smallest, most resolved, multi-dot pixel size)
@@ -335,4 +309,17 @@ pixelate_by_u <- function(dot_matrix, dot_mem, dpp) {
                     uncertainty_breaks = uncertainty_breaks)
 
   return(to_return)
+}
+
+
+#============================================================
+# Function to check arguments are integers
+#
+# We use is remainder zero instead of is.integer because most people
+# are likely to specify an integer as a numeric rather than integer
+# e.g. bigk = 3 rather than bigk = 3L
+#============================================================
+nz_remainder = function(x){
+  y = !all(x %% sapply(x, floor) == 0)
+  return(y)
 }
