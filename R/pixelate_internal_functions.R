@@ -67,7 +67,7 @@ compute_dpp <- function(dpp_2, # Dots per pixel for k = 2
         dpp[i, ] <- dpp[i - 1, ] * 2 * scale_factor # inc. 2 s.t. always divisible by 2
       }
     }
-  } else if (scale == "linear") {
+  } else if (scale == "exponential") {
     if (bigk > 2) {
       for (i in 3:bigk) {
         dpp[i, ] <- dpp[i - 1, ] ^ ( 2 * scale_factor)  # inc. 2 s.t. always divisible by 2
