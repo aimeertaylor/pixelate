@@ -30,6 +30,7 @@
 #'   linearly or exponentially
 #' @param scale_factor Integer. Specifies a factor by which to either multiply
 #'   or exponentiate pixel sizes (in units of dots), depending on the scale.
+#' @param verbose Logical. Set to FALSE to suppress messages
 #' @return List. The list contains the original and expanded dot matrices
 #'   complete with pixelated point estimates (variable Pix_z); bigk+1 quantiles of
 #'   the distribution of average uncertainties used to classify average
@@ -43,7 +44,8 @@ pixelate <- function(dot_matrix,
                      num_pix_xy_bigk = 25,
                      bigk = 5L,
                      scale = "linear",
-                     scale_factor = 1L) {
+                     scale_factor = 1L,
+                     verbose = TRUE) {
 
   warning("
  Please be aware, pixelate works by averaging uncertainty across predictions
@@ -98,7 +100,7 @@ pixelate <- function(dot_matrix,
   dpp <- compute_dpp(min(dpp_2), bigk, scale, scale_factor)
 
   # Expand the dot matrix to enable vectorisation
-  expanded_dot_matrix <- expand_dot_matrix(dpp, dot_matrix)
+  expanded_dot_matrix <- expand_dot_matrix(dpp, dot_matrix, verbose)
 
   # Calculate dot dimensions of dot matrix
   expanded_dot_matrix_dim <- apply(expanded_dot_matrix[, c("x", "y")], 2, function(j) {length(unique(j))})
@@ -107,7 +109,7 @@ pixelate <- function(dot_matrix,
   dot_mem <- allocate_dot_mem(dpp, expanded_dot_matrix_dim)
 
   # Pixelate
-  pix_output <- pixelate_by_u(expanded_dot_matrix, dot_mem, dpp)
+  pix_output <- pixelate_by_u(expanded_dot_matrix, dot_mem, dpp, verbose)
 
   # Unpackage results
   pix_matrix <- pix_output$pix_matrix
