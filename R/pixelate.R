@@ -45,12 +45,16 @@ pixelate <- function(dot_matrix,
                      scale = "linear",
                      scale_factor = 1L) {
 
-  warning("\nPixelate works by averaging uncertainty across predictions and ranking averaged uncertainty.
-           \nAveraging uncertainty is valid only if generated under a joint model.
-           \nWhen measures of uncertainty are generated assuming independence between spatial coordinates,
-           \ne.g., by simulating from the 'per-pixel' posterior predictive distribution as in XXX.
-           \nuncertainty due to covariance between spatial coordinates is neglected.
-           \nThis is liable to impact pixelation only if it has a bearing on the ranks of average uncertainty.")
+  warning("
+ Please be aware, pixelate works by averaging uncertainty across predictions
+ and ranking average uncertainty. Averaging uncertainty is only strictly valid
+ when predictions are generated jointly. When they are not, e.g. by simulating
+ from a 'per-pixel' posterior predictive distribution, uncertainty due to
+ covariance between predictions is not accounted for. Regards pixelation, this
+ omission will be consequential if and only if it changes the ranks of average
+ uncertainty. The ranks of average uncertainty will change if covariance is both
+ spatially non-uniform and non-negligable in relation to other sources of
+ uncertainty.")
 
   # Set num_pix_xy_bigk in both x and y direction if not already
   if (is.na(num_pix_xy_bigk[2])) {num_pix_xy_bigk[2] <- num_pix_xy_bigk[1]}
@@ -82,10 +86,11 @@ pixelate <- function(dot_matrix,
 
   if (any(dpp_2 < 2) | any(dot_matrix_dim < dot_req)) {
     stop(sprintf("
-    \nTogether, arguments num_pix_xy_bigk, bigk, scale and scale_factor are incompatible with the dot matrix dimensions.
-    \nAt least %s spatial predictions are required in the x and y direction for the arguments as currently specified.
-    \nThe dot matrix has %s in the x and y direction.
-    \nConsider reducing num_pix_xy_bigk, bigk, scale_factor and/or using a linear scale.",
+      Together, arguments num_pix_xy_bigk, bigk, scale and scale_factor are
+      incompatible with the dot matrix dimensions. At least %s spatial predictions
+      are required in the x and y direction for the arguments as currently specified.
+      The dot matrix has %s in the x and y direction. Consider reducing
+      num_pix_xy_bigk, bigk, scale_factor and/or using a linear scale.",
                  paste0(dot_req, collapse = ' and '), paste0(dot_matrix_dim, collapse = ' and ')))
   }
 
