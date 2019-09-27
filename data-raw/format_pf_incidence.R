@@ -10,9 +10,9 @@ pf_incid_LCI <- raster::raster('data-raw/Pf_Incidence/Raster Data/Pf_incidence_r
 pf_incid_UCI <- raster::raster('data-raw/Pf_Incidence/Raster Data/Pf_incidence_rate_UCI/pf_incidence_rate_UCI_Global_admin0_2017.tif')
 
 # Convert to data.frame
-pf_incid_med <- as.data.frame(pf_incid_med, xy = TRUE)
-pf_incid_LCI <- as.data.frame(pf_incid_LCI, xy = TRUE)
-pf_incid_UCI <- as.data.frame(pf_incid_UCI, xy = TRUE)
+pf_incid_med <- raster::as.data.frame(pf_incid_med, xy = TRUE)
+pf_incid_LCI <- raster::as.data.frame(pf_incid_LCI, xy = TRUE)
+pf_incid_UCI <- raster::as.data.frame(pf_incid_UCI, xy = TRUE)
 
 # Take the convention that the outcome variable is denoted z
 # (manually check column names first)
