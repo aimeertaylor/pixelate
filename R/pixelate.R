@@ -55,8 +55,8 @@ pixelate <- function(dot_matrix,
  covariance between predictions is not accounted for. Regards pixelation, this
  omission will be consequential if and only if it changes the ranks of average
  uncertainty. The ranks of average uncertainty will change if covariance is both
- spatially non-uniform and non-negligable in relation to other sources of
- uncertainty.")
+ non-negligable in relation to other sources of uncertainty and spatially
+ non-uniform.\n")
 
   # Set num_pix_xy_bigk in both x and y direction if not already
   if (is.na(num_pix_xy_bigk[2])) {num_pix_xy_bigk[2] <- num_pix_xy_bigk[1]}
