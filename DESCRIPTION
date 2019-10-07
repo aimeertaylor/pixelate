@@ -23,9 +23,9 @@ Encoding: UTF-8
 LazyData: true
 Depends: R (>= 3.6.1)
 Imports:
-    dplyr (>= 0.8.3),
-    ggplot2 (>= 3.2.1) 
+    dplyr (>= 0.8.3), 
 Suggests:
+    ggplot2 (>= 3.2.1),
     malariaAtlas (>= 0.0.4),
     raster (>= 3.0-2),
     knitr (>= 1.24),
