@@ -24,12 +24,11 @@ LazyData: true
 Depends: R (>= 3.6.1)
 Imports:
     dplyr (>= 0.8.3),
-    ggplot2 (>= 3.2.1), 
-    sf (>= 0.7-7)
+    ggplot2 (>= 3.2.1) 
 Suggests:
     malariaAtlas (>= 0.0.4),
     raster (>= 3.0-2),
-    knitr,
-    rmarkdown
+    knitr (>= 1.24),
+    rmarkdown (>= 1.15)
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
