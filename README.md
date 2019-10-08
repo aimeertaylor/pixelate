@@ -20,13 +20,18 @@ To download and install RStudio please go to [rstudio.com](https://rstudio.com/)
 
 A development version of **pixelate** is available on Github 
 and can be installed in R using `install_github` from the **devtools** package as follows.
+Please be aware, this may take a few minutes because `build_vignettes = TRUE` and the 
+vignette for pixelate includes plots that are slown to generate. 
+
+<!--- (We chose `build_vignettes = TRUE` over removing `inst/doc` from .gitignore following 
+Hadley Wickham's advice; see https://github.com/r-lib/devtools/issues/584). --->
 
 ```r
 # Install devtools from CRAN if required
 if (!require("devtools")) install.packages("devtools") 
  
 # Install pixelate from GitHub 
-devtools::install_github("artaylor85/pixelate")
+devtools::install_github("artaylor85/pixelate", build_vignettes = TRUE)
 ```
 
 ## Usage
