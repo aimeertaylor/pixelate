@@ -86,12 +86,14 @@ pixelate <- function(dot_matrix,
 
   if (any(dpp_2 < 2) | any(dot_matrix_dim < dot_req)) {
     stop(sprintf("
-    Together, arguments num_pix_xy_bigk, bigk, scale and scale_factor are
-    incompatible with the dot matrix dimensions. At least %s spatial predictions
-    are required in the x and y direction for the arguments as currently
-    specified. The dot matrix has %s in the x and y direction. Consider reducing
-    num_pix_xy_bigk, bigk, scale_factor and/or using a linear scale.",
-                 paste0(dot_req, collapse = ' and '), paste0(dot_matrix_dim, collapse = ' and ')))
+  Together, arguments num_pix_xy_bigk, bigk, scale and scale_factor are
+  incompatible with the dot matrix dimensions. At least
+  \n%s\n
+  spatial predictions are required in the x and y direction for the arguments
+  as currently specified. The dot matrix has %s in the x and y direction.
+  Consider reducing num_pix_xy_bigk, bigk, scale_factor and/or using a linear
+  scale.", paste0(signif(dot_req), collapse = ' and '),
+                 paste0(dot_matrix_dim, collapse = ' and ')))
   }
 
   # Calculate size in dots for pixel k = 1,...,bigk
