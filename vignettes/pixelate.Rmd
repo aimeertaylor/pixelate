@@ -242,8 +242,9 @@ plot_sp_pred(sp_pred = temp_sp, shp_file = SubSaharanAfrica_shp) +
   scale_fill_discrete(name="Average uncertainty \nquantile iterval", na.value = 'lightblue')
 ```
 
-```{r, echo = FALSE}
-# Save plots for manuscript
+
+```{r, echo = FALSE, eval = FALSE}
+# To save plots (this code is not evaluated): 
 png(filename = 'pixelate_example_%d.png')
 unpix
 uncrt
