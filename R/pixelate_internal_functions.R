@@ -124,7 +124,7 @@ compute_num_pix_xy <- function(dpp, dot_matrix_dim) {
 # has no partial pixels on the borders, whereas the original dot matrix may
 # have), which is considerably faster than looping over pixels.
 #=================================================================================
-expand_dot_matrix <- function(dpp, dot_matrix, verbose) {
+expand_dot_matrix <- function(dpp, dot_matrix) {
 
   bigk <- nrow(dpp)
 
@@ -144,7 +144,7 @@ expand_dot_matrix <- function(dpp, dot_matrix, verbose) {
   max_y <- max(unq_y)
 
   # State expansion if necessary
-  if (any(to_expand_xy > 0) & verbose) {writeLines("\nExpanding the input dot matrix...")}
+  if (any(to_expand_xy > 0)) {message("\nExpanding the input dot matrix...")}
 
   # Calculate the extra x and y coordinates
   # Note that it doesn't really matter what they are as we will delete
@@ -228,7 +228,7 @@ allocate_dot_mem <- function(dpp, dot_matrix_dim) {
 # distribution of CI widths averaged at the bigk-th pixel size and
 # no smaller.
 #============================================================
-pixelate_by_u <- function(dot_matrix, dot_mem, dpp, verbose) {
+pixelate_by_u <- function(dot_matrix, dot_mem, dpp) {
 
   # Arrange s.t. compatible with membership allocation
   dot_matrix <- dplyr::arrange(dot_matrix, y, x)
@@ -246,7 +246,7 @@ pixelate_by_u <- function(dot_matrix, dot_mem, dpp, verbose) {
   dot_matrix$u[dot_certain_zero] <- NA
 
   # Compute CI widths for pixels where k = bigk
-  if (verbose){ writeLines("Averaging uncertainty over large pixels...")}
+  message("Averaging uncertainty over large pixels...")
   dot_matrix$u_bigk <- NA
   # Sort by dot_mem: allows vectorisation via temp_matrix since all pixels have the same dpp
   sorted_dot_mem_bigk <- sort.int(dot_mem[, bigk], index.return = T)
@@ -262,7 +262,7 @@ pixelate_by_u <- function(dot_matrix, dot_mem, dpp, verbose) {
                                  probs = seq(0, 1, length.out = bigk + 1),
                                  na.rm = TRUE)
 
-  if (verbose) {writeLines("Allocating predictions to differently sized pixels...")}
+  message("Allocating predictions to differently sized pixels...")
   # Allocate pixel types (.bincode is fast for assigning numeric bins)
   dot_matrix$bins <- .bincode(dot_matrix$u_bigk, breaks = uncertainty_breaks, include.lowest = T)
 
@@ -272,7 +272,7 @@ pixelate_by_u <- function(dot_matrix, dot_mem, dpp, verbose) {
   # For k = 1, use dot estimate. Note that which(.) excludes NA bins
   dot_matrix$pix_z[which(dot_matrix$bins == 1)] <- dot_matrix$z[which(dot_matrix$bins == 1)]
 
-  if (verbose) {writeLines("Averaging point estimates over differently sized pixels...\n")}
+  message("Averaging point estimates over differently sized pixels...\n")
 
   #Obsolete code for parallelising over k = 1,...,bigk
   #Parallisation did not speed code and introduced a bug
