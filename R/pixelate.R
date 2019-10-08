@@ -40,8 +40,8 @@
 #' @export
 #=============================================================================
 pixelate <- function(dot_matrix,
-                     num_pix_xy_bigk = 25,
-                     bigk = 5L,
+                     num_pix_xy_bigk = 20,
+                     bigk = 3L,
                      scale = "linear",
                      scale_factor = 1L) {
 

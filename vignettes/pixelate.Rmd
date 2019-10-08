@@ -109,7 +109,7 @@ plot_sp_pred = function(sp_pred, shp_file){
 
 ## Step 1: get and format spatial predictions 
 
-The function `pixelate` supports spatial predictions on any topic (e.g. residual contamination from nuclear weapon testing @diggle1998) providing that that they have associated measures of uncertainty. To use it, simply format your point estimates and their uncertainty measures and coordinates as per the example data set, `SubSaharanAfrica_Pf_incidence`, described and visualised below. A minimum of two by four (or four by two) predictions are necessary for pixelation by two or more large pixels. 
+The function `pixelate` supports spatial predictions on any topic (e.g. residual contamination from nuclear weapon testing @diggle1998) providing that that they have associated measures of uncertainty. To use it, simply format your point estimates and their uncertainty measures and coordinates as per the example data set, `SubSaharanAfrica_Pf_incidence`, described and visualised below. A minimum of eight predictions (two by four or four by two) are necessary for pixelation by two or more large pixels. 
 
 We illustrate the utility of `pixelate` using spatial predictions of the *P. falciparum* malaria incidence rate in 2017 @weiss2019 available from the the Malaria Atlas Project (MAP) website [map.ox.ac.uk](https://map.ox.ac.uk/). Specifically, we downloaded summaries extracted from per-pixel simulations of the posterior predictive *P. falciparum* incidence rates by selecting "ANNUAL MEAN OF PF INCIDENCE" at [map.ox.ac.uk/malaria-burden-data-download/](https://map.ox.ac.uk/malaria-burden-data-download/). We formatted the downloads using the script format_pf_incidence.R in the data-raw/ available online [github.com/artaylor85/pixelate/data-raw/](https://github.com/artaylor85/pixelate/tree/master/data-raw). 
 
@@ -163,14 +163,14 @@ Spatial predictions are input to `pixelate` via an arguement called dot_matrix. 
 px <- pixelate(dot_matrix = SubSaharanAfrica_Pf_incidence)
 ```
 
-The above call to pixelate implicitly relies on default values for a set of flexible pixelation arguments; see `?pixelate` to see what they are. The default values will fail if there are fewer than 400 by 400 predictions in the dot_matrix. To pixelate a dot_matrix with fewer predictions, reduce the number of large pixels (argument num_pix_xy_bigk) and the number of different pixel sizes (argument bigk). If the dot_matrix has more than 400 by 400 predictions, you can increase the number of large pixels and the number of different pixel sizes:
+The above call to pixelate implicitly relies on default values for a set of flexible pixelation arguments; see `?pixelate` to see what they are. The default values will fail if there are fewer than 80 by 80 totalling 6400 predictions in the dot_matrix. To pixelate a dot_matrix with fewer predictions, reduce the number of large pixels (argument num_pix_xy_bigk) and the number of different pixel sizes (argument bigk). If the dot_matrix has more than 80 by 80 predictions, you can increase the number of large pixels and the number of different pixel sizes:
 
 <!-- We should set the defaults to one number and the example to another in order to make vignette match README and manuscript -->
 
 ```{r, warning = FALSE}
 px <- pixelate(dot_matrix = SubSaharanAfrica_Pf_incidence,
-                       num_pix_xy_bigk = 25, # Change from default, which is XX
-                       bigk = 5) # Change from default, which is XX
+                       num_pix_xy_bigk = 25, # Change from default, which is 20
+                       bigk = 5) # Change from default, which is 3
 ```
 
 It is also possible to explore pixels that scale in size (dots per pixel) more rapidly by increasing the scale_factor argument and increasing the scale argument from linear to exponential. However, because the dots per pixel scale extremely rapidly when default pixelation arguments are increased, the prediction count required for seemingly modest argument combinations may exceed those available and thus generate an error, e.g. 
@@ -178,8 +178,8 @@ It is also possible to explore pixels that scale in size (dots per pixel) more r
 
 ```{r, error = TRUE, purl = FALSE, warning = FALSE}
 px <- pixelate(dot_matrix = SubSaharanAfrica_Pf_incidence,
-                       num_pix_xy_bigk = 25, # Default
-                       bigk = 5, # Default
+                       num_pix_xy_bigk = 25, # Change from default, which is 20
+                       bigk = 5, # Change from default, which is 3
                        scale = 'exponential', # Change from default, which is 'linear'
                        scale_factor = 2) # Change from default, which is 1
 ```

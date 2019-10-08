@@ -4,21 +4,21 @@
 \alias{pixelate}
 \title{Pixelate as per average uncertainty}
 \usage{
-pixelate(dot_matrix, num_pix_xy_K = c(10, 10), K = 3L,
-  scale = "linear", scale_factor = 1L, no.free_cores = 2)
+pixelate(dot_matrix, num_pix_xy_bigk = 20, bigk = 3L,
+  scale = "linear", scale_factor = 1L)
 }
 \arguments{
 \item{dot_matrix}{Data frame. Supplies dot coordinates, point estimates and
 credible interval bounds; see example data (once added).}
 
-\item{num_pix_xy_K}{Integer vector length two. Specifies the number of large
-pixels (Kth pixel size) in the x and y direction}
+\item{num_pix_xy_bigk}{Integer vector length two. Specifies the number of large
+pixels (bigk-th pixel size) in the x and y direction}
 
-\item{K}{Integer. Specifies the number of different uncertainity classes and
+\item{bigk}{Integer. Specifies the number of different uncertainity classes and
 thus pixel sizes.}
 
 \item{scale}{String equal to either "linear" or "exponential". Specifies
-whether to scale pixel sizes (in units of dots) from class k = 2,...,K
+whether to scale pixel sizes (in units of dots) from class k = 2,...,bigk
 linearly or exponentially}
 
 \item{scale_factor}{Integer. Specifies a factor by which to either multiply
@@ -26,11 +26,11 @@ or exponentiate pixel sizes (in units of dots), depending on the scale.}
 }
 \value{
 List. The list contains the original and expanded dot matrices
-  complete with pixelated point estimates (variable Pix_z); K+1 quantiles of
+  complete with pixelated point estimates (variable Pix_z); bigk+1 quantiles of
   the distribution of average uncertainties used to classify average
-  uncertainties; Dots per pixel for k = 1,...,K pixel sizes in the x and y
+  uncertainties; Dots per pixel for k = 1,...,bigk pixel sizes in the x and y
   direction; the dot matrix dimensions (in dots); and a matrix of dot
-  memberships (the index of the pixel each dot belongs to for k = 1,...,K
+  memberships (the index of the pixel each dot belongs to for k = 1,...,bigk
   pixel sizes).
 }
 \description{
@@ -43,13 +43,13 @@ combinations of arguments (if not all) will fail. Let a dot denote a set of
 coordinates associated with a point estimate and its uncertainty, which is
 represented by a single value, e.g. the width of the estimate's credible
 interval. Let a pixel refer to a square or rectangle comprising one or more
-dots. Uncertainties are averaged over a limited number of large pixels (Kth
+dots. Uncertainties are averaged over a limited number of large pixels (bigk-th
 pixel size, many dots per pixel). Average uncertainties are classified as
-high, medium (with one or more subdivisions if argument K exceeds three), or
+high, medium (with one or more subdivisions if argument bigk exceeds three), or
 low. If the average uncertainty is high, point estimates within the large
 pixel are averaged. If the average uncertainty is intermediate, point
 estimates within the large pixel are averaged over smaller pixels (fewer dots
-per pixel) that are nested within the large pixel. There are K-2 nested pixel
+per pixel) that are nested within the large pixel. There are bigk-2 nested pixel
 sizes in total. If the average uncertainty is low, point estimates are not
 averaged.
 }
