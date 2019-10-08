@@ -5,5 +5,5 @@ inst/doc
 doc
 Meta
 **/Pf_Incidence/
-**/Pv_Incidence/
+**/vignettes/*.png
 
