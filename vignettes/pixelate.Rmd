@@ -1,5 +1,5 @@
 ---
-title: "Pixelate spatial predictions using pixelate package"
+title: "Pixelate spatial predictions"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -234,12 +234,6 @@ p_plus_legend = p + geom_tile(data = pix_legend, mapping = aes(x = x, y = y, fil
 p_plus_legend
 ```
 
-```{r, echo = FALSE}
-png(filename = 'pixelate_example.png')
-p_plus_legend
-dev.off()
-```
-
 As mention above `pixelate` works by grouping point estimates into a specified number of large pixels and for each large pixel either averaging point estimates across it or across smaller pixels nested within it, depending on its averaged uncertainty. Specifically, each large pixel is allocated a pixel size (equal or nested) depending on which quantile interval its averaged uncertainty falls into, where the number of quantile intervals is equal to the number of different pixel sizes, and the quantiles are based on the empirical distribution of average uncertainty. We can plot these allocations to see how uncertainty varies across large pixels (i.e. how large pixels are allocated): 
 
 ```{r SubSaharanAfrica_bins}
@@ -252,6 +246,12 @@ plot_sp_pred(sp_pred = temp_sp, shp_file = SubSaharanAfrica_shp) +
                                na.value = 'lightblue')
 ```
 
+```{r, echo = FALSE}
+# Save plots for manuscript
+png(filename = 'pixelate_example.png')
+p_plus_legend
+dev.off()
+```
 
 # References
 
