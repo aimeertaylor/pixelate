@@ -166,8 +166,8 @@ The above call to pixelate implicitly relies on default values for a set of flex
 
 ```{r, warning = FALSE}
 px <- pixelate(dot_matrix = SubSaharanAfrica_Pf_incidence,
-                       num_pix_xy_bigk = 25, # Change from default, which is 20
-                       bigk = 5) # Change from default, which is 3
+               num_pix_xy_bigk = 25, # Change from default, which is 20
+               bigk = 5) # Change from default, which is 3
 ```
 
 It is also possible to explore pixels that scale in size (dots per pixel) more rapidly by increasing the scale_factor argument and increasing the scale argument from linear to exponential. However, because the dots per pixel scale extremely rapidly when default pixelation arguments are increased, the prediction count required for seemingly modest argument combinations may exceed those available and thus generate an error, e.g. 
@@ -175,10 +175,10 @@ It is also possible to explore pixels that scale in size (dots per pixel) more r
 
 ```{r, error = TRUE, purl = FALSE, warning = FALSE}
 px <- pixelate(dot_matrix = SubSaharanAfrica_Pf_incidence,
-                       num_pix_xy_bigk = 25, # Change from default, which is 20
-                       bigk = 5, # Change from default, which is 3
-                       scale = 'exponential', # Change from default, which is 'linear'
-                       scale_factor = 2) # Change from default, which is 1
+               num_pix_xy_bigk = 25, # Change from default, which is 20
+               bigk = 5, # Change from default, which is 3
+               scale = 'exponential', # Change from default, which is 'linear'
+               scale_factor = 2) # Change from default, which is 1
 ```
 
 
@@ -187,42 +187,43 @@ px <- pixelate(dot_matrix = SubSaharanAfrica_Pf_incidence,
 To better appreciate the different pixel sizes, let us first generate a pixel size legend layer:
 
 ```{r SubSaharanAfrica_pixelated_with_legend}
-gap_y <- 15 # Number of dots between example pixels and left edge of the plot
+gap_y <- 20 # Number of dots between example pixels and left edge of the plot
 gap_x <- 350 # Number of dots from the bottom edge of the plot 
-pix_legend_matrix <- px$pix_matrix # Copy coordinates
-pix_legend_matrix$z <- NA # Set z to NA 
+pix_legend <- px$pix_matrix # Copy coordinates
+pix_legend$z <- NA # Set z to NA 
 bigk <- nrow(px$dpp) # Extract the number of pixel sizes
 
 csy <- cumsum(px$dpp$y) 
-xs <- sort(unique(pix_legend_matrix$x))
-ys <- sort(unique(pix_legend_matrix$y))
+xs <- sort(unique(pix_legend$x))
+ys <- sort(unique(pix_legend$y))
 
 for(k in 2:bigk){
-  ind_y <- (gap_y*k + csy[k] + 1):(gap_y*k + csy[k] + px$dpp$y[k])
+  ind_y <- gap_y*k + ((csy[k-1] + 1):csy[k])
   ind_x <- (gap_x + 1):(gap_x + px$dpp$x[k])
-  inds <- which(pix_legend_matrix$x %in% xs[ind_x] & pix_legend_matrix$y %in% ys[ind_y])
-  pix_legend_matrix$pix_z[inds] <- 0
+  inds <- which(pix_legend$x %in% xs[ind_x] & pix_legend$y %in% ys[ind_y])
+  pix_legend$z[inds] <- 0
 }
 
 # Remove all the NAs
-pix_legend <- pix_legend_matrix[!is.na(pix_legend_matrix$z), ]
+pix_legend <- pix_legend[!is.na(pix_legend$z), ]
 ```
 
 Thereafter, we can add the pixels size legend to a plot of the pixelated spatial predictions: 
 
 ```{r}
+
 # Re-create a temp matrix using px
 temp_sp <- px$pix_matrix
 temp_sp$z <- temp_sp$pix_z
 
 # Generate a plot of pixelated 
 p = plot_sp_pred(sp_pred = temp_sp, shp_file = SubSaharanAfrica_shp) +
-  scale_fill_gradientn(name = "Predicted \nincidence rate: \npixelated", 
+  scale_fill_gradientn(name = "Predicted, \npixelated \nincidence rate", 
                                 colors = c("white", "red"), 
                                 na.value = 'lightblue')
 
 # Add pixel size legend with title (alternative code annotate("rect", xmin, xmax, ymin, ymax))
-pix_plus_legend = p + geom_tile(data = pix_legend, mapping = aes(x = x, y = y, fill = pix_z)) +
+pix_plus_legend = p + geom_tile(data = pix_legend, mapping = aes(x = x, y = y, fill = z)) +
   annotate("text", x = min(pix_legend$x), y = max(pix_legend$y) + 1.5,
            label = "Multi-dot pixel sizes", 
            size = 2.5, hjust = 0)
@@ -234,12 +235,28 @@ pix_plus_legend
 As mentioned above `pixelate` works by grouping point estimates into a specified number of large pixels and for each large pixel either averaging point estimates across it or across smaller pixels nested within it, depending on its averaged uncertainty. Specifically, each large pixel is allocated a pixel size (equal or nested) depending on which quantile interval its averaged uncertainty falls into, where the number of quantile intervals is equal to the number of different pixel sizes and the quantiles are based on the empirical distribution of average uncertainty. We can plot these allocations to see how uncertainty varies across large pixels (i.e. which quantile interval each large pixel falls into): 
 
 ```{r SubSaharanAfrica_bins}
-# Make the plotted out put the pixel size allocated
+# Make the plotted output the pixel size allocated
 temp_sp$z = as.factor(px$pix_matrix$bins)
+
+# Define quantile intervals
+qs = seq(0, 1, length.out = bigk + 1)
+quantile_intervals = sapply(2:(bigk+1), function(k){
+  bounds = qs[c(k-1,k)]
+  paste(paste0(format(bounds),'%'), collapse = ' to ')
+})
 
 # Print plot (make legend more informative)
 plot_sp_pred(sp_pred = temp_sp, shp_file = SubSaharanAfrica_shp) +
-  scale_fill_discrete(name="Average uncertainty \nquantile iterval", na.value = 'lightblue')
+  scale_fill_discrete(name="Average uncertainty \nquantile interval", 
+                      na.value = 'lightblue', labels = c(quantile_intervals, 'NA')) 
+```
+
+
+```{r}
+quantile_intervals = sapply(2:bigk, function(k){
+  bounds = px$uncertainty_breaks[c(k-1,k)]
+  paste(format(bounds, digits = 2, scientific = F), collapse = ' to ')
+})
 ```
 
 
