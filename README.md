@@ -21,15 +21,15 @@ To download and install RStudio please go to [rstudio.com](https://rstudio.com/)
 
 A development version of **pixelate** is available on Github. 
 It can be installed in R using `install_github` from the **devtools** package.
-At the time of writing (9th Oct 2019), 
-an in-development version of devtools (version ‘2.2.1.9000’)
-was needed to build **pixelate**'s vignette (central to understading **pixelate**),
-upon **pixelate**'s installation. 
-Please follow the code below to ensure the vignette builds.  
+At the time of writing (9th Oct 2019) 
+an in-development version of devtools (version 2.2.1.9000)
+was needed to build **pixelate**'s vignette (central to understading **pixelate**)
+upon installation. Please follow the code below to ensure the vignette builds.  
 
 _**Please be aware**_, installation with `build_vignettes = TRUE` takes several minutes 
-(approximately 5 mins on a Macbook Pro) 
-because the vignette includes plots that are slown to generate. 
+(approximately five on a Macbook Pro) 
+because the vignette includes plots that are slow to generate. Apologies for the 
+wait and thank you for your patience. 
 
 <!--- (We chose `build_vignettes = TRUE` over removing `inst/doc` from .gitignore following 
 Hadley Wickham's advice; see https://github.com/r-lib/devtools/issues/584). --->
@@ -40,9 +40,9 @@ Hadley Wickham's advice; see https://github.com/r-lib/devtools/issues/584). --->
 if (!require("devtools")) { # If devtools is not intalled
   
   # Install stable version from CRAN:  
-  install.packages("devtools") # Version ‘2.2.1’
+  install.packages("devtools") 
   
-  # Extract and compare its version: 
+  # Extract and compare the stable version: 
   vdetools = as.character(packageVersion("devtools"))
   vcompare = compareVersion(vdetools, '2.2.1.9000')
   
@@ -54,11 +54,11 @@ if (!require("devtools")) { # If devtools is not intalled
 
 } else { # If devtools is already intalled  
   
-  # Extract and compare its version: 
+  # Extract and compare the installed version: 
   vdetools = packageVersion("devtools")
   vcompare = compareVersion(as.character(vdetools), '2.2.1.9000')
   
-  if (vcompare < 0) { # If the stable version is < ‘2.2.1.9000’
+  if (vcompare < 0) { # If the installed version is < ‘2.2.1.9000’
     
     # Install in-development version from Github
     devtools::install_github("r-lib/devtools") 
@@ -67,7 +67,6 @@ if (!require("devtools")) { # If devtools is not intalled
 
 
 # Step 2) install pixelate from GitHub 
-# Approximately 5 mins on a Macbook Pro with 2.7 GHz Intel Core i5
 devtools::install_github("artaylor85/pixelate", build_vignettes = TRUE)
 ```
 
