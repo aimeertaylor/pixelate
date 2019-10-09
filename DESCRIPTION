@@ -25,6 +25,8 @@ Imports:
     dplyr  
 Suggests:
     ggplot2,
+    sf,
+    units, 
     knitr,
     rmarkdown
 RoxygenNote: 6.1.1
