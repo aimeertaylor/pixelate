@@ -45,6 +45,9 @@ pixelate <- function(dot_matrix,
                      scale = "linear",
                      scale_factor = 1L) {
 
+  # Record arguments for reference
+  args <- as.list(environment())
+
   warning("
  Please be aware, pixelate works by averaging uncertainty across predictions
  and ranking average uncertainty. Averaging uncertainty is only strictly valid
@@ -123,7 +126,8 @@ pixelate <- function(dot_matrix,
                     pix_matrix_expanded = pix_matrix,
                     dpp = dpp,
                     dot_matrix_dim = dot_matrix_dim,
-                    dot_mem = dot_mem)
+                    dot_mem = dot_mem,
+                    args = args)
 
   return(to_return)
 }
