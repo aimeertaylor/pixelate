@@ -57,7 +57,7 @@ library(ggplot2)
  
 To use `pixelate`, simply input some spatial predictions and plot the output as follows. To better understand the versatility of `pixelate` and to reproduce the plots that feature in XXX follow the step-by-step example in the next section.  
 
-```{r quick_example}
+```{r quick_example, fig.cap = "Pixelated *P. falciparum* predicted incidence in 2017 for sub-Saharan Africa. Pixelation was performed using default arguments."}
 px <- pixelate(SubSaharanAfrica_Pf_incidence) # pixelate
 ggplot(px$pix_matrix) + geom_raster(mapping = aes(x = x, y = y, fill = pix_z)) # plot
 ```
@@ -119,14 +119,16 @@ The formatted incidence predictions are included in the installed pixelate packa
 knitr::kable(SubSaharanAfrica_Pf_incidence[32863:32868,], row.names = FALSE) 
 ```
 
-In our example, the point estimate, z, is the median of [a per-pixel simulation - check] from the posterior predictive distribution of the incidence rate, and the uncertainty measure, u, is the width of the 95\% credible interval (based on/estimated from?) [a per-pixel simulation - check] of the posterior predictive distribution of the incidence rate. Each is plotted in turn below. 
+In our example, the point estimate, z, is the median of [a per-pixel simulation - check] from the posterior predictive distribution of the incidence rate, and the uncertainty measure, u, is the width of the 95\% credible interval (based on/estimated from?) [a per-pixel simulation - check] of the posterior predictive distribution of the incidence rate. Each is plotted in turn below. Note that uncertainty can be low either due to available epidemiological data or due to presence of strong predictors of transmission such as altitude.
 
 (As an aside, instead of taking the sample median and credible interval width as z and u, respectively, we could have taken the sample mean and standard standard deviation, say, or in a frequentist setting a maximum likelihood estimate of the mean incidence rate (?) and its confidence interval.)
 
-```{r SubSaharanAfrica_unpixelated}
+```{r SubSaharanAfrica_unpixelated, fig.cap = "Predicted median *P. falciparum* incidence for 2017 in sub-Saharan Africa."}
 # Set up the plot using plot_sp_pred
 unpix = plot_sp_pred(sp_pred = SubSaharanAfrica_Pf_incidence, 
                  shp_file = SubSaharanAfrica_shp) 
+
+
 
 # Add gradient surface
 unpix = unpix + scale_fill_gradientn(name = "Predicted \nincidence rate", 
@@ -137,7 +139,7 @@ unpix = unpix + scale_fill_gradientn(name = "Predicted \nincidence rate",
 unpix 
 ```
 
-```{r SubSaharanAfrica_uncertainty, fig.cap = "Test"}
+```{r SubSaharanAfrica_uncertainty, fig.cap = "Uncertainty of predicted *P. falciparum* incidence for 2017 in sub-Saharan Africa."}
 # To plot uncertainty, create a tempory spatial prediction and replace z by u 
 temp_sp <- SubSaharanAfrica_Pf_incidence
 temp_sp$z <- SubSaharanAfrica_Pf_incidence$u
@@ -146,8 +148,8 @@ temp_sp$z <- SubSaharanAfrica_Pf_incidence$u
 uncrt = plot_sp_pred(sp_pred = temp_sp, shp_file = SubSaharanAfrica_shp)
 
 # Add gradient surface
-uncrt = uncrt + scale_fill_gradientn(name = "Credible \ninterval width", 
-                                  colors = c("white", "blue"), 
+uncrt = uncrt + scale_fill_gradientn(name = "95% credible \ninterval width", 
+                                  colors = c("white", "red"), 
                                   na.value = 'lightblue')
 uncrt
 ```
@@ -184,7 +186,7 @@ px <- pixelate(dot_matrix = SubSaharanAfrica_Pf_incidence,
 
 ## Step 3: plot the `pixelate`-ed output
 
-To better appreciate the different pixel sizes, let us first generate a pixel size legend layer:
+To better appreciate the different pixel sizes, we generate a pixel size legend layer:
 
 ```{r SubSaharanAfrica_pixelated_with_legend}
 gap_y <- 20 # Number of dots between example pixels and left edge of the plot
@@ -208,9 +210,9 @@ for(k in 2:bigk){
 pix_legend <- pix_legend[!is.na(pix_legend$z), ]
 ```
 
-Thereafter, we can add the pixels size legend to a plot of the pixelated spatial predictions: 
+Thereafter, we can add the pixels size legend to a plot of the pixelated spatial predictions as follows. 
 
-```{r}
+```{r, fig.cap = sprintf("Pixelated *P. falciparum* predicted incidence for 2017 in sub-Saharan Africa. The number of different pixel sizes was set to %s. The lower bound on the number of large pixels was set to %s in both longitude and latitude, resulting in %s and %s large pixels in longitude and latitude, respectively. All other arguments had default values.", px$args$bigk, px$args$num_pix_xy_bigk, ceiling(px$dot_matrix_dim['x']/px$dpp$x[bigk]), ceiling(px$dot_matrix_dim['y']/px$dpp$y[bigk]))}
 
 # Re-create a temp matrix using px
 temp_sp <- px$pix_matrix
@@ -232,9 +234,29 @@ pix_plus_legend = p + geom_tile(data = pix_legend, mapping = aes(x = x, y = y, f
 pix_plus_legend
 ```
 
-As mentioned above `pixelate` works by grouping point estimates into a specified number of large pixels and for each large pixel either averaging point estimates across it or across smaller pixels nested within it, depending on its averaged uncertainty. Specifically, each large pixel is allocated a pixel size (equal or nested) depending on which quantile interval its averaged uncertainty falls into, where the number of quantile intervals is equal to the number of different pixel sizes and the quantiles are based on the empirical distribution of average uncertainty. We can plot these allocations to see how uncertainty varies across large pixels (i.e. which quantile interval each large pixel falls into): 
+We can also print the different pixel sizes in a table as follows. 
 
-```{r SubSaharanAfrica_bins}
+```{r}
+knitr::kable(px$dpp, row.names = FALSE, 
+             col.names = c("Pixel width (dots)", "Pixel height (dots)"), 
+             caption = sprintf("Dots per pixel for %s different pixel sizes", px$args$bigk), 
+             align = c("c","c"))
+```
+
+As mentioned above `pixelate` works by grouping point estimates into a specified number of large pixels and for each large pixel either averaging point estimates across it or across smaller pixels nested within it, depending on its averaged uncertainty. Specifically, each large pixel is allocated a pixel size (equal or nested) depending on which quantile interval its averaged uncertainty falls into, where the number of quantile intervals is equal to the number of different pixel sizes and the quantiles are based on the empirical distribution of average uncertainty. For example, for the above example there were `px$args$bigk+1` quantiles as follows:
+
+```{r}
+Av_uncert_quantiles = data.frame(Probability = names(px$uncertainty_breaks), 
+                                 Quantile = format(px$uncertainty_breaks,digits = 2))
+
+knitr::kable(Av_uncert_quantiles, row.names = FALSE, align = c("l","c"), 
+             caption = "Quantiles of the empirical distribution over uncertainty averaged over large pixels.")
+```
+
+We can plot the large pixel allocations to see how uncertainty varies across large pixels (i.e. which quantile interval each large pixel falls into): 
+
+```{r SubSaharanAfrica_bins, fig.cap = sprintf("Large pixel average uncertainty quantile intervals of *P. falciparum* predicted incidence for 2017 for sub-Saharan Africa. All arguments as specified in the caption of the above plot. The number of pixel sizes %s corresponds to %s quantile intervals of the empirical distribution of average uncertainty split at %s quantiles: %s as specified in the above table.", px$args$bigk, px$args$bigk, px$args$bigk+1, paste(format(px$uncertainty_breaks,digits = 2), collapse = " "))}
+
 # Make the plotted output the pixel size allocated
 temp_sp$z = as.factor(px$pix_matrix$bins)
 
