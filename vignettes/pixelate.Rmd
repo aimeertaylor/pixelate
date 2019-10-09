@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
 
 # Introduction 
 
-The R package **pixelate** centres around a single function, `pixelate`, designed to pixelate spatial predictions as per their average uncertainty.
+The R package **pixelate** centres around a single function, `pixelate`, designed to pixelate spatial predictions as per their average uncertainty. 
 
 In brief, the function `pixelate` groups point estimates into a specified number of large pixels; computes the average uncertainty within each large pixel; then, for each large pixel, depending on its average uncertainty, either averages the point estimates across it or across smaller pixels nested within it. 
 
@@ -124,7 +124,9 @@ knitr::kable(SubSaharanAfrica_Pf_incidence[32863:(32863+example_count),], row.na
              caption = sprintf("A selection of %s spatial predictions.", example_count)) 
 ```
 
-In our example, the point estimate, z, is the median of [a per-pixel simulation - check] from the posterior predictive distribution of the incidence rate, and the uncertainty measure, u, is the width of the 95\% credible interval (based on/estimated from?) [a per-pixel simulation - check] of the posterior predictive distribution of the incidence rate. Each is plotted in turn below. Note that uncertainty can be low either due to available epidemiological data or due to presence of strong predictors of transmission such as altitude.
+In our example, the point estimate, z, is the median of [a per-pixel simulation - check] from the posterior predictive distribution of the incidence rate, and the uncertainty measure, u, is the width of the 95\% credible interval (based on/estimated from?) [a per-pixel simulation - check] of the posterior predictive distribution of the incidence rate. Each is plotted in turn below. 
+
+Note that the uncertainty in predicted *P. falciparum* incidence is low in regions were there are epidemiological data (can we add data points downloaded from MAP? Shpuld be possible for parasite rate, not sure about incidence) and in regions where there are strong predictors of transmission, e.g. altitude.
 
 (As an aside, instead of taking the sample median and credible interval width as z and u, respectively, we could have taken the sample mean and standard standard deviation, say, or in a frequentist setting a maximum likelihood estimate of the mean incidence rate (?) and its confidence interval.)
 
@@ -137,7 +139,7 @@ unpix = plot_sp_pred(sp_pred = SubSaharanAfrica_Pf_incidence,
 
 # Add gradient surface
 unpix = unpix + scale_fill_gradientn(name = "Predicted \nincidence rate", 
-                                  colors = c("white", "red"), 
+                                  colors = c("seashell", "tomato", "darkred"), 
                                   na.value = 'lightblue')
 
 # Plot
@@ -154,7 +156,7 @@ uncrt = plot_sp_pred(sp_pred = temp_sp, shp_file = SubSaharanAfrica_shp)
 
 # Add gradient surface
 uncrt = uncrt + scale_fill_gradientn(name = "95% credible \ninterval width", 
-                                  colors = c("white", "red"), 
+                                  colors = c("seashell", "darkgray", "black"), 
                                   na.value = 'lightblue')
 uncrt
 ```
@@ -226,7 +228,7 @@ temp_sp$z <- temp_sp$pix_z
 # Generate a plot of pixelated 
 p = plot_sp_pred(sp_pred = temp_sp, shp_file = SubSaharanAfrica_shp) +
   scale_fill_gradientn(name = "Predicted, \npixelated \nincidence rate", 
-                                colors = c("white", "red"), 
+                                colors =  c("seashell", "tomato", "darkred"), 
                                 na.value = 'lightblue')
 
 # Add pixel size legend with title (alternative code annotate("rect", xmin, xmax, ymin, ymax))
@@ -276,14 +278,6 @@ quantile_intervals = sapply(2:(bigk+1), function(k){
 plot_sp_pred(sp_pred = temp_sp, shp_file = SubSaharanAfrica_shp) +
   scale_fill_discrete(name="Average uncertainty \nquantile interval", 
                       na.value = 'lightblue', labels = c(quantile_intervals, 'NA')) 
-```
-
-
-```{r}
-quantile_intervals = sapply(2:bigk, function(k){
-  bounds = px$uncertainty_breaks[c(k-1,k)]
-  paste(format(bounds, digits = 2, scientific = F), collapse = ' to ')
-})
 ```
 
 
