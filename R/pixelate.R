@@ -49,15 +49,17 @@ pixelate <- function(dot_matrix,
   args <- as.list(environment())
 
   warning("
- Please be aware, pixelate works by averaging uncertainty across predictions
- and ranking average uncertainty. Averaging uncertainty is only strictly valid
- when predictions are generated jointly. When they are not, e.g. by simulating
- from a 'per-pixel' posterior predictive distribution, uncertainty due to
- covariance between predictions is not accounted for. Regards pixelation, this
- omission will be consequential if and only if it changes the ranks of average
- uncertainty. The ranks of average uncertainty will change if covariance is both
- non-negligable in relation to other sources of uncertainty and spatially
- non-uniform.\n")
+  Please be aware, pixelate works by averaging uncertainty across predictions
+  within large pixels. Averaging uncertainty is only valid when predictions are
+  generated jointly. When they are not, e.g. by simulating from a 'per-pixel'
+  posterior predictive distribution, uncertainty due to covariance between
+  predictions is not accounted for. Regards pixelation, this omission will be
+  consequential if and only if it changes the quantile interval to which the
+  average uncertainty of given large pixel belongs. Quantile interval
+  allocation is relatively robust, since it depends on the average uncertainty
+  rank and can accommodate some variation around ranks within quantile
+  intervals. Allocation will change if covariance is both non-negligable in
+  relation to other sources of uncertainty and spatially non-uniform.\n")
 
   # Set num_pix_xy_bigk in both x and y direction if not already
   if (is.na(num_pix_xy_bigk[2])) {num_pix_xy_bigk[2] <- num_pix_xy_bigk[1]}
