@@ -260,7 +260,7 @@ knitr::kable(t(Av_uncert_quantiles), align = c("l","c"), col.names = rep(" ", px
 
 We can plot the large pixel allocations to see how uncertainty varies across large pixels (i.e. which quantile interval each large pixel falls into): 
 
-```{r SubSaharanAfrica_bins, fig.cap = sprintf("Average uncertainty quantile intervals of *P. falciparum* predicted incidence for 2017 for sub-Saharan Africa. All arguments as specified in the caption of the above plot. The empirical distribution of uncertainty averaged over large pixels was split at %s quantiles: %s specified in the above table.", px$args$bigk, px$args$bigk+1, paste(format(px$uncertainty_breaks,digits = 2), collapse = " "))}
+```{r SubSaharanAfrica_bins, fig.cap = sprintf("Average uncertainty quantile intervals of *P. falciparum* predicted incidence for 2017 for sub-Saharan Africa. All arguments had values as specified in the caption of the above plot. The empirical distribution of uncertainty averaged over large pixels was split at %s quantiles: %s, as specified in the above table.", px$args$bigk+1, paste(format(px$uncertainty_breaks,digits = 2), collapse = " "))}
 
 # Make the plotted output the pixel size allocated
 temp_sp$z = as.factor(px$pix_matrix$bins)
