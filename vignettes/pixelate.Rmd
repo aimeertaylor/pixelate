@@ -51,9 +51,9 @@ we second install **sf** if required; and third, we install **ggplot2** if requi
 
 ```{r setup}
 # Install packages from CRAN if required
-if (!requireNamespace("units", quietly = TRUE) install.packages("units", type = 'binary')
-if (!requireNamespace("sf", quietly = TRUE) install.packages("sf")
-if (!requireNamespace("ggplot2", quietly = TRUE) install.packages("ggplot2", dependencies = TRUE) 
+if (!requireNamespace("units", quietly = TRUE)) install.packages("units", type = 'binary')
+if (!requireNamespace("sf", quietly = TRUE)) install.packages("sf")
+if (!requireNamespace("ggplot2", quietly = TRUE)) install.packages("ggplot2", dependencies = TRUE) 
 
 # Attach required packages
 library(pixelate)
