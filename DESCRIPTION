@@ -27,7 +27,7 @@ Suggests:
     ggplot2 (>= 3.2.1),
     malariaAtlas (>= 0.0.4),
     raster (>= 3.0-2),
-    knitr (>= 1.24),
-    rmarkdown (>= 1.15)
+    knitr,
+    rmarkdown
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
