@@ -49,12 +49,14 @@ However, **sf** is only suggested by **ggplot2** and **units** sometimes fails t
 As such, we first install **units** as `type = binary` if required; 
 we second install **sf** if required; and third, we install **ggplot2** if required. 
 
-```{r setup}
+```{r setup, eval = FALSE}
 # Install packages from CRAN if required
 if (!requireNamespace("units", quietly = TRUE)) install.packages("units", type = 'binary')
 if (!requireNamespace("sf", quietly = TRUE)) install.packages("sf")
 if (!requireNamespace("ggplot2", quietly = TRUE)) install.packages("ggplot2", dependencies = TRUE) 
+```
 
+```{r}
 # Attach required packages
 library(pixelate)
 library(ggplot2)
