@@ -24,7 +24,8 @@ It can be installed in R using `install_github` from the **devtools** package.
 At the time of writing (9th Oct 2019) 
 an in-development version of devtools (version 2.2.1.9000)
 was needed to build **pixelate**'s vignette (central to understading **pixelate**)
-upon installation. Please follow the code below to ensure the vignette builds.  
+upon installation. Please follow the code below to ensure the vignette builds. Also, 
+please ensure `dependencies = TRUE`. 
 
 _**Please be aware**_, installation with `build_vignettes = TRUE` takes several minutes 
 (approximately five on a Macbook Pro) 
@@ -67,7 +68,7 @@ if (!require("devtools")) { # If devtools is not intalled
 
 
 # Step 2) install pixelate from GitHub 
-devtools::install_github("artaylor85/pixelate", build_vignettes = TRUE)
+devtools::install_github("artaylor85/pixelate", build_vignettes = TRUE, dependencies = TRUE)
 ```
 
 ## Usage
