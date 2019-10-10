@@ -46,7 +46,7 @@ Install **ggplot2** if required and attach packages **pixelate** and **ggplot2**
 
 ```{r setup}
 # Install devtools from CRAN if required
-if (!require("ggplot2")) install.packages("ggplot2") 
+if (!require("ggplot2")) install.packages("ggplot2", dependencies = T) 
 
 # Attach required packages
 library(pixelate)
@@ -133,14 +133,12 @@ Note that the uncertainty in predicted *P. falciparum* incidence is low in regio
 ```{r SubSaharanAfrica_unpixelated, fig.cap = "Median *P. falciparum* predicted incidence for 2017 in sub-Saharan Africa."}
 # Set up the plot using plot_sp_pred
 unpix = plot_sp_pred(sp_pred = SubSaharanAfrica_Pf_incidence, 
-                 shp_file = SubSaharanAfrica_shp) 
-
-
+                     shp_file = SubSaharanAfrica_shp) 
 
 # Add gradient surface
 unpix = unpix + scale_fill_gradientn(name = "Predicted \nincidence rate", 
-                                  colors = c("seashell", "tomato", "darkred"), 
-                                  na.value = 'lightblue')
+                                     colors = c("seashell", "tomato", "darkred"), 
+                                     na.value = 'lightblue')
 
 # Plot
 unpix 
