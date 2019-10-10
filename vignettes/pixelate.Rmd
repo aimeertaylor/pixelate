@@ -16,7 +16,7 @@ csl: vancouver.csl
 knitr::opts_chunk$set(
   message = FALSE, # Switch of all messages
   collapse = TRUE,
-  comment = "#>", # To match console 
+  comment = "> ", # To match console 
   fig.align = "center", 
   fig.height = 5, fig.width = 7, 
   out.width = "100%",
