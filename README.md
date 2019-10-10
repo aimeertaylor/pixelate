@@ -106,22 +106,24 @@ Setting `dependencies = TRUE` in `devtools::install_github` appears to solve the
 If problems persist, however, please consider the comments and code below. 
 
 The function `ggplot::coord_sf`, which features in the vignette of **pixelate**
-requires the **sf** package that depends on the **units** package. (As an aside, 
-please be aware that `ggplot::coord_sf` is not essential: it enables plots to
-be enhanced via the addition of shape file details, e.g. country borders). 
+requires the **sf** package that depends on the **units** package and also 
+requires the **sp** package. 
+(As an aside, please be aware that `ggplot::coord_sf` is not essential: 
+it enables plots tobe enhanced via the addition of shape file details, 
+e.g. country borders). 
 The package **sf** is suggested by **ggplot2** so does not install unless 
 `dependencies = TRUE` and **units** sometimes fails to install. 
 If this happens, first try to install **units** as `type = binary` if required. 
 If that fails, see instructions for other solutions online 
 (e.g. https://community.rstudio.com/t/trouble-installing-packages-in-the-quickstart/23800). 
-After installing **units**, install **sf** and **ggplot2** if required. 
+After installing **units**, install **sf** and **ggplot2** (with dependencies = TRUE). 
 If all of the above fail, you can still use `pixelate` and plot its output. 
 You just wont be able to add country borders etc. to plots.
 
 ```{r setup, eval = FALSE}
 # Install packages from CRAN if required (this code is not evaluated)
 if (!requireNamespace("units", quietly = TRUE)) install.packages("units", type = 'binary')
-if (!requireNamespace("sf", quietly = TRUE)) install.packages("sf")
+if (!requireNamespace("sf", quietly = TRUE)) install.packages("sf", dependencies = TRUE)
 if (!requireNamespace("ggplot2", quietly = TRUE)) install.packages("ggplot2", dependencies = TRUE)
 ```
 
