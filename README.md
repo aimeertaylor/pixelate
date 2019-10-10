@@ -108,7 +108,7 @@ If problems persist, however, please consider the comments and code below.
 The function `ggplot::coord_sf`, which features in the vignette of **pixelate**
 requires the **sf** package that depends on the **units** package. (As an aside, 
 please be aware that `ggplot::coord_sf` is not essential: it enables plots to
-be enhanced via the addition of country borders). 
+be enhanced via the addition of shape file details, e.g. country borders). 
 The package **sf** is suggested by **ggplot2** and **units** sometimes fails to install. 
 If this happens, first try to install **units** as `type = binary` if required. 
 If that fails, see instructions for other solutions online 
