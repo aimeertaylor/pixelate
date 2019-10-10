@@ -92,7 +92,7 @@ plot_sp_pred = function(sp_pred, shp_file){
     ylab('Latitude') + xlab('Longitude') +
     
     # Set the limits of the plot using coord_sf before adding shape file
-    coord_sf(xlim = round(range(sp_pred$x)), crs = 4326,   
+    coord_sf(xlim = round(range(sp_pred$x)),    
                       ylim = round(range(sp_pred$y)),
                       expand = FALSE) +
     
