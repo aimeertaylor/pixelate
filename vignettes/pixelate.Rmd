@@ -79,25 +79,27 @@ plot_sp_pred = function(sp_pred, shp_file){
     
     # Modify the legend and add a border:
     theme(legend.justification = c(0,0),
-                   legend.position = c(0.01,0.01),
-                   legend.background = element_rect(fill = NA),
-                   legend.title = element_text(size=8),
-                   legend.text = element_text(size=8),
-                   panel.border = element_rect(fill = NA)) + 
-                   
+          legend.position = c(0.01,0.01),
+          legend.background = element_rect(fill = NA),
+          legend.title = element_text(size=8),
+          legend.text = element_text(size=8),
+          panel.border = element_rect(fill = NA)) + 
+    
     # ------------------------------------------------------------------
-    # If there are issues with installation of packages sf and units the 
-    # code in this boxed section can be commented with loss of borders only
+  # Since there are issues with installation of packages sf and dependencies
+  # code in this boxed section is implemented only if the necessary packages
+  # are available
+  if (require("sf") & require("units")){
     
     # Set the limits of the plot using coord_sf before adding shape file
     coord_sf(xlim = round(range(sp_pred$x)),    
-                      ylim = round(range(sp_pred$y)),
-                      expand = FALSE) +
-    
+             ylim = round(range(sp_pred$y)),
+             expand = FALSE) +
+      
     # Country borders based on shape file
     geom_polygon(data = shp_file, aes(x = long, y = lat, group = group), 
-                          fill = NA, colour = "black") 
-    # ------------------------------------------------------------------                      
+                 fill = NA, colour = "black") 
+  }
   
   return(p)
 }

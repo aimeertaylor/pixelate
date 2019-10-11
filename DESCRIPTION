@@ -24,7 +24,7 @@ LazyData: true
 Imports:
     dplyr  
 Suggests:
-    ggplot2, sf, sp, units, 
+    ggplot2, 
     knitr,
     rmarkdown
 RoxygenNote: 6.1.1
