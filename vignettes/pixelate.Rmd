@@ -83,24 +83,25 @@ plot_sp_pred = function(sp_pred, shp_file){
           legend.background = element_rect(fill = NA),
           legend.title = element_text(size=8),
           legend.text = element_text(size=8),
-          panel.border = element_rect(fill = NA)) + 
+          panel.border = element_rect(fill = NA))  
     
-  # Since there are issues with the installation of dependency sf of ggplot2
-  # the following code is implemented only if the necessary packages are available
+  # Since there are issues with the installation of dependency 
+  # sf of ggplot2 the following code is implemented only if the 
+  # necessary packages can be loaded
   
   # load pkgs if installed
   if (requireNamespace("sf") & requireNamespace("units")) { 
     
     # Set the limits of the plot using coord_sf before adding shape file
-    coord_sf(xlim = round(range(sp_pred$x)),    
-             ylim = round(range(sp_pred$y)),
-             expand = FALSE) +
+    p = p + coord_sf(xlim = round(range(sp_pred$x)),    
+                     ylim = round(range(sp_pred$y)),
+                     expand = FALSE) +
       
       # Country borders based on shape file
       geom_polygon(data = shp_file, aes(x = long, y = lat, group = group), 
                    fill = NA, colour = "black")  
   } else {
-    coord_fixed(expand = FALSE) 
+    p = p + coord_fixed(expand = FALSE) 
   }
   
   return(p)
