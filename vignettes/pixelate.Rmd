@@ -91,7 +91,7 @@ plot_sp_pred = function(sp_pred, shp_file){
   # necessary packages can be loaded
   
   # load pkgs if installed
-  if (requireNamespace("sf") & requireNamespace("units")) { 
+  if (requireNamespace("sf")) { 
     
     # Set the limits of the plot using coord_sf before adding shape file
     p = p + coord_sf(xlim = round(range(sp_pred$x)),    
