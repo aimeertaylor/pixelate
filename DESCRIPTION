@@ -7,17 +7,16 @@ Authors@R:
            role = c("aut", "cre"),
            email = "first.last@example.com",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: Pixelate and plot point estimates as per their averaged uncertainties. 
-    Let a dot denote a set of coordinates associated with a point estimate and its uncertainty, 
-    which is represented by a single value, e.g. the width of the estimate's credible interval.
-    Let a pixel refer to a square or rectangle comprising one or more dots.  
-    Uncertainties are averaged over a limited number of large pixels (many dots per pixel). 
-    Average uncertainties are classified as high, intermediate or low. 
-    If the average uncertainty is high, point estimates plotted within the large pixel are averaged. 
-    If the average uncertainty is intermediate, point estimates plotted within the large pixel are 
-    averaged over smaller pixels (fewer dots per pixel) that are nested within the large pixel.
-    There may be one or more intermediate classifications, corresponding to one or more nested pixel sizes. 
-    If the average uncertainty is low, point estimates are not averaged. 
+Description: Pixelate spatially continuous predictions as per their averaged uncertainties. 
+             In brief, the function pixelate groups point estimates into a specified
+             number of large pixels; computes the average uncertainty within each large
+             pixel; then, for each large pixel, depending on its average uncertainty,
+             either averages the point estimates across it or across smaller pixels nested
+             within it. The resulting plot of pixelated spatial predictions is deliberately and
+             selectively pixelated, similar to a photo that is pixelated to disguise a
+             person’s identity. Areas of high average uncertainty in the pixelated plot
+             are unresolved, while areas with low average uncertainty are resolved,
+             similar to information poor versus rich regions of a satellite map.
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
