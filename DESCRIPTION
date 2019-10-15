@@ -21,6 +21,7 @@ Description: Pixelate and plot point estimates as per their averaged uncertainti
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
+Depends: R (>= 3.6.1)
 Imports:
     dplyr  
 Suggests:
