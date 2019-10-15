@@ -26,7 +26,6 @@ Imports:
 Suggests:
     ggplot2, 
     knitr,
-    rmarkdown, 
-    mymadeuppkg
+    rmarkdown
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
