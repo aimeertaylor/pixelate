@@ -93,18 +93,18 @@ Shape file data (see e.g. `?SubSaharanAfrica_shp`) were obtained using the funct
 # Function to wrap many functions from ggplot2
 plot_sp_pred = function(sp_pred, shp_file){
   
-  p = ggplot() +
+  p <- ggplot() +
     
     # Raster surface
     geom_raster(data = sp_pred, mapping = aes(x = x, y = y, fill = z)) +
     ylab('Latitude (degrees)') + xlab('Longitude (degrees)') + 
     
     # Modify the legend and add a plot border:
-    theme(legend.justification = c(0,0),
-          legend.position = c(0.02,0.01),
+    theme(legend.justification = c(0, 0),
+          legend.position = c(0.02, 0.01),
           legend.background = element_rect(fill = NA),
-          legend.title = element_text(size=8),
-          legend.text = element_text(size=8),
+          legend.title = element_text(size = 8),
+          legend.text = element_text(size = 8),
           panel.border = element_rect(fill = NA))  
     
   # Check the availablity of package sf (needed for ggplot2::coord_sf) 
@@ -113,7 +113,7 @@ plot_sp_pred = function(sp_pred, shp_file){
   if (requireNamespace("sf")) { 
     
     # Set the limits of the plot using coord_sf before adding shape file data 
-    p = p + coord_sf(xlim = round(range(sp_pred$x)),    
+    p <- p + coord_sf(xlim = round(range(sp_pred$x)),    
                      ylim = round(range(sp_pred$y)),
                      expand = FALSE) +
       
@@ -121,7 +121,7 @@ plot_sp_pred = function(sp_pred, shp_file){
       geom_polygon(data = shp_file, aes(x = long, y = lat, group = group), 
                    fill = NA, colour = "black")  
   } else {
-    p = p + coord_fixed(expand = FALSE) 
+    p <- p + coord_fixed(expand = FALSE) 
   }
   
   return(p)
@@ -141,7 +141,7 @@ We illustrate the utility of `pixelate` using spatial predictions of the *P. fal
 
 The formatted incidence predictions are included in the installed pixelate package. They are stored in a data.frame with a prediction per row and at least four variables: a longitude, x; a latitude, y; a point estimate, z; and an uncertainty measure, u; see `?SubSaharanAfrica_Pf_incidence` or `help(SubSaharanAfrica_Pf_incidence)` for more details. A selection of predictions that are neither zero (e.g. because they are on a mountain top) or NA (e.g. because they are in the ocean) is printed below.  
 
-```{r, results='asis'}
+```{r, results = 'asis'}
 # non-zero non-NA rows for illustration:
 example_count = 5
 knitr::kable(SubSaharanAfrica_Pf_incidence[32863:(32863+example_count),], row.names = FALSE, 
@@ -157,11 +157,11 @@ Both z and u are plotted in turn below. The uncertainty, u, in predicted *P. fal
 
 ```{r SubSaharanAfrica_unpixelated, fig.cap = "*P. falciparum* predicted incidence for 2017 in sub-Saharan Africa."}
 # Set up the plot using plot_sp_pred
-unpix = plot_sp_pred(sp_pred = SubSaharanAfrica_Pf_incidence, 
+unpix <- plot_sp_pred(sp_pred = SubSaharanAfrica_Pf_incidence, 
                      shp_file = SubSaharanAfrica_shp) 
 
 # Add gradient surface
-unpix = unpix + scale_fill_gradientn(name = "Median \nincidence rate", 
+unpix <- unpix + scale_fill_gradientn(name = "Median \nincidence rate", 
                                      colors = c("seashell", "tomato", "darkred"), 
                                      na.value = 'lightblue')
 
@@ -175,10 +175,10 @@ temp_sp <- SubSaharanAfrica_Pf_incidence
 temp_sp$z <- SubSaharanAfrica_Pf_incidence$u
 
 # Set up the plot using plot_sp_pred
-uncrt = plot_sp_pred(sp_pred = temp_sp, shp_file = SubSaharanAfrica_shp)
+uncrt <- plot_sp_pred(sp_pred = temp_sp, shp_file = SubSaharanAfrica_shp)
 
 # Add gradient surface
-uncrt = uncrt + scale_fill_gradientn(name = "95% credible \ninterval width", 
+uncrt <- uncrt + scale_fill_gradientn(name = "95% credible \ninterval width", 
                                   colors = c("seashell", "darkgray", "black"), 
                                   na.value = 'lightblue')
 uncrt
@@ -268,21 +268,21 @@ pix
 As mentioned above `pixelate` works by grouping point estimates into a specified number of large pixels and for each large pixel either averaging point estimates across it or across smaller pixels nested within it depending on its averaged uncertainty. Specifically, each large pixel is allocated a pixel size depending on which quantile interval its averaged uncertainty falls into, where the number of quantile intervals is equal to the number of different nested pixel sizes and the quantiles are based on the empirical distribution of average uncertainty. For example, in the above plot the different pixel sizes correspond to the following quantile intervals:
 
 ```{r}
-
 # Define quantile intervals
-qs = names(px$uncertainty_breaks)
-quantile_intervals = sapply(2:(bigk+1), function(k){
-  bounds = qs[c(k-1,k)]
+qs <- names(px$uncertainty_breaks)
+quantile_intervals <- sapply(2:(bigk+1), function(k){
+  bounds <- qs[c(k-1,k)]
   paste(bounds, collapse = ' to ')
 })
 
-avus = format(px$uncertainty_breaks,digits = 2)
-avuncertainty_intervals = sapply(2:(bigk+1), function(k){
-  bounds = avus[c(k-1,k)]
+# Define average uncertainty intervals
+avus <- format(px$uncertainty_breaks,digits = 2)
+avuncertainty_intervals <- sapply(2:(bigk+1), function(k){
+  bounds <- avus[c(k-1,k)]
   paste(bounds, collapse = ' to ')
 })
 
-pixel_table = cbind(quantile_intervals, avuncertainty_intervals, px$dpp) 
+pixel_table <- cbind(quantile_intervals, avuncertainty_intervals, px$dpp) 
 
 knitr::kable(pixel_table, row.names = FALSE, 
              col.names = c("Quantile interval", "Average uncertainty", "Pixel width (dots)", "Pixel height (dots)"), 
@@ -293,9 +293,8 @@ knitr::kable(pixel_table, row.names = FALSE,
 We can plot the large pixel allocations to see how uncertainty varies across large pixels (i.e. which quantile interval each large pixel falls into): 
 
 ```{r SubSaharanAfrica_bins, fig.cap = "Average uncertainty quantile intervals of *P. falciparum* predicted incidence for 2017 for sub-Saharan Africa. All arguments had values as specified in the caption of the above plot."}
-
 # Set the plotted output, z, equal to the large pixel average uncertainty quantile interval 
-temp_sp$z = as.factor(px$pix_matrix$bins)
+temp_sp$z <- as.factor(px$pix_matrix$bins)
 
 # Print plot (make legend more informative)
 plot_sp_pred(sp_pred = temp_sp, shp_file = SubSaharanAfrica_shp) +
@@ -306,7 +305,7 @@ plot_sp_pred(sp_pred = temp_sp, shp_file = SubSaharanAfrica_shp) +
 
 ```{r, echo = FALSE, eval = FALSE}
 # To save plots (this code is not evaluated): 
-png(filename = 'pixelate_example_%d.png')
+png(filename <- 'pixelate_example_%d.png')
 unpix
 uncrt
 pix_plus_legend
