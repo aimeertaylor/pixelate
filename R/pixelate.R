@@ -92,7 +92,7 @@ pixelate <- function(dot_matrix,
   if (any(dpp_2 < 2) | any(dot_matrix_dim < dot_req)) {
     stop(sprintf("
   Together, arguments num_pix_xy_bigk, bigk, scale and scale_factor are
-  incompatible with the dot matrix dimensions. At least \n%s\n
+  incompatible with the dot matrix dimensions. At least %s
   spatial predictions are required in the x and y direction for the arguments
   as currently specified. The dot matrix has %s in the x and y direction.
   Consider reducing num_pix_xy_bigk, bigk, scale_factor and/or using a linear
