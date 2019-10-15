@@ -70,12 +70,11 @@ Before we begin, to avoid duplicating code over multiple plots, let us define a 
 `plot_sp_pred`, that wraps various calls to functions from the package **gglpot2** @ggplot2. 
 
 The `plot_sp_pred` function generates a raster plot with country borders if possible. 
-Country borders are inessential but enhance plots.
+Country borders enhance plots but are inessential.
 We attempt to add them using shape file data and 
 functions `ggplot2::geom_polygon` and `ggplot2::coord_sf`. 
-The `ggplot::coord_sf` function requires the **sf** package 
-and its dependencies whose installation can be problematic. 
-To ensure the code runs for all, including those who have problems with installation of **sf**, 
+The latter requires the **sf** package whose installation can be problematic. 
+To ensure the code runs for all, including those who have problems with the installation of **sf**, 
 we check for the availability of **sf** and generate plots accordingly,
 with and without country borders. 
 
