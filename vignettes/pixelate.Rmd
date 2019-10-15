@@ -10,14 +10,6 @@ bibliography: ref.bib
 csl: vancouver.csl
 ---
 
-
-<!-- Work out if there are any other frameworks under which spatial predictions with uncertainty estimates can be made -->
-<!-- Check that we're working with per-pixel --->
-<!-- Check if a CI is based on/extracted from/approximated by a posterior predictive simulation --->
-<!-- Can we add data points downloaded from MAP? Should be possible for parasite rate, not sure about incidence --->
-<!-- change dots to predictions in code and make pixelate's argument names more explicit --->
-<!-- report more parameter arguements --->
- 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   message = FALSE, # Switch of all messages
@@ -265,7 +257,7 @@ pix
 ```
 
 
-As mentioned above `pixelate` works by grouping point estimates into a specified number of large pixels and for each large pixel either averaging point estimates across it or across smaller pixels nested within it depending on its averaged uncertainty. Specifically, each large pixel is allocated a pixel size depending on which quantile interval its averaged uncertainty falls into, where the number of quantile intervals is equal to the number of different nested pixel sizes and the quantiles are based on the empirical distribution of average uncertainty. For example, in the above plot the different pixel sizes correspond to the following quantile intervals:
+As mentioned above `pixelate` works by grouping point estimates into a specified number of large pixels and for each large pixel either averaging point estimates across it or across smaller pixels nested within it depending on its averaged uncertainty. Specifically, each large pixel is allocated a pixel size depending on which quantile interval its averaged uncertainty falls into, where the number of quantile intervals is equal to the number of different pixel sizes and the quantiles are based on the empirical distribution of average uncertainty. For example, in the above plot the different pixel sizes correspond to the following quantile intervals:
 
 ```{r}
 # Define quantile intervals
