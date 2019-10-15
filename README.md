@@ -24,12 +24,10 @@ It can be installed in R using `install_github` from the **devtools** package.
 At the time of writing (9th Oct 2019) 
 an in-development version of devtools (version 2.2.1.9000)
 was needed to build **pixelate**'s vignette (central to understading **pixelate**)
-upon installation. Please follow the code below to ensure the vignette builds. Also, 
-please ensure `dependencies = TRUE`. If you encounter problems with dependencies, 
-see section entitled **Dependency issues** below. 
+upon installation. Please follow the code below to ensure the vignette builds. 
 
 _**Please be aware**_, installation with `build_vignettes = TRUE` takes several minutes 
-(approximately five on a Macbook Pro) 
+(up to five on a Macbook Pro) 
 because the vignette includes plots that are slow to generate. Apologies for the 
 wait and thank you for your patience. 
 
@@ -96,35 +94,6 @@ The vignette can be accessed as follows.
 ```r
 # Load vignette
 vignette("pixelate")
-```
-
-## Dependency issues
-
-Originally, we encountered problems with dependencies required for a
-single function, `ggplot::coord_sf`, that features in the vignette of **pixelate**. 
-Setting `dependencies = TRUE` in `devtools::install_github` appears to solve these problems. 
-If problems persist, however, please consider the comments and code below. 
-
-The function `ggplot::coord_sf`, which features in the vignette of **pixelate**
-requires the **sf** package that depends on the **units** package and also 
-requires the **sp** package. 
-(As an aside, please be aware that `ggplot::coord_sf` is not essential: 
-it enables plots to be enhanced via the addition of shape file details, 
-e.g. country borders). 
-The package **sf** is suggested by **ggplot2** so does not install unless 
-`dependencies = TRUE` and **units** sometimes fails to install. 
-If this happens, first try to install **units** as `type = binary` if required. 
-If that fails, see instructions for other solutions online 
-(e.g. https://community.rstudio.com/t/trouble-installing-packages-in-the-quickstart/23800). 
-After installing **units**, install **sf** and **ggplot2** (with dependencies = TRUE). 
-If all of the above fail, you can still use `pixelate` and plot its output. 
-You just wont be able to add country borders etc. to plots.
-
-```{r setup, eval = FALSE}
-# Install packages from CRAN if required (this code is not evaluated)
-if (!requireNamespace("units", quietly = TRUE)) install.packages("units", type = 'binary')
-if (!requireNamespace("sf", quietly = TRUE)) install.packages("sf", dependencies = TRUE)
-if (!requireNamespace("ggplot2", quietly = TRUE)) install.packages("ggplot2", dependencies = TRUE)
 ```
 
 ## Contributing
