@@ -66,10 +66,26 @@ ggplot(px$pix_matrix) + geom_raster(mapping = aes(x = x, y = y, fill = pix_z))
 
 ## Step 0: define a wrapper function for plotting
 
-Before we begin, to avoid duplicating code over multiple plots, let us define a function, `plot_sp_pred`, that wraps various calls to functions from the package **gglpot2** @ggplot2. 
+Before we begin, to avoid duplicating code over multiple plots, let us define a function, 
+`plot_sp_pred`, that wraps various calls to functions from the package **gglpot2** @ggplot2. 
 
-To enhance plots within `plot_sp_pred`, we add country borders using shape file data; see `?SubSaharanAfrica_shp` or `help(SubSaharanAfrica_shp)`). They are not essential. The shape file data were obtained using the function `malariaAtlas::getShp` from the malariaAtlas package @malariaAtlas; see get_shape_files.R in the data-raw/ directory of the pixelate source package (the development version of the pixelate package). The data-raw/ directory is not available in the installed pixelate package, but it is available online [github.com/artaylor85/pixelate/data-raw/](https://github.com/artaylor85/pixelate/tree/master/data-raw)
+The `plot_sp_pred` function generates a raster plot with country borders if possible. 
+Country borders are inessential but enhance plots.
+We attempt to add them using shape file data and 
+functions `ggplot2::geom_polygon` and `ggplot2::coord_sf`. 
+The `ggplot::coord_sf` function requires the **sf** package 
+and its dependencies whose installation can be problematic. 
+To ensure the code runs for all, including those who have problems with installation of **sf**, 
+we check for the availability of **sf** and generate plots accordingly,
+with and without country borders. 
 
+Shape file data (see e.g. `?SubSaharanAfrica_shp`) were obtained using the function `malariaAtlas::getShp` from the malariaAtlas package @malariaAtlas; see get_shape_files.R in the data-raw/ directory of the pixelate source package (the development version of the pixelate package). The data-raw/ directory is not available in the installed pixelate package, but it is available online [github.com/artaylor85/pixelate/data-raw/](https://github.com/artaylor85/pixelate/tree/master/data-raw)
+
+<!-- Specifically, the function `ggplot::coord_sf` depends on the **sf** package 
+that depends on the **units** package and others, which can be problematic to install.  
+The **sf** package is suggested by **ggplot2**. It is not a dependency 
+of **ggplot2**, presumably because **sf** can be problematic to install
+due to its dependencies (e.g. **units**) --->
 
 ```{r}
 # Function to wrap many functions from ggplot2
@@ -89,8 +105,7 @@ plot_sp_pred = function(sp_pred, shp_file){
           legend.text = element_text(size=8),
           panel.border = element_rect(fill = NA))  
     
-  # Since there are sometimes issues with the installation of the sf 
-  # dependency of ggplot2 (needed for coord_sf) check its availablity
+  # Check the availablity of package sf (needed for ggplot2::coord_sf) 
   # and proceed accordingly. Note that requireNamespace("sf") is FALSE
   # if sf is avialble but one of its dependencies (e.g. units) is not
   
