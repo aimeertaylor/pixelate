@@ -3,22 +3,34 @@
 \docType{data}
 \name{SubSaharanAfrica_Pf_incidence}
 \alias{SubSaharanAfrica_Pf_incidence}
-\title{Plasmodium falciparum parasite rate in 2-10 year olds in 2000-2017 in Sub-Saharan Africa}
-\format{A data frame with 144000 rows and 5 variables:
+\title{\emph{Plasmodium falciparum} predicted incidence rate}
+\format{An data frame with a row per prediction (obs) and four variables:
 \describe{
   \item{x}{Longitude in decimal degrees}
   \item{y}{Latitude in decimal degrees}
-  \item{Median}{The median posterior predictive rate of Plasmodium falciparum in 2-10 year olds, 2000-2017}
-  \item{UCI}{The lower extreme of the credible interval around the median posterior predictive rate of Plasmodium falciparum in 2-10 year olds, 2000-2017}
-  \item{UCI}{The upper extreme of the credible interval around the median posterior predictive rate of Plasmodium falciparum in 2-10 year olds, 2000-2017}
+  \item{z}{The median of a ‘per-pixel’ posterior predictive simulation of \emph{P. falciparum} incidence rate in 2017}
+  \item{u}{The width of the 95\% credible interval of a ‘per-pixel’ posterior predictive simulation of \emph{P. falciparum}
+  incidence rate in 2017.}
 }}
 \source{
-\url{https://map.ox.ac.uk/}
+These data are available at the Malaria Atlas Project (MAP) website \url{https://map.ox.ac.uk/}.
+   Specifically, they were obtained by selecting
+   'ANNUAL MEAN OF PF INCIDENCE' at \url{https://map.ox.ac.uk/malaria-burden-data-download/}.
 }
 \usage{
 SubSaharanAfrica_Pf_incidence
 }
 \description{
-A dataset containing longitude, latitude, point estimates, and credible intervals bounds
+\emph{P. falciparum} predicted all-age incidence rate (clinical cases per 1,000 population per annum)
+in 2017 for sub-Saharan Africa at 2.5 arcminute (approximately 5km) resolution.
+}
+\examples{
+str(SubSaharanAfrica_Pf_incidence)
+head(SubSaharanAfrica_Pf_incidence)
+}
+\references{
+Weiss DJ, Lucas TCD, Nguyen M, et al.
+   Mapping the global prevalence, incidence, and mortality of Plasmodium falciparum, 2000--17:
+   a spatial and temporal modelling study. Lancet 2019; published online June 19.
 }
 \keyword{datasets}

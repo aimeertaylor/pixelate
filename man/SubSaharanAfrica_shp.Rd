@@ -3,19 +3,18 @@
 \docType{data}
 \name{SubSaharanAfrica_shp}
 \alias{SubSaharanAfrica_shp}
-\title{Shape files for Sub-Saharan Africa}
-\format{A SpatialPolygonsDataFrame with dimensions 59 and 16
-\describe{
-  \item{iso}{To-be-completed}
-  \item{admn_level}{To-be-completed}
-}}
+\title{Shape files for sub-Saharan Africa}
+\format{An object of class \code{SpatialPolygonsDataFrame} with 59 rows and 16 columns.}
 \source{
-Obtained using malariaAtlas::getShp (see data-raw/get_shape_files.R)
+Obtained using malariaAtlas::getShp; see \url{https://github.com/artaylor85/pixelate/blob/master/data-raw/get_shape_files.R}.
 }
 \usage{
 SubSaharanAfrica_shp
 }
 \description{
-A SpatialPolygonsDataFrame for Sub-Saharan Africa
+An object of class SpatialPolygonsDataFrame from the R package \strong{sp} v1.3-1 containing shape file data for sub-Saharan Africa.
+}
+\seealso{
+\url{https://www.rdocumentation.org/packages/sp/versions/1.3-1/topics/SpatialPolygonsDataFrame-class}
 }
 \keyword{datasets}
