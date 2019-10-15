@@ -6,7 +6,7 @@ An R package to pixelate spatial predictions according to the uncertainty that s
 <!--- I have not figured out how to export a single code chunck figure from the vignette
 and load here since best practice dictates that vignettes should be built on installation;
 see https://github.com/r-lib/devtools/issues/584. 
-Perhaps we could add some static examples based not on pf. That way we can avoid the need to 
+Let's add some static examples based not on pf. That way we can avoid the need to 
 sync and thus avoid any conflict between images here in the manuscript / vugnette? 
 ---> 
 
@@ -23,12 +23,12 @@ A development version of **pixelate** is available on Github.
 It can be installed in R using `install_github` from the **devtools** package.
 At the time of writing (9th Oct 2019) 
 an in-development version of devtools (version 2.2.1.9000)
-was needed to build **pixelate**'s vignette (central to understading **pixelate**)
-upon installation. Please follow the code below to ensure the vignette builds. 
+was needed to build **pixelate**'s vignette upon installation. 
+Please follow the code below to ensure the vignette builds. 
 
-_**Please be aware**_, installation with `build_vignettes = TRUE` takes several minutes 
+_**Please be aware**_, the vignette takes several minutes to build 
 (up to five on a Macbook Pro) 
-because the vignette includes plots that are slow to generate. Apologies for the 
+because it includes plots that are slow to generate. Apologies for the 
 wait and thank you for your patience. 
 
 <!--- (We chose `build_vignettes = TRUE` over removing `inst/doc` from .gitignore following 
@@ -74,27 +74,22 @@ devtools::install_github("artaylor85/pixelate", build_vignettes = TRUE, dependen
 
 The **pixelate** package centres around a single function `pixelate`.
 To use `pixelate` and visualise its output following our examples, 
-please install **ggplot2** if required and attach both packages as follows. 
+simply load and attach **pixelate** then read the **pixelate** vignette for quick and detailed examples. 
+In addition (and if you did not build the vignette upon installation), please see the documentation of `pixelate` 
+(accessed by `?pixelate` or `help(pixelate)`).  
 
 ```r
-# Install ggplot2 from CRAN if required
-if (!require("ggplot2")) install.packages("ggplot2") 
-
-# Attach packages pixelate and ggplot2 
+# load and attach
 library(pixelate) 
-library(ggplot2)
-```
 
-Thereafter, please see the documentation of `pixelate` (accessed by `?pixelate` of `help(pixelate)`) 
-and read the **pixelate** vignette for quick and detailed examples of **pixelate**'s usage. 
-The vignette can be accessed as follows. 
+# load the vignette for quick and detailed examples
+vignette("pixelate") 
+
+# Access documentation for pixelate()
+?pixelate 
+```
 
 <!--- Avoid examples here s.t. user follows the vignette --->
-
-```r
-# Load vignette
-vignette("pixelate")
-```
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
@@ -103,7 +98,6 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
-
 
 
 <!--- ## Acknowledgements 
