@@ -32,7 +32,7 @@ In brief, the function `pixelate` groups point estimates into a specified number
 
 The resulting map is deliberately and selectively pixelated, similar to a photo that is pixelated to disguise a person's identity. Areas of high average uncertainty in the pixelated map are unresolved, while areas with low average uncertainty are resolved, similar to information poor versus rich regions of a satellite image. 
 
-For full details of the function `pixelate` see its documentation, accessed by `?pixelate` or `help(pixelate)`, and the code for the functions on which it depends, which can be found in pixelate_internal_functions.R under the R/ directory of the installed package (use `find.package('pixelate')` to locate the installed package) or online [github.com/artaylor85/pixelate](https://github.com/artaylor85/pixelate). 
+For full details of the function `pixelate` see its documentation accessed by `?pixelate` or `help(pixelate)` and the code for the functions on which it depends, which can be found in pixelate_internal_functions.R under the R/ directory online [github.com/artaylor85/pixelate](https://github.com/artaylor85/pixelate). 
 
 The function `pixelate` supports spatially continuous point estimates on any topic providing that they have associated measures of uncertainty. Its output could be plotted using any of the various geographic information systems available. We illustrate its utility using predicted *Plasmodium falciparum* incidence @weiss2019 and plot its output in R using functions from the **gglpot2** package @ggplot2. 
 
