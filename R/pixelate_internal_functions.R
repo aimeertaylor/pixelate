@@ -155,7 +155,8 @@ expand_dot_matrix <- function(dpp, dot_matrix) {
     return(dot_matrix)
   }
 
-  # Add extra colunms: this step assumes the dot matrix has these columns
+  # Add extra colunms
+  # (this step assumes the dot matrix has only variables x, y, z and u)
   extra$z <- NA
   extra$u <- NA
 
