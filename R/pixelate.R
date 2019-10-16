@@ -48,7 +48,7 @@
 #'   \item{dot_mem}{A matrix of dot memberships, where each membership specifies
 #'   which quantile interval that the large pixel containing the specified dot
 #'   falls into.}
-#'   \item{args}{The arguments passed to pixelate when it was called.}
+#'   \item{arguments}{The arguments passed to pixelate when it was called.}
 #' }
 #' @examples
 #' #=================================================
@@ -120,7 +120,7 @@ pixelate <- function(dot_matrix,
                      scale_factor = 1L) {
 
   # Record arguments for reference
-  args <- as.list(environment())
+  arguments <- as.list(environment())
 
   warning("
   Please be aware, pixelate works by averaging uncertainty across predictions
@@ -135,13 +135,23 @@ pixelate <- function(dot_matrix,
   intervals. Allocation will change if covariance is both non-negligable in
   relation to other sources of uncertainty and spatially non-uniform.\n")
 
+  # Set dot_matrix to data.frame if not already
+  if (class(dot_matrix) != "data.frame") {
+    dot_matrix <- as.data.frame(dot_matrix)
+  }
+
+  # Initial check
+  if (!setequal(c("u", "x", "y", "z"), ls(dot_matrix))) {
+    stop("The dot matrix must contain variables 'u', 'x', 'y', and 'z' only.")
+  }
+
   # Set num_pix_xy_bigk in both x and y direction if not already
   if (is.na(num_pix_xy_bigk[2])) {num_pix_xy_bigk[2] <- num_pix_xy_bigk[1]}
 
-  # Calculate dot dimensions of dot matrix -------------------------------------
+  # Calculate dot dimensions of dot matrix
   dot_matrix_dim <- apply(dot_matrix[, c("x", "y")], 2, function(j) {length(unique(j))})
 
-  # Initial checks ------------------------------------------------------------
+  # Additional checks
   errors = c(dmat = ifelse (all(dot_matrix_dim >= c(2,4)) | all(dot_matrix_dim >= c(4,2)), FALSE, TRUE),
              npix = ifelse (all(num_pix_xy_bigk < 2) | nz_remainder(num_pix_xy_bigk), TRUE, FALSE),
              bigk = ifelse (bigk < 2 | nz_remainder(bigk), TRUE, FALSE),
@@ -156,10 +166,10 @@ pixelate <- function(dot_matrix,
 
   if (any(errors)) stop(error_mgs[errors])
 
-  # Calculate size in dots for pixel k = 2 -------------------------------------
+  # Calculate size in dots for pixel k = 2
   dpp_2 <- compute_dpp_2(num_pix_xy_bigk, bigk, scale, scale_factor, dot_matrix_dim)
 
-  # Dot matrix compatibility check ---------------------------------------------
+  # Dot matrix compatibility check
   dpp_min <- compute_dpp(2, bigk, scale, scale_factor)
   dot_req <- dpp_min[bigk,] * num_pix_xy_bigk
 
@@ -203,7 +213,7 @@ pixelate <- function(dot_matrix,
                     dpp = dpp,
                     dot_matrix_dim = dot_matrix_dim,
                     dot_mem = dot_mem,
-                    args = args)
+                    arguments = arguments)
 
   return(to_return)
 }

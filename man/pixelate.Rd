@@ -42,7 +42,7 @@ List.
   \item{dot_mem}{A matrix of dot memberships, where each membership specifies
   which quantile interval that the large pixel containing the specified dot
   falls into.}
-  \item{args}{The arguments passed to pixelate when it was called.}
+  \item{arguments}{The arguments passed to pixelate when it was called.}
 }
 }
 \description{
