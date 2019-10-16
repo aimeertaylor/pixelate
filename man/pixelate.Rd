@@ -67,13 +67,64 @@ nested pixels. If the average uncertainty is low (falls within the bottom
 quantile interval), point estimates are not averaged.
 }
 \examples{
+#=================================================
+# Use pixelate and inspect its output
+#=================================================
 # Pixelate using default parameters
 px_def <- pixelate(SubSaharanAfrica_Pf_incidence)
 
-# Pixelate using alternative parameters
-px_alt <- pixelate(SubSaharanAfrica_Pf_incidence, num_pix_xy_bigk = 25, bigk = 5)
-
-# Inspect values returned
+# Inspect list returned by pixelate
 str(px_def)
-str(px_alt)
+
+# Inspect a sample of uncertain pixelated predictions
+uncertain_ind = which(px_def$pix_matrix$u > 0)
+head(px_def$pix_matrix[uncertain_ind, ])
+
+# Pixelate using alternative parameters
+px_alt <- pixelate(SubSaharanAfrica_Pf_incidence,
+                   num_pix_xy_bigk = 25, bigk = 5)
+
+
+#=================================================
+# Plotting pixelate's output
+#=================================================
+# Load and attach ggplot2
+if (!require("ggplot2")){
+   stop("Package ggplot2 needed for the following code. Please install it.")
+}
+
+# Define a plotting function
+plot_sp_pred <- function(sp_pred){
+
+ ggplot(sp_pred) +
+
+   # Add raster surface
+   geom_raster(mapping = aes(x = x, y = y, fill = pix_z)) +
+
+   # Add gradient
+   scale_fill_gradientn(name = "Median incidence rate",
+                        colors = c("seashell", "tomato", "darkred"),
+                        na.value = 'lightblue') +
+
+   # Add axis labels
+   ylab('Latitude (degrees)') +
+   xlab('Longitude (degrees)') +
+
+   # Ensure the plotting space is not expanded
+   coord_fixed(expand = FALSE) +
+
+   # Modify the legend and add a plot border:
+   theme(legend.justification = c(0, 0),
+         legend.position = c(0.02, 0.01),
+         legend.background = element_rect(fill = NA),
+         legend.title = element_text(size = 8),
+         legend.text = element_text(size = 8),
+         panel.border = element_rect(fill = NA))
+
+}
+
+# Plot default and alternative
+plot_sp_pred(px_def$pix_matrix)
+plot_sp_pred(px_alt$pix_matrix)
+
 }
