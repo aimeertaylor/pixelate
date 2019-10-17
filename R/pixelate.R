@@ -122,6 +122,19 @@ pixelate <- function(dot_matrix,
   # Record arguments for reference
   arguments <- as.list(environment())
 
+  warning("\n
+        Please be aware, pixelate works by averaging uncertainty across predictions
+        within large pixels. Averaging uncertainty is only valid when predictions are
+        generated jointly. When they are not, e.g. by simulating from a 'per-pixel'
+        posterior predictive distribution, uncertainty due to covariance between
+        predictions is not accounted for. Regards pixelation, this omission will be
+        consequential if and only if it changes the quantile interval to which the
+        average uncertainty of given large pixel belongs. Quantile interval 
+        allocation is relatively robust, since it depends on the average uncertainty
+        rank and can accommodate some variation around ranks within quantile
+        intervals. Allocation will change if covariance is both non-negligable in
+        relation to other sources of uncertainty and spatially non-uniform.\n")
+  
   # Set dot_matrix to data.frame if not already
   if (class(dot_matrix) != "data.frame") {
     dot_matrix <- as.data.frame(dot_matrix)
