@@ -129,7 +129,7 @@ pixelate <- function(dot_matrix,
   posterior predictive distribution, uncertainty due to covariance between
   predictions is not accounted for. Regards pixelation, this omission will be
   consequential if and only if it changes the quantile interval to which the
-  average uncertainty of given large pixel belongs. Quantile interval
+  average uncertainty of given large pixel belongs. Quantile interval 
   allocation is relatively robust, since it depends on the average uncertainty
   rank and can accommodate some variation around ranks within quantile
   intervals. Allocation will change if covariance is both non-negligable in
