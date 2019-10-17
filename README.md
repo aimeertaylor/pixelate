@@ -12,10 +12,9 @@ sync and thus avoid any conflict between images here in the manuscript / vugnett
 
 ## Prerequisites
 
-The package **pixelate** is an R package. 
-It was developed in R version 3.6.1 (2019-07-05) using RStudio. 
+The package **pixelate** is an R package. It was developed in R version 3.6.1 (2019-07-05) using RStudio. 
 To download and install R please go to [cran.r-project.org](https://cran.r-project.org).
-To download and install RStudio please go to [rstudio.com](https://rstudio.com/).
+To download and install RStudio please go to [rstudio.com](https://rstudio.com/). To avoid problems, ensure you have the latest version of R or at least version 3.5.0. 
 
 ## Installation
 
@@ -24,7 +23,8 @@ It can be installed in R using `install_github` from the **devtools** package.
 At the time of writing (9th Oct 2019) 
 an in-development version of devtools (version 2.2.1.9000)
 was needed to build **pixelate**'s vignette upon installation. 
-Please follow the code below to ensure the vignette builds. 
+To ensure **pixelate** installs and the vignette builds, 
+please follow the code below and accept any suggested package updates. 
 
 _**Please be aware**_, the vignette takes several minutes to build 
 (up to five on a Macbook Pro) 
@@ -100,5 +100,5 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 [MIT](https://choosealicense.com/licenses/mit/)
 
 
-<!--- ## Acknowledgements 
-Acknowledge everyone who helps test code (e.g. PM)
+## Acknowledgements 
+Thank you to Pierre Jacob, Pamela Martinez Vargas, Rene Niehu and Pablo Martínez de Salazar for help testing package installation. 
