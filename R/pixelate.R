@@ -133,7 +133,7 @@ pixelate <- function(dot_matrix,
   allocation is relatively robust, since it depends on the average uncertainty
   rank and can accommodate some variation around ranks within quantile
   intervals. Allocation will change if covariance is both non-negligable in
-  relation to other sources of uncertainty and spatially non-uniform.\n")
+  relation to other sources of uncertainty and spatially non-uniform.")
 
   # Set dot_matrix to data.frame if not already
   if (class(dot_matrix) != "data.frame") {
