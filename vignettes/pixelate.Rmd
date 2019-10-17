@@ -272,7 +272,7 @@ pixel_table <- cbind(quantile_intervals, avuncertainty_intervals, px$dpp)
 
 knitr::kable(pixel_table, row.names = FALSE, 
              col.names = c("Quantile interval", "Average uncertainty", "Pixel width (dots)", "Pixel height (dots)"), 
-             caption = sprintf("Attributes of %s different pixel sizes from small (top) to large (bottom)", px$args$bigk), 
+             caption = sprintf("Attributes of %s different pixel sizes from small (top) to large (bottom)", px$arguments$bigk), 
              align = rep("c",ncol(pixel_table)))
 ```
 
