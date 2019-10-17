@@ -68,16 +68,10 @@ The `plot_sp_pred` function generates a raster plot with country borders if poss
 Country borders enhance plots but are inessential.
 We attempt to add them using shape file data and 
 functions `ggplot2::geom_polygon` and `ggplot2::coord_sf`. 
-The latter requires the **sf** package whose installation can be problematic. 
-To ensure the code runs for all, including those who have problems with the installation of **sf**, 
-we check for the availability of **sf** and generate plots accordingly,
+The latter requires the **sf** package whose installation can be problematic, since it may require some external packages that are operating system specific. To ensure the code runs for all, including those who have problems with the installation of **sf**, we check for the availability of **sf** and generate plots accordingly,
 with and without country borders. 
 
-<!-- Specifically, the function `ggplot::coord_sf` depends on the **sf** package 
-that depends on the **units** package and others, which can be problematic to install.  
-The **sf** package is suggested by **ggplot2**. It is not a dependency 
-of **ggplot2**, presumably because **sf** can be problematic to install
-due to its dependencies (e.g. **units**) --->
+<!-- R packages like {sf}, {sp}, {rgdal}, {rgeos} may require some external packages --->
 
 Shape file data (see e.g. `?SubSaharanAfrica_shp`) were obtained using the function `malariaAtlas::getShp` from the malariaAtlas package @malariaAtlas; see get_shape_files.R in the data-raw/ directory of the source package, available online [github.com/artaylor85/pixelate/data-raw/](https://github.com/artaylor85/pixelate/tree/master/data-raw).
 
