@@ -14,7 +14,7 @@ sync and thus avoid any conflict between images here in the manuscript / vugnett
 
 The package **pixelate** is an R package. It was developed in R version 3.6.1 (2019-07-05) using RStudio. 
 To download and install R please go to [cran.r-project.org](https://cran.r-project.org).
-To download and install RStudio please go to [rstudio.com](https://rstudio.com/). To avoid problems, ensure you have the latest version of R or at least version 3.5.0. 
+To download and install RStudio please go to [rstudio.com](https://rstudio.com/). Please ensure you have the latest version of R or at least version 3.5.0. 
 
 ## Installation
 
@@ -27,7 +27,7 @@ To ensure **pixelate** installs and the vignette builds,
 please follow the code below and accept any suggested package updates. 
 
 _**Please be aware**_, the vignette takes several minutes to build 
-(up to five on a Macbook Pro) 
+(up to five on an Early 2015 MacVook Pro)
 because it includes plots that are slow to generate. Apologies for the 
 wait and thank you for your patience. 
 
