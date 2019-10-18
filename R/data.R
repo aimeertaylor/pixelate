@@ -7,7 +7,7 @@
 #' \emph{P. falciparum} predicted all-age incidence rate (clinical cases per 1,000 population per annum)
 #' in 2017 for sub-Saharan Africa at 2.5 arcminute (approximately 5km) resolution.
 #'
-#' @format An data frame with a row per prediction (obs) and four variables:
+#' @format An data frame with 1794240 obs. (predictions) of four variables:
 #' \describe{
 #'   \item{x}{Longitude in decimal degrees}
 #'   \item{y}{Latitude in decimal degrees}
@@ -32,7 +32,7 @@
 #' \emph{P. falciparum} predicted all-age incidence rate (clinical cases per 1,000 population per annum)
 #' in 2017 for Central Africa at 2.5 arcminute (approximately 5km) resolution.
 #'
-#' @format An data frame with a row per prediction (obs) and four variables:
+#' @format An data frame with 270083 obs. (predictions) of four variables:
 #' \describe{
 #'   \item{x}{Longitude in decimal degrees}
 #'   \item{y}{Latitude in decimal degrees}
@@ -47,8 +47,8 @@
 #'    Mapping the global prevalence, incidence, and mortality of Plasmodium falciparum, 2000--17:
 #'    a spatial and temporal modelling study. Lancet 2019; published online June 19.
 #' @examples
-#' str(SubSaharanAfrica_Pf_incidence)
-#' head(SubSaharanAfrica_Pf_incidence)
+#' str(CentralAfrica_Pf_incidence)
+#' head(CentralAfrica_Pf_incidence)
 "CentralAfrica_Pf_incidence"
 
 
@@ -64,7 +64,7 @@
 
 #' Shape files for Central Africa
 #'
-#' An object of class SpatialPolygonsDataFrame from the R package \strong{sp} v1.3-1 containing shape file data for sub-Saharan Africa.
+#' An object of class SpatialPolygonsDataFrame from the R package \strong{sp} v1.3-1 containing shape file data for Central Africa.
 #'
 #' @format
 #' @source Obtained using malariaAtlas::getShp; see \url{https://github.com/artaylor85/pixelate/blob/master/data-raw/get_shape_files.R}.
