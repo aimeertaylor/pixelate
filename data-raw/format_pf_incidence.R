@@ -21,24 +21,21 @@ colnames(pf_incid_LCI)[3] <- 'z'
 colnames(pf_incid_UCI)[3] <- 'z'
 
 
-
-
-
 # SubSaharanAfrica_Pf_incidence -------------------------------
 lat_long = lat_long_intervals['CentralAfrica',]
 
 # Filter by lat long intervals
-pf_incid_med = dplyr::filter(pf_incid_med,
+med_filtered = dplyr::filter(pf_incid_med,
                                 x > lat_long$lon_min,
                                 x < lat_long$lon_max,
                                 y > lat_long$lat_min,
                                 y < lat_long$lat_max)
-pf_incid_LCI = dplyr::filter(pf_incid_LCI,
+LCI_filtered = dplyr::filter(pf_incid_LCI,
                              x> lat_long$lon_min,
                              x< lat_long$lon_max,
                              y> lat_long$lat_min,
                              y< lat_long$lat_max)
-pf_incid_UCI = dplyr::filter(pf_incid_UCI,
+UCI_filtered = dplyr::filter(pf_incid_UCI,
                              x> lat_long$lon_min,
                              x< lat_long$lon_max,
                              y> lat_long$lat_min,
@@ -46,31 +43,31 @@ pf_incid_UCI = dplyr::filter(pf_incid_UCI,
 
 # Check they all match
 writeLines('check all are zeros..')
-any((pf_incid_med$x != pf_incid_LCI$x) & (pf_incid_med$x != pf_incid_UCI$x))
-any((pf_incid_med$y != pf_incid_LCI$y) & (pf_incid_med$y != pf_incid_UCI$y))
+any((med_filtered$x != LCI_filtered$x) & (med_filtered$x != UCI_filtered$x))
+any((med_filtered$y != LCI_filtered$y) & (med_filtered$y != UCI_filtered$y))
 
 # Create and save data frame
-CentralAfrica_Pf_incidence = data.frame(x = pf_incid_med$x,
-                                           y = pf_incid_med$y,
-                                           z = pf_incid_med$z,
-                                           u = pf_incid_UCI$z - pf_incid_LCI$z)
+CentralAfrica_Pf_incidence = data.frame(x = med_filtered$x,
+                                           y = med_filtered$y,
+                                           z = med_filtered$z,
+                                           u = pf_incid_UCI$z - LCI_filtered$z)
 
 
 # CentralAfrica_Pf_incidence -------------------------------
 lat_long = lat_long_intervals['SubSaharanAfrica',]
 
 # Filter by lat long intervals
-pf_incid_med = dplyr::filter(pf_incid_med,
+med_filtered = dplyr::filter(pf_incid_med,
                              x > lat_long$lon_min,
                              x < lat_long$lon_max,
                              y > lat_long$lat_min,
                              y < lat_long$lat_max)
-pf_incid_LCI = dplyr::filter(pf_incid_LCI,
+LCI_filtered = dplyr::filter(pf_incid_LCI,
                              x> lat_long$lon_min,
                              x< lat_long$lon_max,
                              y> lat_long$lat_min,
                              y< lat_long$lat_max)
-pf_incid_UCI = dplyr::filter(pf_incid_UCI,
+UCI_filtered = dplyr::filter(pf_incid_UCI,
                              x> lat_long$lon_min,
                              x< lat_long$lon_max,
                              y> lat_long$lat_min,
@@ -78,14 +75,14 @@ pf_incid_UCI = dplyr::filter(pf_incid_UCI,
 
 # Check they all match
 writeLines('check all are zeros..')
-any((pf_incid_med$x != pf_incid_LCI$x) & (pf_incid_med$x != pf_incid_UCI$x))
-any((pf_incid_med$y != pf_incid_LCI$y) & (pf_incid_med$y != pf_incid_UCI$y))
+any((med_filtered$x != LCI_filtered$x) & (med_filtered$x != UCI_filtered$x))
+any((med_filtered$y != LCI_filtered$y) & (med_filtered$y != UCI_filtered$y))
 
 # Create and save data frame
-SubSaharanAfrica_Pf_incidence = data.frame(x = pf_incid_med$x,
-                                           y = pf_incid_med$y,
-                                           z = pf_incid_med$z,
-                                           u = pf_incid_UCI$z - pf_incid_LCI$z)
+SubSaharanAfrica_Pf_incidence = data.frame(x = med_filtered$x,
+                                           y = med_filtered$y,
+                                           z = med_filtered$z,
+                                           u = UCI_filtered$z - LCI_filtered$z)
 
 
 # Save example data
