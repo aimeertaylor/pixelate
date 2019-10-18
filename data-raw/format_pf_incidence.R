@@ -20,22 +20,61 @@ colnames(pf_incid_med)[3] <- 'z'
 colnames(pf_incid_LCI)[3] <- 'z'
 colnames(pf_incid_UCI)[3] <- 'z'
 
+
+
+
+
+# SubSaharanAfrica_Pf_incidence -------------------------------
+lat_long = lat_long_intervals['CentralAfrica',]
+
 # Filter by lat long intervals
 pf_incid_med = dplyr::filter(pf_incid_med,
-                                x > lat_long_intervals$lon_min,
-                                x < lat_long_intervals$lon_max,
-                                y > lat_long_intervals$lat_min,
-                                y < lat_long_intervals$lat_max)
+                                x > lat_long$lon_min,
+                                x < lat_long$lon_max,
+                                y > lat_long$lat_min,
+                                y < lat_long$lat_max)
 pf_incid_LCI = dplyr::filter(pf_incid_LCI,
-                             x> lat_long_intervals$lon_min,
-                             x< lat_long_intervals$lon_max,
-                             y> lat_long_intervals$lat_min,
-                             y< lat_long_intervals$lat_max)
+                             x> lat_long$lon_min,
+                             x< lat_long$lon_max,
+                             y> lat_long$lat_min,
+                             y< lat_long$lat_max)
 pf_incid_UCI = dplyr::filter(pf_incid_UCI,
-                             x> lat_long_intervals$lon_min,
-                             x< lat_long_intervals$lon_max,
-                             y> lat_long_intervals$lat_min,
-                             y< lat_long_intervals$lat_max)
+                             x> lat_long$lon_min,
+                             x< lat_long$lon_max,
+                             y> lat_long$lat_min,
+                             y< lat_long$lat_max)
+
+# Check they all match
+writeLines('check all are zeros..')
+any((pf_incid_med$x != pf_incid_LCI$x) & (pf_incid_med$x != pf_incid_UCI$x))
+any((pf_incid_med$y != pf_incid_LCI$y) & (pf_incid_med$y != pf_incid_UCI$y))
+
+# Create and save data frame
+CentralAfrica_Pf_incidence = data.frame(x = pf_incid_med$x,
+                                           y = pf_incid_med$y,
+                                           z = pf_incid_med$z,
+                                           u = pf_incid_UCI$z - pf_incid_LCI$z)
+
+
+# CentralAfrica_Pf_incidence -------------------------------
+lat_long = lat_long_intervals['SubSaharanAfrica',]
+
+# Filter by lat long intervals
+pf_incid_med = dplyr::filter(pf_incid_med,
+                             x > lat_long$lon_min,
+                             x < lat_long$lon_max,
+                             y > lat_long$lat_min,
+                             y < lat_long$lat_max)
+pf_incid_LCI = dplyr::filter(pf_incid_LCI,
+                             x> lat_long$lon_min,
+                             x< lat_long$lon_max,
+                             y> lat_long$lat_min,
+                             y< lat_long$lat_max)
+pf_incid_UCI = dplyr::filter(pf_incid_UCI,
+                             x> lat_long$lon_min,
+                             x< lat_long$lon_max,
+                             y> lat_long$lat_min,
+                             y< lat_long$lat_max)
 
 # Check they all match
 writeLines('check all are zeros..')
@@ -47,6 +86,9 @@ SubSaharanAfrica_Pf_incidence = data.frame(x = pf_incid_med$x,
                                            y = pf_incid_med$y,
                                            z = pf_incid_med$z,
                                            u = pf_incid_UCI$z - pf_incid_LCI$z)
+
+
 # Save example data
-usethis::use_data(SubSaharanAfrica_Pf_incidence, overwrite = TRUE)
+usethis::use_data(CentralAfrica_Pf_incidence, SubSaharanAfrica_Pf_incidence, overwrite = TRUE)
+
 
