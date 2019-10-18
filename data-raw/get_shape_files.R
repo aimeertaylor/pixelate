@@ -1,9 +1,16 @@
 library(malariaAtlas)
 
-# Use long lat
+load(file = "data-raw/lat_long_intervals.RData")
 
-SubSaharanAfrica_shp <- malariaAtlas::getShp(lat = c(-26,21), long = c(-17,52), admin_level = "admin0")
-CentralAfrica_shp <- malariaAtlas::getShp(lat = c(-7.5,5), long = c(15,35), admin_level = "admin0")
+lat_lon = lat_long_intervals['SubSaharanAfrica',]
+SubSaharanAfrica_shp <- malariaAtlas::getShp(lat = c(lat_lon$lat_min, lat_lon$lat_max),
+                                             long = c(lat_lon$lon_min, lat_lon$lon_max),
+                                             admin_level = "admin0")
+
+lat_lon = lat_long_intervals['CentralAfrica',]
+CentralAfrica_shp <- malariaAtlas::getShp(lat = c(lat_lon$lat_min, lat_lon$lat_max),
+                                          long = c(lat_lon$lon_min, lat_lon$lon_max),
+                                          admin_level = "admin0")
 
 usethis::use_data(SubSaharanAfrica_shp, CentralAfrica_shp, overwrite = TRUE)
 
