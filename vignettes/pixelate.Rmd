@@ -293,11 +293,11 @@ plot_sp_pred(sp_pred = temp_sp, shp_file = SubSaharanAfrica_shp) +
 ```{r, echo = FALSE, eval = FALSE}
 # To save plots (this code is not evaluated): 
 # Note width / height over-rides option chunck 
-pdf(filename <- 'pixelate_examples.pdf', width = 7, height = 4.5) 
-unpix
-uncrt
-pix
-dev.off()
+# pdf(filename <- 'pixelate_examples.pdf', width = 7, height = 4.5) 
+# unpix
+# uncrt
+# pix
+# dev.off()
 ```
 
 
