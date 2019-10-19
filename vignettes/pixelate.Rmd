@@ -100,8 +100,8 @@ plot_sp_pred = function(sp_pred, shp_file){
   if (requireNamespace("sf")) { 
     
     # Set the limits of the plot using coord_sf before adding shape file data 
-    p <- p + coord_sf(xlim = round(range(sp_pred$x)),    
-                     ylim = round(range(sp_pred$y)),
+    p <- p + coord_sf(xlim = range(sp_pred$x),    
+                     ylim = range(sp_pred$y),
                      expand = FALSE) +
       
       # Country borders based on shape file data
@@ -150,7 +150,7 @@ unpix <- plot_sp_pred(sp_pred = SubSaharanAfrica_Pf_incidence,
 # Add gradient surface
 unpix <- unpix + scale_fill_gradientn(name = "Median \nincidence rate", 
                                      colors = c("seashell", "tomato", "darkred"), 
-                                     na.value = 'lightblue')
+                                     na.value = 'lightblue2')
 
 # Plot
 unpix 
@@ -167,7 +167,7 @@ uncrt <- plot_sp_pred(sp_pred = temp_sp, shp_file = SubSaharanAfrica_shp)
 # Add gradient surface
 uncrt <- uncrt + scale_fill_gradientn(name = "95% credible \ninterval width", 
                                   colors = c("seashell", "darkgray", "black"), 
-                                  na.value = 'lightblue')
+                                  na.value = 'lightblue2')
 uncrt
 ```
 
@@ -185,8 +185,8 @@ The above call to pixelate implicitly relies on default values for a set of pixe
 
 ```{r, warning = FALSE}
 px <- pixelate(dot_matrix = SubSaharanAfrica_Pf_incidence,
-               num_pix_xy_bigk = 25, # Change from default, which is 20
-               bigk = 5) # Change from default, which is 3
+               num_pix_xy_bigk = 20, # Change from default, which is 20
+               bigk = 6) # Change from default, which is 3
 ```
 
 It is also possible to explore pixels that scale in size (dots per pixel) more rapidly by increasing the scale_factor argument and changing the scale argument from linear to exponential. However, because the dots per pixel can scale extremely rapidly when default pixelation arguments are changed, the prediction count required for seemingly modest argument combinations may exceed those available and thus generate an error, e.g. 
@@ -241,7 +241,7 @@ pix <- plot_sp_pred(sp_pred = temp_sp, shp_file = SubSaharanAfrica_shp)
 # Add gradient and pixel size legend layer with title   
 pix <- pix + scale_fill_gradientn(name = "Pixelated median \nincidence rate", 
                                  colors =  c("seashell", "tomato", "darkred"), 
-                                 na.value = 'lightblue') + 
+                                 na.value = 'lightblue2') + 
   geom_tile(data = pix_legend, mapping = aes(x = x, y = y, fill = z)) +
   annotate("text", x = min(pix_legend$x), y = max(pix_legend$y) + 1.5,
            label = "Multi-dot pixel sizes", 
@@ -286,7 +286,7 @@ temp_sp$z <- as.factor(px$pix_matrix$bins)
 # Print plot (make legend more informative)
 plot_sp_pred(sp_pred = temp_sp, shp_file = SubSaharanAfrica_shp) +
   scale_fill_discrete(name="Average uncertainty \nquantile interval", 
-                      na.value = 'lightblue', labels = c(quantile_intervals, 'NA')) 
+                      na.value = 'lightblue2', labels = c(quantile_intervals, 'NA')) 
 ```
 
 
@@ -295,7 +295,7 @@ plot_sp_pred(sp_pred = temp_sp, shp_file = SubSaharanAfrica_shp) +
 png(filename <- 'pixelate_example_%d.png')
 unpix
 uncrt
-pix_plus_legend
+pix
 dev.off()
 ```
 
