@@ -1,3 +1,14 @@
+#################################################
+# All code in this script is copied and pasted
+# from the vignette of Vizumap [1], which is the
+# R-package associated with [2].
+#
+# [1] Petra Kuhnert and Lydia Lucchesi (2017). Vizumap:
+#     Visualizing Uncertainty in spatial data. R package version 1.1.0.
+# [2] Lucchesi, Lydia R., and Christopher K. Wikle.
+#     "Visualizing uncertainty in areal data with bivariate choropleth maps,
+#      map pixelation and glyph rotation." Stat 6.1 (2017): 292-302.
+#################################################
 
 # install.packages("devtools")
 if(!requireNamespace("Vizumap")){
@@ -7,6 +18,7 @@ if(!requireNamespace("Vizumap")){
 library('Vizumap')
 vignette("Vizumap")
 
+# The code
 data(us_data)
 us_data$GEO.id2 <- as.numeric(us_data$GEO.id2)
 ca_data <- subset(us_data, us_data$GEO.id2 > 6000 & us_data$GEO.id2 < 7000)
@@ -27,13 +39,11 @@ ca_data$region %in% pix$region
 #uniform distribution
 u_m <- build_pmap(data = ca_data, distribution = "uniform", pixelGeo = pix, id = "region")
 
-
 #normal distribution
 ca_data$se <- ca_data$pov_moe / 1.645
 ca_data <- read.uv(data = ca_data, estimate = "pov_rate", error = "se")
 
 n_m <- build_pmap(data = ca_data, distribution = "normal", pixelGeo = pix, id = "region")
-
 
 #experiment with discrete distribution
 #exponential - example for q argument
@@ -41,7 +51,7 @@ ca_data.q <- with(ca_data, data.frame(p0.05 = qexp(0.05, 1/pov_rate), p0.25 = qe
 
 head(ca_data.q)
 
-d_m <- build_pmap(data = ca_data, distribution = "discrete", 
+d_m <- build_pmap(data = ca_data, distribution = "discrete",
                   pixelGeo = pix, id = "region", q = ca_data.q)
 
 
