@@ -4,25 +4,40 @@
 #' Pixelate spatially continuous predictions as per their average uncertainties.
 #'
 #' This is a wrapper function which, given a dot matrix and several arguments,
-#' pixelates as follows. Let a dot denote a prediction with a set of
-#' coordinates, a point estimate and uncertainty measure represented by a single
-#' value, e.g. 95\% credible interval width. Let a pixel refer to a
-#' square or rectangle comprising one or more dots. Uncertainties are averaged
-#' over a limited number of large pixels (pixels of the bigk-th size). Average
+#' pixelates as follows. Let a single dot denote a set containing a prediction,
+#' its coordinates, and its uncertainty measure represented by a single value,
+#' e.g. 95\% credible interval width. Let a pixel refer to a square or rectangle
+#' comprising one or more predictions and thus dots. By default, pixels are
+#' square. Uncertainties are averaged over a limited number of large pixels
+#' (pixels of the bigk-th size). We specify a lower bound on the number of large
+#' pixels. The function pixelate internally calculates the smallest number of
+#' large pixels greater than or equal to the specified lower bound. By default
+#' the lower bound is the same in both the x and y dimension. The actual number
+#' of large pixels in either dimension is be determined by whichever dimension
+#' is smaller (this behaviour is hard-coded within pixelate). Average
 #' uncertainties are classified as high, medium (with bigk-2 subdivisions), or
 #' low, according to the quantile interval they fall into, where the number of
-#' quantile intervals is equal to the number of different pixel sizes (bigk) and
-#' the quantiles are based on the empirical distribution of average
-#' uncertainties. If the average uncertainty is high (falls within the top
-#' quantile interval), point estimates within the large pixel are averaged. If
-#' the average uncertainty is intermediate (falls with an intermediate quantile
-#' interval), point estimates within the large pixel are averaged over smaller
-#' nested pixels. If the average uncertainty is low (falls within the bottom
-#' quantile interval), point estimates are not averaged.
+#' quantile intervals is equal to a specified number of different pixel sizes (k
+#' = 1,...,bigk) and the quantiles are based on the empirical distribution of
+#' average uncertainties (calculated internally). For a given k, each pixel has
+#' the same number of dots per pixel (dpp) in the x and y direction. However, we
+#' do not specify dpps directly; they are calculated internally to best match
+#' the specified parameters. The arguments scale and scale_factor determine the
+#' rates at which dpps scale. If the average uncertainty is high (falls within
+#' the top quantile interval), predictions within the large pixel are averaged.
+#' If the average uncertainty is intermediate (falls with an intermediate
+#' quantile interval), predictions within the large pixel are averaged over
+#' smaller nested pixels. If the average uncertainty is low (falls within the
+#' bottom quantile interval), predictions are not averaged. Importantly, missing
+#' predictions and predictions that are zero with certainty are excluded from
+#' the entire pixelation process (i.e. computation and classification of average
+#' uncertainty, and computation of average prediction across large or nested
+#' pixel sizes). This behaviour is hard-coded within a function that pixelate
+#' calls internally.
 #'
-#' @param dot_matrix Data frame. Contains a row per spatial prediction with at least
-#'   four variables: longitude, x; latitude, y; point estimate, z; and uncertainty measure u.
-#' @param num_pix_xy_bigk Integer or integer vector length two. Specifies the number of large
+#' @param dot_matrix Data frame. Contains a row per dot with at least
+#'   four variables: longitude, x; latitude, y; prediction, z; and uncertainty measure u.
+#' @param num_pix_xy_bigk Integer or integer vector length two. Specifies a lower bound on the number of large
 #'   pixels in the x and y direction.
 #' @param bigk Integer. Specifies the number of average uncertainty quantile intervals and
 #'   thus different pixel sizes to pixelate into.
@@ -35,10 +50,10 @@
 #' \describe{
 #'   \item{pix_matrix}{The original dot matrix with additional variables:
 #'   average uncertainty, u_bigk; the average uncertainty quantile interval
-#'   allocation, bins; and pixelated point estimate, pix_z.}
+#'   allocation, bins; and averaged predictions, pix_z.}
 #'   \item{pix_matrix_expanded}{A spatially expanded dot matrix with additional
 #'   variables: the average uncertainty, u_bigk; average uncertainty quantile
-#'   interval allocation, bins; and pixelated point estimate, pix_z.}
+#'   interval allocation, bins; and averaged predictions, pix_z.}
 #'   \item{uncertainty_breaks}{The values of average uncertainty at the bigk+1
 #'   quantiles of the empirical distribution of average uncertainties.}
 #'   \item{dpp}{The dots per pixel (dpp) for k = 1,...,bigk pixel sizes in the x
@@ -112,7 +127,6 @@
 #' plot_sp_pred(px_alt$pix_matrix)
 #'
 #' @export
-#=============================================================================
 pixelate <- function(dot_matrix,
                      num_pix_xy_bigk = 15,
                      bigk = 6L,
@@ -126,14 +140,15 @@ pixelate <- function(dot_matrix,
         Please be aware, pixelate works by averaging uncertainty across predictions
         within large pixels. Averaging uncertainty is only valid when predictions are
         generated jointly. When they are not, e.g. by simulating from a 'per-pixel'
-        posterior predictive distribution, uncertainty due to spatial covariance between
-        predictions is not accounted for. Regards pixelation, this omission will be
-        consequential if and only if it changes the quantile interval to which the
-        average uncertainty of a given large pixel belongs. Quantile interval
-        allocation is relatively robust, since it depends on the average uncertainty
-        rank and can accommodate some variation around ranks within quantile
-        intervals. Allocation will change if covariance is both non-negligible in
-        relation to other sources of uncertainty and spatially non-uniform.\n")
+        posterior predictive distribution, uncertainty due to spatial covariance
+        between predictions is not accounted for. Regards pixelation, this omission
+        will be consequential if and only if it changes the quantile interval to
+        which the average uncertainty of a given large pixel belongs. Quantile
+        interval allocation is relatively robust, since it depends on the average
+        uncertainty rank and can accommodate some variation around ranks within
+        quantile intervals. Allocation will change if covariance is both
+        non-negligible in relation to other sources of uncertainty and spatially
+        non-uniform.\n")
 
   # Set dot_matrix to data.frame if not already
   if (class(dot_matrix) != "data.frame") {
@@ -217,6 +232,3 @@ pixelate <- function(dot_matrix,
 
   return(to_return)
 }
-
-
-
