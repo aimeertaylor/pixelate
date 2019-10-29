@@ -132,7 +132,7 @@ pixelate <- function(dot_matrix,
         average uncertainty of a given large pixel belongs. Quantile interval
         allocation is relatively robust, since it depends on the average uncertainty
         rank and can accommodate some variation around ranks within quantile
-        intervals. Allocation will change if covariance is both non-negligable in
+        intervals. Allocation will change if covariance is both non-negligible in
         relation to other sources of uncertainty and spatially non-uniform.\n")
 
   # Set dot_matrix to data.frame if not already
