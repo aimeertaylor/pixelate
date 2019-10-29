@@ -4,7 +4,7 @@
 \alias{pixelate}
 \title{Pixelate as per average uncertainty}
 \usage{
-pixelate(dot_matrix, num_pix_xy_bigk = 20, bigk = 3L,
+pixelate(dot_matrix, num_pix_xy_bigk = 15, bigk = 6L,
   scale = "linear", scale_factor = 1L)
 }
 \arguments{
