@@ -114,8 +114,8 @@
 #' @export
 #=============================================================================
 pixelate <- function(dot_matrix,
-                     num_pix_xy_bigk = 20,
-                     bigk = 3L,
+                     num_pix_xy_bigk = 15,
+                     bigk = 6L,
                      scale = "linear",
                      scale_factor = 1L) {
 
@@ -129,12 +129,12 @@ pixelate <- function(dot_matrix,
         posterior predictive distribution, uncertainty due to covariance between
         predictions is not accounted for. Regards pixelation, this omission will be
         consequential if and only if it changes the quantile interval to which the
-        average uncertainty of given large pixel belongs. Quantile interval 
+        average uncertainty of a given large pixel belongs. Quantile interval
         allocation is relatively robust, since it depends on the average uncertainty
         rank and can accommodate some variation around ranks within quantile
         intervals. Allocation will change if covariance is both non-negligable in
         relation to other sources of uncertainty and spatially non-uniform.\n")
-  
+
   # Set dot_matrix to data.frame if not already
   if (class(dot_matrix) != "data.frame") {
     dot_matrix <- as.data.frame(dot_matrix)
@@ -174,7 +174,7 @@ pixelate <- function(dot_matrix,
   dot_req <- dpp_min[bigk,] * num_pix_xy_bigk
 
   if (any(dpp_2 < 2) | any(dot_matrix_dim < dot_req)) {
-    stop(sprintf("
+    stop(sprintf("\n
   Together, arguments num_pix_xy_bigk, bigk, scale and scale_factor are
   incompatible with the dot matrix dimensions. At least %s
   spatial predictions are required in the x and y direction for the arguments
