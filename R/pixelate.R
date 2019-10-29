@@ -126,7 +126,7 @@ pixelate <- function(dot_matrix,
         Please be aware, pixelate works by averaging uncertainty across predictions
         within large pixels. Averaging uncertainty is only valid when predictions are
         generated jointly. When they are not, e.g. by simulating from a 'per-pixel'
-        posterior predictive distribution, uncertainty due to covariance between
+        posterior predictive distribution, uncertainty due to spatial covariance between
         predictions is not accounted for. Regards pixelation, this omission will be
         consequential if and only if it changes the quantile interval to which the
         average uncertainty of a given large pixel belongs. Quantile interval
@@ -180,7 +180,7 @@ pixelate <- function(dot_matrix,
   spatial predictions are required in the x and y direction for the arguments
   as currently specified. The dot matrix has %s in the x and y direction.
   Consider reducing num_pix_xy_bigk, bigk, scale_factor and/or using a linear
-  scale.", paste0(signif(dot_req), collapse = ' and '),
+  scale.\n", paste0(signif(dot_req), collapse = ' and '),
                  paste0(dot_matrix_dim, collapse = ' and ')))
   }
 
