@@ -1,23 +1,24 @@
 Package: pixelate
-Title: Pixelate and plot as per average uncertainty 
+Title: Pixelate spatial predictions as per their average uncertainty 
 Version: 0.0.0.9000
-Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: Pixelate spatially continuous predictions as per their averaged uncertainties. 
-             In brief, the function pixelate groups point estimates into a specified
-             number of large pixels; computes the average uncertainty within each large
-             pixel; then, for each large pixel, depending on its average uncertainty,
-             either averages the point estimates across it or across smaller pixels nested
-             within it. The resulting plot of pixelated spatial predictions is deliberately and
-             selectively pixelated, similar to a photo that is pixelated to disguise a
-             person’s identity. Areas of high average uncertainty in the pixelated plot
-             are unresolved, while areas with low average uncertainty are resolved,
-             similar to information poor versus rich regions of a satellite map.
-License: What license it uses
+Authors@R: c(
+    person(given = "Aimee", family = "Taylor", role = c("aut", "cre"), email = "ataylor@hsph.harvard.edu"), 
+    person(given = "James", family = "Watson",role = "art"),
+    person(given = "Caroline", family = "Buckee", role = "aut"))
+Description: Pixelate spatially continuous predictions as per their average uncertainty.
+    The package pixelate centres around a single function also called pixelate.
+    The function pixelate groups predictions into a specified number of large
+    pixels; computes the average uncertainty within each large pixel; then, for
+    each large pixel, depending on its average uncertainty, either averages the
+    predictions across it or across smaller pixels nested within it. The averaged
+    predictions can then be plotted. The resulting plot of averaged predictions
+    is selectively pixelated, similar to a photo that is deliberately pixelated
+    to disguise a person’s identity. Areas of high average uncertainty in the
+    pixelated plot are unresolved, while areas with high average certainty are
+    resolved, similar to information poor versus rich regions of a satellite map.
+License: MIT + file LICENSE
+URL: https://github.com/artaylor85/pixelate
+BugReports: https://github.com/artaylor85/pixelate/issues
 Encoding: UTF-8
 LazyData: true
 Imports:
