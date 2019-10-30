@@ -21,7 +21,7 @@ CentralAfrica_Pf_incidence
 }
 \description{
 \emph{P. falciparum} predicted all-age incidence (clinical cases per 1,000 population per annum)
-in 2017 for central Africa at 2.5 arcminute (approximately 5km) resolution.
+in 2017 for central Africa at 2.5 arcminute (approximately 5km) resolution [1].
 }
 \details{
 The median and credible interval were computed using samples from a posterior
