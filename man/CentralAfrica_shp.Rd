@@ -3,7 +3,7 @@
 \docType{data}
 \name{CentralAfrica_shp}
 \alias{CentralAfrica_shp}
-\title{Shape files for Central Africa}
+\title{Shape files for central Africa}
 \format{An object of class \code{SpatialPolygonsDataFrame} with 20 rows and 16 columns.}
 \source{
 Obtained using malariaAtlas::getShp; see \url{https://github.com/artaylor85/pixelate/blob/master/data-raw/get_shape_files.R}.
@@ -12,7 +12,7 @@ Obtained using malariaAtlas::getShp; see \url{https://github.com/artaylor85/pixe
 CentralAfrica_shp
 }
 \description{
-An object of class SpatialPolygonsDataFrame from the R package \strong{sp} v1.3-1 containing shape file data for Central Africa.
+An object of class SpatialPolygonsDataFrame from the R package \strong{sp} v1.3-1 containing shape file data for central Africa.
 }
 \seealso{
 \url{https://www.rdocumentation.org/packages/sp/versions/1.3-1/topics/SpatialPolygonsDataFrame-class}

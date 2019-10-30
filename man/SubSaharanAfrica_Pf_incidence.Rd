@@ -3,14 +3,13 @@
 \docType{data}
 \name{SubSaharanAfrica_Pf_incidence}
 \alias{SubSaharanAfrica_Pf_incidence}
-\title{\emph{Plasmodium falciparum} predicted incidence rate}
-\format{An data frame with 1794240 obs. (predictions) of four variables:
+\title{\emph{Plasmodium falciparum} predicted incidence}
+\format{A data frame with 1794240 observations and four variables:
 \describe{
   \item{x}{Longitude in decimal degrees}
   \item{y}{Latitude in decimal degrees}
-  \item{z}{The median of a ‘per-pixel’ posterior predictive simulation of \emph{P. falciparum} incidence rate in 2017}
-  \item{u}{The width of the 95\% credible interval of a ‘per-pixel’ posterior predictive simulation of \emph{P. falciparum}
-  incidence rate in 2017.}
+  \item{z}{Median predicted incidence at location x y}
+  \item{u}{Width of the 95\% predicted incidence credible interval at location x y}
 }}
 \source{
 These data are available at the Malaria Atlas Project (MAP) website \url{https://map.ox.ac.uk/}.
@@ -21,16 +20,27 @@ These data are available at the Malaria Atlas Project (MAP) website \url{https:/
 SubSaharanAfrica_Pf_incidence
 }
 \description{
-\emph{P. falciparum} predicted all-age incidence rate (clinical cases per 1,000 population per annum)
-in 2017 for sub-Saharan Africa at 2.5 arcminute (approximately 5km) resolution.
+\emph{P. falciparum} predicted all-age incidence (clinical cases per 1,000 population per annum)
+in 2017 for sub-Saharan Africa at 2.5 arcminute (approximately 5km) resolution [1].
+}
+\details{
+The median and credible interval were computed using samples from a posterior
+predictive simulation that approximated the joint posterior predictive
+distribution thereby accounting for spatial covariance [1,2].
 }
 \examples{
 str(SubSaharanAfrica_Pf_incidence)
 head(SubSaharanAfrica_Pf_incidence)
 }
 \references{
-Weiss DJ, Lucas TCD, Nguyen M, et al.
-   Mapping the global prevalence, incidence, and mortality of Plasmodium falciparum, 2000--17:
-   a spatial and temporal modelling study. Lancet 2019; published online June 19.
+\describe{
+  \item{[1]}{Weiss DJ, Lucas TCD, Nguyen M, et al. Mapping the global
+  prevalence, incidence, and mortality of Plasmodium falciparum, 2000--17: a
+  spatial and temporal modelling study. Lancet 2019.}
+  \item{[2]}{Gething PW, Patil AP, and Hay SI. Quantifying aggregated
+  uncertainty in Plasmodium falciparum malaria prevalence and populations at
+  risk via efficient space-time geostatistical joint simulation. PLoS
+  computational biology 2010.}
+}
 }
 \keyword{datasets}
