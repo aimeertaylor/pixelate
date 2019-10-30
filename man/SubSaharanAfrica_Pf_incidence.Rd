@@ -40,7 +40,7 @@ head(SubSaharanAfrica_Pf_incidence)
   \item{[2]}{Gething PW, Patil AP, and Hay SI. Quantifying aggregated
   uncertainty in Plasmodium falciparum malaria prevalence and populations at
   risk via efficient space-time geostatistical joint simulation. PLoS
-  computational biology 2010.}
+  Computational Biology 2010.}
 }
 }
 \keyword{datasets}

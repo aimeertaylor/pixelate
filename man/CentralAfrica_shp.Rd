@@ -12,7 +12,12 @@ Obtained using malariaAtlas::getShp; see \url{https://github.com/artaylor85/pixe
 CentralAfrica_shp
 }
 \description{
-An object of class SpatialPolygonsDataFrame from the R package \strong{sp} v1.3-1 containing shape file data for central Africa.
+An object of class SpatialPolygonsDataFrame from the R package \strong{sp} v1.3-1 (see reference) containing shape file data for central Africa.
+}
+\references{
+Pebesma, E., 2018. Simple Features for R: Standardized Support
+  for Spatial Vector Data. The R Journal 10 (1), 439-446,
+  https://doi.org/10.32614/RJ-2018-009
 }
 \seealso{
 \url{https://www.rdocumentation.org/packages/sp/versions/1.3-1/topics/SpatialPolygonsDataFrame-class}

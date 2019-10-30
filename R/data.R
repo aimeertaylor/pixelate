@@ -1,4 +1,4 @@
-# Documenting datasets
+# Documenting data sets
 # R packages by Hadley Wickham (http://r-pkgs.had.co.nz/data.html)
 # use devtools::load_all() to load during package development
 
@@ -30,7 +30,7 @@
 #'   \item{[2]}{Gething PW, Patil AP, and Hay SI. Quantifying aggregated
 #'   uncertainty in Plasmodium falciparum malaria prevalence and populations at
 #'   risk via efficient space-time geostatistical joint simulation. PLoS
-#'   computational biology 2010.}
+#'   Computational Biology 2010.}
 #'}
 #' @examples
 #' str(SubSaharanAfrica_Pf_incidence)
@@ -66,7 +66,7 @@
 #'   \item{[2]}{Gething PW, Patil AP, and Hay SI. Quantifying aggregated
 #'   uncertainty in Plasmodium falciparum malaria prevalence and populations at
 #'   risk via efficient space-time geostatistical joint simulation. PLoS
-#'   computational biology 2010.}
+#'   Computational Biology 2010.}
 #'}
 #' @examples
 #' str(CentralAfrica_Pf_incidence)
@@ -76,20 +76,26 @@
 
 #' Shape files for sub-Saharan Africa
 #'
-#' An object of class SpatialPolygonsDataFrame from the R package \strong{sp} v1.3-1 containing shape file data for sub-Saharan Africa.
+#' An object of class SpatialPolygonsDataFrame from the R package \strong{sp} v1.3-1 (see reference) containing shape file data for sub-Saharan Africa.
 #'
 #' @format
 #' @source Obtained using malariaAtlas::getShp; see \url{https://github.com/artaylor85/pixelate/blob/master/data-raw/get_shape_files.R}.
 #' @seealso \url{https://www.rdocumentation.org/packages/sp/versions/1.3-1/topics/SpatialPolygonsDataFrame-class}
+#' @references Pebesma, E., 2018. Simple Features for R: Standardized Support
+#'   for Spatial Vector Data. The R Journal 10 (1), 439-446,
+#'   https://doi.org/10.32614/RJ-2018-009
 "SubSaharanAfrica_shp"
 
 
 #' Shape files for central Africa
 #'
-#' An object of class SpatialPolygonsDataFrame from the R package \strong{sp} v1.3-1 containing shape file data for central Africa.
+#' An object of class SpatialPolygonsDataFrame from the R package \strong{sp} v1.3-1 (see reference) containing shape file data for central Africa.
 #'
 #' @format
 #' @source Obtained using malariaAtlas::getShp; see \url{https://github.com/artaylor85/pixelate/blob/master/data-raw/get_shape_files.R}.
 #' @seealso \url{https://www.rdocumentation.org/packages/sp/versions/1.3-1/topics/SpatialPolygonsDataFrame-class}
+#' @references Pebesma, E., 2018. Simple Features for R: Standardized Support
+#'   for Spatial Vector Data. The R Journal 10 (1), 439-446,
+#'   https://doi.org/10.32614/RJ-2018-009
 "CentralAfrica_shp"
 
