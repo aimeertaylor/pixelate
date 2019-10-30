@@ -58,7 +58,7 @@ To use `pixelate`, simply input some spatial predictions and plot the output as 
 px <- pixelate(SubSaharanAfrica_Pf_incidence) 
 
 # Plot
-ggplot(px$pix_matrix) + geom_raster(mapping = aes(x = x, y = y, fill = pix_z)) 
+ggplot(px$pix_df) + geom_raster(mapping = aes(x = x, y = y, fill = pix_z)) 
 ```
 
 # Detailed example
@@ -137,7 +137,7 @@ knitr::kable(CentralAfrica_Pf_incidence[1:example_count,], row.names = FALSE,
              caption = sprintf("A selection of %s spatial predictions and associated variables.", example_count)) 
 ```
 
-In our example z is the median and u is the width of the 0.95\% credible interval. 
+In our example z is the median predicted incidence and u is the width of the 0.95\% predicted incidence credible interval. 
 
 (As an aside, instead of taking the median and credible interval width as z and u respectively, we could have taken other measures of location and uncertainty, e.g. the mean and standard deviation as in @van2019.)
 
@@ -194,33 +194,33 @@ Uncertainty in predicted *P. falciparum* incidence (figure above) is low in regi
 
 ## Pixelate spatial predictions using `pixelate`
 
-Spatial predictions are input into `pixelate` via an argument called dot_matrix. A dot refers to a set containing a single prediction throughout the code and package documentation, whereas pixels refer to squares or rectangles comprised of one or more predictions and thus dots. Note that the warning regards averaging uncertainty is silenced in the following examples.  
+Spatial predictions are input into `pixelate` via an argument called obs_df. An observation (obs) refers to a set containing a single prediction throughout the code and package documentation, whereas pixels refer to squares or rectangles comprised of one or more observations and thus predictions. Note that the warning regards averaging uncertainty is silenced in the following examples.  
 
 ```{r, warning = FALSE}
-px <- pixelate(dot_matrix = SubSaharanAfrica_Pf_incidence)
+px <- pixelate(obs_df = SubSaharanAfrica_Pf_incidence)
 ```
 
-The above call to pixelate implicitly relies on default values for a set of pixelation arguments; see `?pixelate` to see what they are. The default values will fail if there are fewer than 480 by 480 predictions in the dot_matrix. To pixelate a dot_matrix with fewer predictions, reduce the number of large pixels (argument num_pix_xy_bigk) and/or the number of different pixel sizes (argument bigk): 
+The above call to pixelate implicitly relies on default values for a set of pixelation arguments; see `?pixelate` to see what they are. The default values will fail if there are fewer than 480 by 480 predictions in the obs_df. To pixelate a obs_df with fewer predictions, reduce the number of large pixels (argument num_pix_xy_bigk) and/or the number of different pixel sizes (argument bigk): 
 
 ```{r, warning = FALSE}
-px_CA <- pixelate(dot_matrix = CentralAfrica_Pf_incidence,
+px_CA <- pixelate(obs_df = CentralAfrica_Pf_incidence,
                   num_pix_xy_bigk = 12) # Change from default, which is 15
 ```
 
-If the dot_matrix has more than 480 by 480 predictions, you can increase the number of large pixels and/or the number of different pixel sizes:
+If the obs_df has more than 480 by 480 predictions, you can increase the number of large pixels and/or the number of different pixel sizes:
 
 
 ```{r, warning = FALSE}
-px_SSA <- pixelate(dot_matrix = SubSaharanAfrica_Pf_incidence,
+px_SSA <- pixelate(obs_df = SubSaharanAfrica_Pf_incidence,
                    num_pix_xy_bigk = 20) # Change from default, which is 15
 ```
 
-It is also possible to explore pixels that scale in size (dots per pixel) more rapidly by increasing the scale_factor argument and changing the scale argument from linear to exponential. However, because the dots per pixel can scale extremely rapidly when default pixelation arguments are changed, the prediction count required for seemingly modest argument combinations may exceed those available and thus generate an error, e.g. 
+It is also possible to explore pixels that scale in size (observations per pixel) more rapidly by increasing the scale_factor argument and changing the scale argument from linear to exponential. However, because the observations per pixel can scale extremely rapidly when default pixelation arguments are changed, the prediction count required for seemingly modest argument combinations may exceed those available and thus generate an error, e.g. 
 
 <!-- Note that purl = FALSE is essential in the following code block since it ensures this code block, which throws an error, is excluded from the vignette code document, allowing R to source and build the vignette without errors.  -->
 
 ```{r, error = TRUE, purl = FALSE, warning = FALSE}
-px <- pixelate(dot_matrix = SubSaharanAfrica_Pf_incidence,
+px <- pixelate(obs_df = SubSaharanAfrica_Pf_incidence,
                scale = 'exponential', # Change from default, which is 'linear'
                scale_factor = 2) # Change from default, which is 1
 ```
@@ -231,21 +231,21 @@ px <- pixelate(dot_matrix = SubSaharanAfrica_Pf_incidence,
 To better appreciate the different pixel sizes, we first generate a pixel size legend layer as follows:
 
 ```{r pixel legend}
-gap_y <- 20 # Number of dots between example pixels and left edge of the plot
-gap_x <- 350 # Number of dots from the bottom edge of the plot 
-pix_legend <- px_SSA$pix_matrix # Copy coordinates
+gap_y <- 20 # Number of observations between example pixels and left edge of the plot
+gap_x <- 350 # Number of observations from the bottom edge of the plot 
+pix_legend <- px_SSA$pix_df # Copy coordinates
 pix_legend$z <- NA # Set z to NA 
-bigk <- nrow(px_SSA$dpp) # Extract the number of pixel sizes 
+bigk <- nrow(px_SSA$opp) # Extract the number of pixel sizes 
 
-csy <- c(0,cumsum(px_SSA$dpp$y)) # Cumulatively add pixel sizes (dots per pixel, dpp)
+csy <- c(0,cumsum(px_SSA$opp$y)) # Cumulatively add pixel sizes (observations per pixel, opp)
 xs <- sort(unique(pix_legend$x)) # Extract unique longitude (degrees)
 ys <- sort(unique(pix_legend$y)) # Extract unique latitude (degrees)
 
 for(k in 1:bigk){ # For each of the pixel sizes
   ind_y <- gap_y*k + ((csy[k] + 1):csy[k+1]) # Indices of latitude of example pixels
-  ind_x <- (gap_x + 1):(gap_x + px_SSA$dpp$x[k]) # Indices of longitude of example pixels
+  ind_x <- (gap_x + 1):(gap_x + px_SSA$opp$x[k]) # Indices of longitude of example pixels
   
-  # Indices in the dot matrix
+  # Indices in the obseravation data frame 
   inds <- which(pix_legend$x %in% xs[ind_x] & pix_legend$y %in% ys[ind_y]) 
   pix_legend$z[inds] <- 0 # Set location measure of example pixel predictions to zero
 }
@@ -256,9 +256,9 @@ pix_legend <- pix_legend[!is.na(pix_legend$z), ]
 
 We then add the pixels size legend layer to a plot of the pixelated spatial predictions as follows. 
 
-```{r, fig.cap = sprintf("Pixelated *P. falciparum* predicted incidence for 2017 in sub-Saharan Africa. The lower bound on the number of large pixels was set to %s in both longitude and latitude, resulting in %s and %s large pixels in longitude and latitude, respectively. All other arguments had default values.", px_SSA$arguments$num_pix_xy_bigk, ceiling(px_SSA$dot_matrix_dim['x']/px_SSA$dpp$x[bigk]), ceiling(px_SSA$dot_matrix_dim['y']/px_SSA$dpp$y[bigk]))}
+```{r, fig.cap = sprintf("Pixelated *P. falciparum* predicted incidence for 2017 in sub-Saharan Africa. The lower bound on the number of large pixels was set to %s in both longitude and latitude, resulting in %s and %s large pixels in longitude and latitude, respectively. All other arguments had default values.", px_SSA$arguments$num_pix_xy_bigk, ceiling(px_SSA$obs_df_dim['x']/px_SSA$opp$x[bigk]), ceiling(px_SSA$obs_df_dim['y']/px_SSA$opp$y[bigk]))}
 # Create a temporary data frame and set z to pixelated z, pix_z
-temp_sp <- px_SSA$pix_matrix
+temp_sp <- px_SSA$pix_df
 temp_sp$z <- temp_sp$pix_z
 
 # Generate a pixelated plot
@@ -280,24 +280,24 @@ pix_SSA
 
 Following the example above, we can plot the bespoke pixelation of the central Africa region (i.e. pixelation of the predictions within the boxed region of the unpixelated plot as per the uncertainties within the boxed region of the uncertainty plot): 
 
-```{r, fig.cap = sprintf("Pixelated *P. falciparum* predicted incidence for 2017 in the central Africa region. The lower bound on the number of large pixels was set to %s in both longitude and latitude, resulting in %s and %s large pixels in longitude and latitude, respectively. All other arguments had default values.", px_CA$arguments$num_pix_xy_bigk, ceiling(px_CA$dot_matrix_dim['x']/px_CA$dpp$x[bigk]), ceiling(px_CA$dot_matrix_dim['y']/px_CA$dpp$y[bigk]))}
+```{r, fig.cap = sprintf("Pixelated *P. falciparum* predicted incidence for 2017 in the central Africa region. The lower bound on the number of large pixels was set to %s in both longitude and latitude, resulting in %s and %s large pixels in longitude and latitude, respectively. All other arguments had default values.", px_CA$arguments$num_pix_xy_bigk, ceiling(px_CA$obs_df_dim['x']/px_CA$opp$x[bigk]), ceiling(px_CA$obs_df_dim['y']/px_CA$opp$y[bigk]))}
 
 # Pixel size legend
-gap_y <- 5 # Number of dots between example pixels and left edge of the plot
-gap_x <- 5 # Number of dots from the bottom edge of the plot
-pix_legend <- px_CA$pix_matrix # Copy coordinates
+gap_y <- 5 # Number of observations between example pixels and left edge of the plot
+gap_x <- 5 # Number of observations from the bottom edge of the plot
+pix_legend <- px_CA$pix_df # Copy coordinates
 pix_legend$z <- NA # Set z to NA
-bigk <- nrow(px_CA$dpp) # Extract the number of pixel sizes
+bigk <- nrow(px_CA$opp) # Extract the number of pixel sizes
 
-csy <- c(0,cumsum(px_CA$dpp$y)) # Cumulatively add pixel sizes (dots per pixel, dpp)
+csy <- c(0,cumsum(px_CA$opp$y)) # Cumulatively add pixel sizes (observations per pixel, opp)
 xs <- sort(unique(pix_legend$x)) # Extract unique longitude (degrees)
 ys <- sort(unique(pix_legend$y)) # Extract unique latitude (degrees)
 
 for(k in 1:bigk){ # For each of the pixel sizes
   ind_y <- gap_y*k + ((csy[k] + 1):csy[k+1]) # Indices of latitude of example pixels
-  ind_x <- (gap_x + 1):(gap_x + px_CA$dpp$x[k]) # Indices of longitude of example pixels
+  ind_x <- (gap_x + 1):(gap_x + px_CA$opp$x[k]) # Indices of longitude of example pixels
   
-  # Indices in the dot matrix
+  # Indices in the observation data frame
   inds <- which(pix_legend$x %in% xs[ind_x] & pix_legend$y %in% ys[ind_y]) 
   pix_legend$z[inds] <- 0 # Set centrality measure of examples pixels to zero
 }
@@ -306,7 +306,7 @@ for(k in 1:bigk){ # For each of the pixel sizes
 pix_legend <- pix_legend[!is.na(pix_legend$z), ]
 
 # Create a temporary data frame and set z to pixelated pix_z
-temp_sp <- px_CA$pix_matrix
+temp_sp <- px_CA$pix_df
 temp_sp$z <- temp_sp$pix_z
 
 # Generate a plot of pixelated
@@ -340,7 +340,7 @@ As mentioned above `pixelate` works by grouping predictions into a specified num
 
 ```{r}
 # Extract bigk
-bigk <- nrow(px_SSA$dpp)
+bigk <- nrow(px_SSA$opp)
 
 # Define quantile intervals
 qs <- format(as.numeric(gsub('%', '',names(px_SSA$uncertainty_breaks))), digits = 4)
@@ -358,14 +358,14 @@ avuncertainty_intervals <- sapply(2:(bigk+1), function(k){
 })
 
 # Group together
-pixel_table <- cbind(quantile_intervals, avuncertainty_intervals, px_SSA$dpp) 
+pixel_table <- cbind(quantile_intervals, avuncertainty_intervals, px_SSA$opp) 
 
 # Generate table
 knitr::kable(pixel_table, row.names = FALSE, 
              col.names = c("Quantile interval", 
                            "Average uncertainty", 
-                           "Nested pixel width (dots)", 
-                           "Nested pixel height (dots)"), 
+                           "Nested pixel width (obs)", 
+                           "Nested pixel height (obs)"), 
              align = rep("c",ncol(pixel_table)))
 ```
 
@@ -373,8 +373,8 @@ We can plot the large pixel allocations to see how uncertainty varies across lar
 
 ```{r SubSaharanAfrica_bins, fig.cap = "Average uncertainty quantile intervals of *P. falciparum* predicted incidence for 2017 for sub-Saharan Africa. All arguments had values as specified in the caption of the pixelated plot of sub-Saharan plot."}
 # Set z equal to the large pixel average uncertainty quantile interval index
-temp_sp <- px_SSA$pix_matrix
-temp_sp$z <- as.factor(px_SSA$pix_matrix$bins)
+temp_sp <- px_SSA$pix_df
+temp_sp$z <- as.factor(px_SSA$pix_df$bins)
 
 # Generate and print the plot
 plot_sp_pred(sp_pred = temp_sp, shp_file = SubSaharanAfrica_shp) +
@@ -382,7 +382,7 @@ plot_sp_pred(sp_pred = temp_sp, shp_file = SubSaharanAfrica_shp) +
                       na.value = 'lightblue2', labels = c(quantile_intervals, 'NA')) 
 ```
 
-From the plot and table of quantile intervals, we can see that coral regions have high certainty and thus predictions in these regions of the pixelated plot of sub-Saharan Africa are not averaged (the nested pixels are one dot by one dot). Meanwhile predictions in the pixelated plot of sub-Saharan Africa that fall with green regions of the quantile plot are averaged over moderately sized nested pixels (six by six dots). Pink regions (that cover large parts of the Democratic Republic of the Congo) have high uncertainty; predictions in the pixelated plot of sub-Saharan Africa that fall within pink regions of the quantile plot are averaged across the entire large pixel, which is 48 by 48 dots. 
+From the plot and table of quantile intervals, we can see that coral regions have high certainty and thus predictions in these regions of the pixelated plot of sub-Saharan Africa are not averaged (the nested pixels are one by one observation). Meanwhile predictions in the pixelated plot of sub-Saharan Africa that fall with green regions of the quantile plot are averaged over moderately sized nested pixels (six by six observations). Pink regions (that cover large parts of the Democratic Republic of the Congo) have high uncertainty; predictions in the pixelated plot of sub-Saharan Africa that fall within pink regions of the quantile plot are averaged across the entire large pixel, which is 48 by 48 observations. 
 
 
 # References

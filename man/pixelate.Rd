@@ -4,56 +4,58 @@
 \alias{pixelate}
 \title{Pixelate as per average uncertainty}
 \usage{
-pixelate(dot_matrix, num_pix_xy_bigk = 15, bigk = 6L,
-  scale = "linear", scale_factor = 1L)
+pixelate(obs_df, num_pix_xy_bigk = 15, bigk = 6L, scale = "linear",
+  scale_factor = 1L)
 }
 \arguments{
-\item{dot_matrix}{Data frame. Contains a row per dot with at least
+\item{obs_df}{Data frame. Contains a row per observation with
 four variables: longitude, x; latitude, y; prediction, z; and uncertainty measure u.}
 
 \item{num_pix_xy_bigk}{Integer or integer vector length two. Specifies a lower bound on the number of large
 pixels in the x and y direction.}
 
 \item{bigk}{Integer. Specifies the number of average uncertainty quantile intervals and
-thus different pixel sizes to pixelate into.}
+thus different pixel sizes.}
 
-\item{scale}{String equal to either "linear" or "exponential". Specifies
-whether to scale pixel sizes (in units of dots) from class k = 2,...,bigk
+\item{scale}{Character equal to either "linear" or "exponential". Specifies
+whether to scale pixel sizes (in units of observations) from class k = 2,...,bigk
 linearly or exponentially.}
 
 \item{scale_factor}{Integer. Specifies a factor by which to either multiply
-or exponentiate pixel sizes (in units of dots), depending on the scale.}
+or exponentiate pixel sizes (in units of observations) depending on the scale.}
 }
 \value{
-List.
+pixelate returns a list.
 \describe{
-  \item{pix_matrix}{The original dot matrix with additional variables:
+  \item{pix_df}{The original observation data frame with additional variables:
   average uncertainty, u_bigk; the average uncertainty quantile interval
   allocation, bins; and averaged predictions, pix_z.}
-  \item{pix_matrix_expanded}{A spatially expanded dot matrix with additional
+  \item{pix_df_expanded}{A spatially expanded observation data frame with additional
   variables: the average uncertainty, u_bigk; average uncertainty quantile
-  interval allocation, bins; and averaged predictions, pix_z.}
+  interval allocation, bins; and averaged predictions, pix_z. All variables
+  besides x and y are NA for in spatially expanded regions.}
   \item{uncertainty_breaks}{The values of average uncertainty at the bigk+1
   quantiles of the empirical distribution of average uncertainties.}
-  \item{dpp}{The dots per pixel (dpp) for k = 1,...,bigk pixel sizes in the x
+  \item{opp}{The observations per pixel (opp) for k = 1,...,bigk pixel sizes in the x
   and y direction.}
-  \item{dot_matrix_dim}{The dimensions (in dots) of the
-  original dot matrix.}
-  \item{dot_mem}{A matrix of dot memberships, where each membership specifies
-  which quantile interval that the large pixel containing the specified dot
-  falls into.}
+  \item{obs_df_dim}{The dimensions (in observations) of the
+  original observation data frame.}
+  \item{obs_mem}{A data frame of observation memberships, where
+  each membership specifies the quantile interval that the large pixel
+  containing the specified observation falls into.}
   \item{arguments}{The arguments passed to pixelate when it was called.}
 }
 }
 \description{
-Pixelate spatially continuous predictions as per their average uncertainties.
+Pixelate spatially continuous predictions according to the uncertainty that
+surrounds them.
 }
 \details{
-This is a wrapper function which, given a dot matrix and several arguments,
-pixelates as follows. Let a single dot denote a set containing a prediction,
+This is a wrapper function which, given a data frame of observations and several arguments,
+pixelates as follows. Let a single observation denote a set containing a prediction,
 its coordinates, and its uncertainty measure represented by a single value,
 e.g. 95\% credible interval width. Let a pixel refer to a square or rectangle
-comprising one or more predictions and thus dots. By default, pixels are
+comprising one or more observations and thus predictions. By default, pixels are
 square. Uncertainties are averaged over a limited number of large pixels
 (pixels of the bigk-th size). We specify a lower bound on the number of large
 pixels. The function pixelate internally calculates the smallest number of
@@ -65,21 +67,21 @@ uncertainties are classified as high, medium (with bigk-2 subdivisions), or
 low, according to the quantile interval they fall into, where the number of
 quantile intervals is equal to a specified number of different pixel sizes (k
 = 1,...,bigk) and the quantiles are based on the empirical distribution of
-average uncertainties (calculated internally). For a given k, each pixel has
-the same number of dots per pixel (dpp) in the x and y direction. However, we
-do not specify dpps directly; they are calculated internally to best match
-the specified parameters. The arguments scale and scale_factor determine the
-rates at which dpps scale. If the average uncertainty is high (falls within
-the top quantile interval), predictions within the large pixel are averaged.
-If the average uncertainty is intermediate (falls with an intermediate
-quantile interval), predictions within the large pixel are averaged over
-smaller nested pixels. If the average uncertainty is low (falls within the
-bottom quantile interval), predictions are not averaged. Importantly, missing
-predictions and predictions that are zero with certainty are excluded from
-the entire pixelation process (i.e. computation and classification of average
-uncertainty, and computation of average prediction across large or nested
-pixel sizes). This behaviour is hard-coded within a function that pixelate
-calls internally.
+average uncertainties (calculated internally). For a given k = 1,...,bigk,
+the k-th pixel size is defined the number of observations per pixel (opp) in the x
+and y direction. We do not specify opps directly; they are calculated
+internally to best match the specified parameters. Arguments scale and
+scale_factor determine the rates at which opps scale. If the average
+uncertainty is high (falls within the top quantile interval), predictions
+within the large pixel are averaged. If the average uncertainty is
+intermediate (falls with an intermediate quantile interval), predictions are
+averaged across smaller pixels nested within the large pixel. If the average
+uncertainty is low (falls within the bottom quantile interval), predictions
+are not averaged. Importantly, missing predictions and predictions that are
+zero with certainty are excluded from the entire pixelation process (i.e.
+computation and classification of average uncertainty, and computation of
+average prediction across large or nested pixel sizes). This behaviour is
+hard-coded within a function that pixelate calls internally.
 }
 \examples{
 #=================================================
@@ -92,8 +94,8 @@ px_def <- pixelate(SubSaharanAfrica_Pf_incidence)
 str(px_def)
 
 # Inspect a sample of uncertain pixelated predictions
-uncertain_ind = which(px_def$pix_matrix$u > 0)
-head(px_def$pix_matrix[uncertain_ind, ])
+uncertain_ind = which(px_def$pix_df$u > 0)
+head(px_def$pix_df[uncertain_ind, ])
 
 # Pixelate using alternative parameters
 px_alt <- pixelate(SubSaharanAfrica_Pf_incidence,
@@ -139,7 +141,7 @@ plot_sp_pred <- function(sp_pred){
 }
 
 # Plot default and alternative
-plot_sp_pred(px_def$pix_matrix)
-plot_sp_pred(px_alt$pix_matrix)
+plot_sp_pred(px_def$pix_df)
+plot_sp_pred(px_alt$pix_df)
 
 }
