@@ -200,11 +200,11 @@ Spatial predictions are input into `pixelate` via an argument called obs_df. An 
 px <- pixelate(obs_df = SubSaharanAfrica_Pf_incidence)
 ```
 
-The above call to pixelate implicitly relies on default values for a set of pixelation arguments; see `?pixelate` to see what they are. The default values will fail if there are fewer than 480 by 480 predictions in the obs_df. To pixelate a obs_df with fewer predictions, reduce the number of large pixels (argument num_pix_xy_bigk) and/or the number of different pixel sizes (argument bigk): 
+The above call to pixelate implicitly relies on default values for a set of pixelation arguments; see `?pixelate` to see what they are. The default values will fail if there are fewer than 480 by 480 predictions in the obs_df. To pixelate a obs_df with fewer predictions, reduce the number of large pixels (argument num_bigk_pix) and/or the number of different pixel sizes (argument bigk): 
 
 ```{r, warning = FALSE}
 px_CA <- pixelate(obs_df = CentralAfrica_Pf_incidence,
-                  num_pix_xy_bigk = 12) # Change from default, which is 15
+                  num_bigk_pix = 12) # Change from default, which is 15
 ```
 
 If the obs_df has more than 480 by 480 predictions, you can increase the number of large pixels and/or the number of different pixel sizes:
@@ -212,16 +212,16 @@ If the obs_df has more than 480 by 480 predictions, you can increase the number 
 
 ```{r, warning = FALSE}
 px_SSA <- pixelate(obs_df = SubSaharanAfrica_Pf_incidence,
-                   num_pix_xy_bigk = 20) # Change from default, which is 15
+                   num_bigk_pix = 20) # Change from default, which is 15
 ```
 
-It is also possible to explore pixels that scale in size (observations per pixel) more rapidly by increasing the scale_factor argument and changing the scale argument from linear to exponential. However, because the observations per pixel can scale extremely rapidly when default pixelation arguments are changed, the prediction count required for seemingly modest argument combinations may exceed those available and thus generate an error, e.g. 
+It is also possible to explore pixels that scale in size (observations per pixel) more rapidly by increasing the scale_factor argument and changing the scale argument from imult to iexpn. However, because the observations per pixel can scale extremely rapidly when default pixelation arguments are changed, the prediction count required for seemingly modest argument combinations may exceed those available and thus generate an error, e.g. 
 
 <!-- Note that purl = FALSE is essential in the following code block since it ensures this code block, which throws an error, is excluded from the vignette code document, allowing R to source and build the vignette without errors.  -->
 
 ```{r, error = TRUE, purl = FALSE, warning = FALSE}
 px <- pixelate(obs_df = SubSaharanAfrica_Pf_incidence,
-               scale = 'exponential', # Change from default, which is 'linear'
+               scale = 'iexpn', # Change from default, which is 'imult'
                scale_factor = 2) # Change from default, which is 1
 ```
 
@@ -256,7 +256,7 @@ pix_legend <- pix_legend[!is.na(pix_legend$z), ]
 
 We then add the pixels size legend layer to a plot of the pixelated spatial predictions as follows. 
 
-```{r, fig.cap = sprintf("Pixelated *P. falciparum* predicted incidence for 2017 in sub-Saharan Africa. The lower bound on the number of large pixels was set to %s in both longitude and latitude, resulting in %s and %s large pixels in longitude and latitude, respectively. All other arguments had default values.", px_SSA$arguments$num_pix_xy_bigk, ceiling(px_SSA$obs_df_dim['x']/px_SSA$opp$x[bigk]), ceiling(px_SSA$obs_df_dim['y']/px_SSA$opp$y[bigk]))}
+```{r, fig.cap = sprintf("Pixelated *P. falciparum* predicted incidence for 2017 in sub-Saharan Africa. The lower bound on the number of large pixels was set to %s in both longitude and latitude, resulting in %s and %s large pixels in longitude and latitude, respectively. All other arguments had default values.", px_SSA$arguments$num_bigk_pix, ceiling(px_SSA$obs_df_dim['x']/px_SSA$opp$x[bigk]), ceiling(px_SSA$obs_df_dim['y']/px_SSA$opp$y[bigk]))}
 # Create a temporary data frame and set z to pixelated z, pix_z
 temp_sp <- px_SSA$pix_df
 temp_sp$z <- temp_sp$pix_z
@@ -280,7 +280,7 @@ pix_SSA
 
 Following the example above, we can plot the bespoke pixelation of the central Africa region (i.e. pixelation of the predictions within the boxed region of the unpixelated plot as per the uncertainties within the boxed region of the uncertainty plot): 
 
-```{r, fig.cap = sprintf("Pixelated *P. falciparum* predicted incidence for 2017 in the central Africa region. The lower bound on the number of large pixels was set to %s in both longitude and latitude, resulting in %s and %s large pixels in longitude and latitude, respectively. All other arguments had default values.", px_CA$arguments$num_pix_xy_bigk, ceiling(px_CA$obs_df_dim['x']/px_CA$opp$x[bigk]), ceiling(px_CA$obs_df_dim['y']/px_CA$opp$y[bigk]))}
+```{r, fig.cap = sprintf("Pixelated *P. falciparum* predicted incidence for 2017 in the central Africa region. The lower bound on the number of large pixels was set to %s in both longitude and latitude, resulting in %s and %s large pixels in longitude and latitude, respectively. All other arguments had default values.", px_CA$arguments$num_bigk_pix, ceiling(px_CA$obs_df_dim['x']/px_CA$opp$x[bigk]), ceiling(px_CA$obs_df_dim['y']/px_CA$opp$y[bigk]))}
 
 # Pixel size legend
 gap_y <- 5 # Number of observations between example pixels and left edge of the plot

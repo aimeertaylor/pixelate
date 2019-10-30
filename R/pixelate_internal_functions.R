@@ -4,7 +4,7 @@
 #
 # This function essentially back calculates the observations per pixel for pixel size k =
 # 2 given a target number of pixels of the bigk-th size (largest, least resolved
-# pixel size) in the x and y direction, which is specified by num_pix_xy_bigk.
+# pixel size) in the x and y direction, which is specified by num_bigk_pix.
 # Note that we use bigk rather than K to avoid problems with case insensitivity.
 #
 # Rationale: for a given data frame of observations, it is easy to envision a target number of
@@ -12,21 +12,21 @@
 # calculate the opp for pixel size k = 2, which is the smallest, most resolved,
 # multi-observation pixel size.
 #=================================================================================
-compute_opp_2 <- function(num_pix_xy_bigk, # bigk pixels in x and y direction
+compute_opp_2 <- function(num_bigk_pix, # bigk pixels in x and y direction
                           bigk, scale, scale_factor, # pixelate arguments
                           obs_df_dim) { # observation data frame dimensions
 
   # Compute the opp for k = bigk in the x and y direction
   # Use floor to allow for some partial pixels at edges
-  opp_bigk <- ceiling(obs_df_dim / num_pix_xy_bigk)
+  opp_bigk <- ceiling(obs_df_dim / num_bigk_pix)
 
   # Compute the opp for k = 2 in the x and y direction
-  if (scale == "linear") {
+  if (scale == "imult") {
     opp_2 <- sapply(floor(opp_bigk / ( (2 * scale_factor) ^ (bigk - 2))), as.integer)
-  } else if (scale == "exponential") {
+  } else if (scale == "iexpn") {
     opp_2 <- sapply(floor(opp_bigk ^ (1 / ( (2 * scale_factor) ^ (bigk - 2)))), as.integer)
   } else {
-    stop("Scale must either be 'linear' or 'exponential'")
+    stop("Scale must either be 'imult' or 'iexpn'")
   }
 
   return(sapply(opp_2, as.integer))
@@ -49,7 +49,7 @@ compute_opp_2 <- function(num_pix_xy_bigk, # bigk pixels in x and y direction
 #=================================================================================
 compute_opp <- function(opp_2, # Observations per pixel for k = 2
                         bigk, # Number of different pixel sizes, e.g. 3L
-                        scale, # scale i.e. 'exponential' or 'linear'
+                        scale, # scale i.e. 'imult' or 'iexpn'
                         scale_factor) { # scale_factor e.g. 1L
 
   if (is.null(opp_2[2])) {opp_2[2] <- opp_2[1]} # Set opp_2 in y direction if not already
@@ -60,20 +60,20 @@ compute_opp <- function(opp_2, # Observations per pixel for k = 2
   opp[2, ] <- opp_2 # Set opp for k = 2 (smallest, most resolved, multi-observation pixel size)
 
   # Set subsequent multi-observation pixel sizes, k = 3,..,bigk
-  if (scale == "linear") {
+  if (scale == "imult") {
     if (bigk > 2) {
       for (i in 3:bigk) {
         opp[i, ] <- opp[i - 1, ] * 2 * scale_factor # inc. 2 s.t. always divisible by 2
       }
     }
-  } else if (scale == "exponential") {
+  } else if (scale == "iexpn") {
     if (bigk > 2) {
       for (i in 3:bigk) {
         opp[i, ] <- opp[i - 1, ] ^ ( 2 * scale_factor)  # inc. 2 s.t. always divisible by 2
       }
     }
   } else {
-    stop("scale should either be 'linear' or 'exponential'")
+    stop("scale should either be 'imult' or 'iexpn'")
   }
 
   # Check all rows are nested
