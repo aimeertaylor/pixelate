@@ -55,7 +55,7 @@ compute_opp <- function(opp_2, # Observations per pixel for k = 2
   if (is.null(opp_2[2])) {opp_2[2] <- opp_2[1]} # Set opp_2 in y direction if not already
 
   # Compute opp for k = 1,...,bigk
-  opp <- array(NA, dim = c(bigk, 2), dimnames = list(1:bigk, c("x", "y"))) # Create data frame
+  opp <- array(NA, dim = c(bigk, 2), dimnames = list(1:bigk, c("x", "y"))) # Create array
   opp[1, ] <- c(1, 1) # Always set opp for k = 1 to one
   opp[2, ] <- opp_2 # Set opp for k = 2 (smallest, most resolved, multi-observation pixel size)
 
@@ -157,7 +157,7 @@ expand_obs_df <- function(opp, obs_df) {
     return(obs_df)
   }
 
-  # Add extra colunms
+  # Add extra columns
   # (this step assumes the oberservation data frame has only variables x, y, z and u)
   extra$z <- NA
   extra$u <- NA
@@ -180,7 +180,7 @@ expand_obs_df <- function(opp, obs_df) {
 # For each pixel size k = 1,...,bigk allocate a pixel membership to each observation
 #
 # This function assumes coordinates in the observation data frame are sorted by y and then
-# by x, e.g. obs_df = cbind(x = c(1,2,3,1,2,3), y = c(1,1,1,2,2,2)). The
+# by x, e.g. obs_df[,("x","y")] = cbind(x = c(1,2,3,1,2,3), y = c(1,1,1,2,2,2)). The
 # function trims the allocated memberships to match the input obs_df_dim.
 # Trim is redundant if obs_df_dim is based on an expanded observation data frame.
 #
@@ -228,7 +228,7 @@ pixelate_by_u <- function(obs_df, obs_mem, opp) {
   # to prevent bias to the pixelation process
   # Aside, typically there are no z > 0 with u == 0; check by:
   if (any(obs_df$z > 0 & obs_df$u == 0, na.rm = T)) {
-    message("Note that there are some certain predictions with non-zero point estimates")
+    message("Note that there are some certain yet non-zero predictions")
   }
   obs_certain_zero <- which(obs_df$z == 0 & obs_df$u == 0)
   obs_df$z[obs_certain_zero] <- NA
@@ -270,7 +270,7 @@ pixelate_by_u <- function(obs_df, obs_mem, opp) {
     sorted_obs_mem_k <- sort.int(obs_mem[obs_inds_k, k], index.return = T)
     # Create a temporary data frame with pixel entries per column
     temp_df <- matrix(obs_df$z[obs_inds_k][sorted_obs_mem_k$ix], nrow = prod(opp[k, ]))
-    # temp_df enables calculation of pixelated point estimates using colMeans, which is fast
+    # temp_df enables calculation of averaged predictions using colMeans, which is fast
     pix_z_temp <- colMeans(temp_df, na.rm = T)
     # Expand us_bigk such that there is one per observation and allocate using indices
     obs_df$pix_z[obs_inds_k][sorted_obs_mem_k$ix] <- rep(pix_z_temp, each = prod(opp[k, ]))

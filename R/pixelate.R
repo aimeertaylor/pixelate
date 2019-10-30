@@ -53,8 +53,9 @@
 #'
 #' @param obs_df Data frame. Contains a row per observation with four variables:
 #'   longitude, x; latitude, y; prediction, z; and uncertainty measure u.
-#' @param num_bigk_pix Integer or integer vector length two. Specifies a
-#'   lower bound on the number of large pixels in the x and y direction.
+#' @param num_bigk_pix Integer or integer vector length two. Specifies a lower
+#'   bound on the number of large pixels (pixels of the bigk-th size) in the x
+#'   and y direction.
 #' @param bigk Integer. Specifies the number of average uncertainty quantile
 #'   intervals and thus different pixel sizes.
 #' @param scale Character equal to either "imult" or "iexpn". Specifies whether
@@ -76,7 +77,7 @@
 #'   quantiles of the empirical distribution of average uncertainties.}
 #'   \item{opp}{The observations per pixel (opp) for k = 1,...,bigk pixel sizes
 #'   in the x and y direction.}
-#'   \item{obs_df_dim}{The dimensions (in observations) of the original
+#'   \item{obs_df_dim}{The dimensions (in units of observations) of the original
 #'   observation data frame.}
 #'   \item{obs_mem}{A data frame of observation memberships, where each
 #'   membership specifies the quantile interval that the large pixel containing
@@ -147,9 +148,9 @@
 #' @export
 pixelate <- function(obs_df,
                      num_bigk_pix = 15,
-                     bigk = 6L,
+                     bigk = 6,
                      scale = "imult",
-                     scale_factor = 1L) {
+                     scale_factor = 1) {
 
   # Record arguments for reference
   arguments <- as.list(environment())

@@ -4,7 +4,7 @@ rm(list=ls())
 
 load(file = "data-raw/lat_long_intervals.RData")
 
-# Import point estimates and lower and upper credible interval bounds
+# Import predictions and lower and upper credible interval bounds
 pf_incid_med <- raster::raster('data-raw/Pf_Incidence/Raster Data/Pf_incidence_rate_median/incidence_rate_median_Global_admin0_2017.tif')
 pf_incid_LCI <- raster::raster('data-raw/Pf_Incidence/Raster Data/Pf_incidence_rate_LCI/pf_incidence_rate_LCI_Global_admin0_2017.tif')
 pf_incid_UCI <- raster::raster('data-raw/Pf_Incidence/Raster Data/Pf_incidence_rate_UCI/pf_incidence_rate_UCI_Global_admin0_2017.tif')
