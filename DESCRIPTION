@@ -3,7 +3,7 @@ Title: Pixelate spatial predictions as per their average uncertainty
 Version: 0.0.0.9000
 Authors@R: c(
     person(given = "Aimee", family = "Taylor", role = c("aut", "cre"), email = "ataylor@hsph.harvard.edu"), 
-    person(given = "James", family = "Watson",role = "art"),
+    person(given = "James", family = "Watson", role = "aut"),
     person(given = "Caroline", family = "Buckee", role = "aut"))
 Description: Pixelate spatially continuous predictions as per their average uncertainty.
     The package pixelate centres around a single function also called pixelate.
