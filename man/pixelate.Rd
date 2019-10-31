@@ -4,15 +4,16 @@
 \alias{pixelate}
 \title{Pixelate as per average uncertainty}
 \usage{
-pixelate(obs_df, num_bigk_pix = 15, bigk = 6L, scale = "imult",
-  scale_factor = 1L)
+pixelate(obs_df, num_bigk_pix = 15, bigk = 6, scale = "imult",
+  scale_factor = 1)
 }
 \arguments{
 \item{obs_df}{Data frame. Contains a row per observation with four variables:
 longitude, x; latitude, y; prediction, z; and uncertainty measure u.}
 
-\item{num_bigk_pix}{Integer or integer vector length two. Specifies a
-lower bound on the number of large pixels in the x and y direction.}
+\item{num_bigk_pix}{Integer or integer vector length two. Specifies a lower
+bound on the number of large pixels (pixels of the bigk-th size) in the x
+and y direction.}
 
 \item{bigk}{Integer. Specifies the number of average uncertainty quantile
 intervals and thus different pixel sizes.}
@@ -39,7 +40,7 @@ pixelate returns a list.
   quantiles of the empirical distribution of average uncertainties.}
   \item{opp}{The observations per pixel (opp) for k = 1,...,bigk pixel sizes
   in the x and y direction.}
-  \item{obs_df_dim}{The dimensions (in observations) of the original
+  \item{obs_df_dim}{The dimensions (in units of observations) of the original
   observation data frame.}
   \item{obs_mem}{A data frame of observation memberships, where each
   membership specifies the quantile interval that the large pixel containing

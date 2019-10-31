@@ -209,17 +209,18 @@ pixelate <- function(obs_df,
 
   if (any(opp_2 < 2) | any(obs_df_dim < obs_req)) {
     stop(sprintf("\n
-  Together, arguments num_bigk_pix, bigk, scale and scale_factor are
-  incompatible with the observation data frame dimensions. At least %s
-  spatial predictions are required in the x and y direction for the arguments
-  as currently specified. The observation data frame has %s in the x and y direction.
-  Consider reducing num_bigk_pix, bigk, scale_factor and/or using a imult
-  scale.\n", paste0(signif(obs_req), collapse = ' and '),
-                 paste0(obs_df_dim, collapse = ' and ')))
+    Together, arguments num_bigk_pix, bigk, scale and scale_factor are
+    incompatible with the observation data frame dimensions.
+    At least %s spatial predictions are required in
+    the x and y direction for the arguments as currently specified. The
+    observation data frame has %s in the x and y
+    direction. Consider reducing num_bigk_pix, bigk, scale_factor and/or using an
+    imult scale.\n", paste0(signif(obs_req), collapse = ' and '),
+                 paste0(signif(obs_df_dim), collapse = ' and ')))
   }
 
   # Calculate size in observations for pixel k = 1,...,bigk
-  opp <- compute_opp(min(opp_2), bigk, scale, scale_factor)
+  opp <- compute_opp(opp_2, bigk, scale, scale_factor)
 
   # Expand the observation data frame to enable vectorisation
   expanded_obs_df <- expand_obs_df(opp, obs_df)
