@@ -13,7 +13,11 @@ longitude, x; latitude, y; prediction, z; and uncertainty measure u.}
 
 \item{num_bigk_pix}{Integer or integer vector length two. Specifies a lower
 bound on the number of large pixels (pixels of the bigk-th size) in the x
-and y direction.}
+and y direction. If a single integer is specified, all pixels will be
+square and the actual number of pixels will be calculated relative to the
+lower bound in the smallest dimension. If an integer vector of length two
+is specified, pixels will likely be rectangular and calculated relative to
+the lower bounds in both directions x then y.}
 
 \item{bigk}{Integer. Specifies the number of average uncertainty quantile
 intervals and thus different pixel sizes.}
@@ -65,10 +69,13 @@ are square.
 Uncertainties are averaged over a limited number of large pixels (pixels of
 the bigk-th size). We specify a lower bound on the number of large pixels.
 The function pixelate internally calculates the smallest number of large
-pixels greater than or equal to the specified lower bound. By default the
-lower bound is the same in both the x and y dimension. As such, the actual
-number of large pixels in either dimension is determined, by default, by
-whichever dimension is smaller.
+pixels greater than or equal to the specified lower bound. The lower bound
+can either be an integer or integer vector length two. If a single integer is
+specified, all pixels will be square and the actual number of pixels will be
+calculated relative to the lower bound in the smallest dimension. This is the
+default. If an integer vector of length two is specified, pixels will likely
+be rectangular and calculated relative to the lower bounds in both
+directions x then y.
 
 Average uncertainties are classified as high, intermediate (with bigk-2
 subdivisions), or low, according to the quantile interval they fall into,

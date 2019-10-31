@@ -16,10 +16,13 @@
 #' Uncertainties are averaged over a limited number of large pixels (pixels of
 #' the bigk-th size). We specify a lower bound on the number of large pixels.
 #' The function pixelate internally calculates the smallest number of large
-#' pixels greater than or equal to the specified lower bound. By default the
-#' lower bound is the same in both the x and y dimension. As such, the actual
-#' number of large pixels in either dimension is determined, by default, by
-#' whichever dimension is smaller.
+#' pixels greater than or equal to the specified lower bound. The lower bound
+#' can either be an integer or integer vector length two. If a single integer is
+#' specified, all pixels will be square and the actual number of pixels will be
+#' calculated relative to the lower bound in the smallest dimension. This is the
+#' default. If an integer vector of length two is specified, pixels will likely
+#' be rectangular and calculated relative to the lower bounds in both
+#' directions x then y.
 #'
 #' Average uncertainties are classified as high, intermediate (with bigk-2
 #' subdivisions), or low, according to the quantile interval they fall into,
@@ -55,7 +58,11 @@
 #'   longitude, x; latitude, y; prediction, z; and uncertainty measure u.
 #' @param num_bigk_pix Integer or integer vector length two. Specifies a lower
 #'   bound on the number of large pixels (pixels of the bigk-th size) in the x
-#'   and y direction.
+#'   and y direction. If a single integer is specified, all pixels will be
+#'   square and the actual number of pixels will be calculated relative to the
+#'   lower bound in the smallest dimension. If an integer vector of length two
+#'   is specified, pixels will likely be rectangular and calculated relative to
+#'   the lower bounds in both directions x then y.
 #' @param bigk Integer. Specifies the number of average uncertainty quantile
 #'   intervals and thus different pixel sizes.
 #' @param scale Character equal to either "imult" or "iexpn". Specifies whether
@@ -180,7 +187,13 @@ pixelate <- function(obs_df,
   }
 
   # Set num_bigk_pix in both x and y direction if not already
-  if (is.na(num_bigk_pix[2])) {num_bigk_pix[2] <- num_bigk_pix[1]}
+  # Create a variable to ensure pixels are square
+  if (is.na(num_bigk_pix[2])) {
+    num_bigk_pix[2] <- num_bigk_pix[1]
+    square_pix = TRUE
+  } else {
+    square_pix = FALSE
+  }
 
   # Calculate observation dimensions of observation data frame
   obs_df_dim <- apply(obs_df[, c("x", "y")], 2, function(j) {length(unique(j))})
@@ -219,8 +232,15 @@ pixelate <- function(obs_df,
                  paste0(signif(obs_df_dim), collapse = ' and ')))
   }
 
+  # Determine whether to use one or both elements of opp
+  if (square_pix) {
+    opp_2_to_use = min(opp_2)
+  } else {
+    opp_2_to_use = opp_2
+  }
+
   # Calculate size in observations for pixel k = 1,...,bigk
-  opp <- compute_opp(opp_2, bigk, scale, scale_factor)
+  opp <- compute_opp(opp_2_to_use, bigk, scale, scale_factor)
 
   # Expand the observation data frame to enable vectorisation
   expanded_obs_df <- expand_obs_df(opp, obs_df)
