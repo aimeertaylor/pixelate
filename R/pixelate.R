@@ -17,9 +17,9 @@
 #' the bigk-th size). We specify a lower bound on the number of large pixels.
 #' The function pixelate internally calculates the smallest number of large
 #' pixels greater than or equal to the specified lower bound. By default the
-#' lower bound is the same in both the x and y dimension. The actual number of
-#' large pixels in either dimension is determined by whichever dimension is
-#' smaller.
+#' lower bound is the same in both the x and y dimension. As such, the actual
+#' number of large pixels in either dimension is determined, by default, by
+#' whichever dimension is smaller.
 #'
 #' Average uncertainties are classified as high, intermediate (with bigk-2
 #' subdivisions), or low, according to the quantile interval they fall into,
