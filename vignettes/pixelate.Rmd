@@ -343,8 +343,8 @@ As mentioned above `pixelate` works by grouping predictions into a specified num
 bigk <- nrow(px_SSA$opp)
 
 # Define quantile intervals
-qs <- format(as.numeric(gsub('%', '',names(px_SSA$uncertainty_breaks))), digits = 4)
-qs <- sapply(qs, function(q){paste(q, "%", sep = "")})
+qs <- format(as.numeric(gsub('%', '',names(px_SSA$uncertainty_breaks)))/100, 
+             digits = 2)
 quantile_intervals <- sapply(2:(bigk+1), function(k){
   bounds <- qs[c(k-1,k)]
   paste(bounds, collapse = ' to ')
@@ -378,11 +378,13 @@ temp_obs$z <- as.factor(px_SSA$pix_df$bins)
 
 # Generate and print the plot
 plot_sp_pred(sp_pred = temp_obs, shp_file = SubSaharanAfrica_shp) +
-  scale_fill_discrete(name="Average uncertainty \nquantile interval", 
-                      na.value = 'lightblue2', labels = c(quantile_intervals, 'NA')) 
+  scale_fill_discrete(name = "Average uncertainty \nquantile interval", 
+                      na.value = 'lightblue2',
+                      h = c(120, 360), 
+                      labels = c(quantile_intervals, 'NA')) 
 ```
 
-From the plot and table of quantile intervals, we can see that coral regions have high certainty and thus predictions in these regions of the pixelated plot of sub-Saharan Africa are not averaged (the nested pixels are one by one observation). Meanwhile predictions in the pixelated plot of sub-Saharan Africa that fall with green regions of the quantile plot are averaged over moderately sized nested pixels (six by six observations). Pink regions (that cover large parts of the Democratic Republic of the Congo) have high uncertainty; predictions in the pixelated plot of sub-Saharan Africa that fall within pink regions of the quantile plot are averaged across the entire large pixel, which is 48 by 48 observations. 
+From the plot and table of quantile intervals, we can see that the greenest regions have high certainty and thus predictions in these regions of the pixelated plot of sub-Saharan Africa are not averaged (the nested pixels are one by one observation). Meanwhile predictions in the pixelated plot of sub-Saharan Africa that fall with blue regions of the quantile plot are averaged over moderately sized nested pixels (six by six observations). The redest regions (that cover large parts of the Democratic Republic of the Congo) have high uncertainty; predictions in the pixelated plot of sub-Saharan Africa that fall within pink regions of the quantile plot are averaged across the entire large pixel, which is 48 by 48 observations. 
 
 
 # References
