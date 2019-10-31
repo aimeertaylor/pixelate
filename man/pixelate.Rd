@@ -15,10 +15,11 @@ longitude, x; latitude, y; prediction, z; and uncertainty measure u.}
 bound on the number of large pixels (pixels of the bigk-th size) in the x
 and y direction, which, in turn, determines the dimensions of the pixels.
 If a single integer is specified, pixels are square and the number of them
-is calculated relative to the lower bound in the smallest dimension. If an
-integer vector of length two is specified, pixels are rectangular and the
-number of them is calculated relative to the lower bounds in both
-directions x then y.}
+is calculated relative to the lower bound in the smallest dimension (while
+accounting for other specified arguments). If an integer vector of length
+two is specified, pixels are rectangular and the number of them is
+calculated relative to the lower bounds in both directions x and y (also
+while accounting for other specified arguments).}
 
 \item{bigk}{Integer. Specifies the number of average uncertainty quantile
 intervals and thus different pixel sizes.}
@@ -70,13 +71,13 @@ are square.
 Uncertainties are averaged over a limited number of large pixels (pixels of
 the bigk-th size). We specify a lower bound on the number of large pixels.
 The function pixelate internally calculates the smallest number of large
-pixels greater than or equal to the specified lower bound. The lower bound
-can either be an integer or integer vector length two. If a single integer is
-specified, all pixels are square and the number of pixels is calculated
-relative to the lower bound in the smallest dimension. This is the default.
-If an integer vector of length two is specified, pixels are rectangular and
-the number of pixels is calculated relative to the lower bounds in both
-directions x then y.
+pixels greater than or equal to the specified lower bound, while also
+accounting for other specified arguments. The lower bound can either be an
+integer or integer vector length two. If a single integer is specified, all
+pixels are square and the number of them is calculated relative to the lower
+bound in the smallest dimension. This is the default. If an integer vector of
+length two is specified, pixels are rectangular and the number of them is
+calculated relative to the lower bounds in both directions x and y.
 
 Average uncertainties are classified as high, intermediate (with bigk-2
 subdivisions), or low, according to the quantile interval they fall into,
@@ -126,7 +127,14 @@ head(px_def$pix_df[uncertain_ind, ])
 px_alt <- pixelate(SubSaharanAfrica_Pf_incidence,
                    num_bigk_pix = 25, bigk = 5)
 
+# Pixelate as little as possible by allowing
+# rectangular pixels and by using only two
+# pixels sizes
+px_min <- pixelate(SubSaharanAfrica_Pf_incidence,
+                   num_bigk_pix = c(2,2), bigk = 2)
 
+# Inspect the observations per pixel
+px_min$opp
 #=================================================
 # Plotting pixelate's output
 #=================================================
@@ -165,8 +173,9 @@ plot_sp_pred <- function(sp_pred){
 
 }
 
-# Plot default and alternative
+# Plot
 plot_sp_pred(px_def$pix_df)
 plot_sp_pred(px_alt$pix_df)
+plot_sp_pred(px_min$pix_df)
 
 }
