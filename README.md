@@ -101,4 +101,4 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 
 ## Acknowledgements 
-Thank you to Pierre Jacob, Pamela Martinez Vargas, Rene Niehu and Pablo Martínez de Salazar for help testing package installation. 
+Thank you to Pierre Jacob, Pamela Martinez Vargas, Rene Niehus and Pablo Martínez de Salazar for help testing package installation. 
