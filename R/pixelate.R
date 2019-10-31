@@ -18,10 +18,10 @@
 #' The function pixelate internally calculates the smallest number of large
 #' pixels greater than or equal to the specified lower bound. The lower bound
 #' can either be an integer or integer vector length two. If a single integer is
-#' specified, all pixels will be square and the actual number of pixels will be
-#' calculated relative to the lower bound in the smallest dimension. This is the
-#' default. If an integer vector of length two is specified, pixels will likely
-#' be rectangular and calculated relative to the lower bounds in both
+#' specified, all pixels are square and the number of pixels is calculated
+#' relative to the lower bound in the smallest dimension. This is the default.
+#' If an integer vector of length two is specified, pixels are rectangular and
+#' the number of pixels is calculated relative to the lower bounds in both
 #' directions x then y.
 #'
 #' Average uncertainties are classified as high, intermediate (with bigk-2
@@ -58,11 +58,12 @@
 #'   longitude, x; latitude, y; prediction, z; and uncertainty measure u.
 #' @param num_bigk_pix Integer or integer vector length two. Specifies a lower
 #'   bound on the number of large pixels (pixels of the bigk-th size) in the x
-#'   and y direction. If a single integer is specified, all pixels will be
-#'   square and the actual number of pixels will be calculated relative to the
-#'   lower bound in the smallest dimension. If an integer vector of length two
-#'   is specified, pixels will likely be rectangular and calculated relative to
-#'   the lower bounds in both directions x then y.
+#'   and y direction, which, in turn, determines the dimensions of the pixels.
+#'   If a single integer is specified, pixels are square and the number of them
+#'   is calculated relative to the lower bound in the smallest dimension. If an
+#'   integer vector of length two is specified, pixels are rectangular and the
+#'   number of them is calculated relative to the lower bounds in both
+#'   directions x then y.
 #' @param bigk Integer. Specifies the number of average uncertainty quantile
 #'   intervals and thus different pixel sizes.
 #' @param scale Character equal to either "imult" or "iexpn". Specifies whether
