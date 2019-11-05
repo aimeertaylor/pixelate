@@ -1,6 +1,6 @@
 # pixelate
 
-An R package to pixelate spatial predictions according to the uncertainty that surrounds them.
+An R package that varies pixel sizes to show uncertainty in geostatistical/geospatial maps
 
 <!--- e.g. ![ ](link-to-image) --->
 <!--- I have not figured out how to export a single code chunck figure from the vignette
@@ -101,4 +101,4 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 
 ## Acknowledgements 
-Thank you to Pierre Jacob, Pamela Martinez Vargas, Rene Niehus and Pablo Martínez de Salazar for help testing package installation. 
+Thank you to Pierre Jacob, Pamela Martinez, Rene Niehus and Pablo Martínez de Salazar for help testing package installation. 
