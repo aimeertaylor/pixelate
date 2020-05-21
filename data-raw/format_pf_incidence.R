@@ -50,7 +50,7 @@ any((med_filtered$y != LCI_filtered$y) & (med_filtered$y != UCI_filtered$y))
 CentralAfrica_Pf_incidence = data.frame(x = med_filtered$x,
                                            y = med_filtered$y,
                                            z = med_filtered$z,
-                                           u = pf_incid_UCI$z - LCI_filtered$z)
+                                           u = UCI_filtered$z - LCI_filtered$z)
 
 
 # CentralAfrica_Pf_incidence -------------------------------
