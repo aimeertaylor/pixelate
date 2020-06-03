@@ -85,4 +85,5 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 
 ## Acknowledgements 
-Thank you to Pierre Jacob, Pamela Martinez, René Niehus and Pablo Martínez de Salazar for help testing package installation. 
+Thank you to Pierre Jacob, Pamela Martinez, René Niehus and Pablo Martínez de Salazar for help testing package installation. A.R.T. and C.O.B. are supported by a Maximizing Investigators Research Award for Early Stage Investi-
+gators (R35 GM-124715). 
