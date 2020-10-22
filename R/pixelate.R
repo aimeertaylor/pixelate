@@ -18,11 +18,11 @@
 #' The function pixelate internally calculates the smallest number of large
 #' pixels greater than or equal to the specified lower bound, while also
 #' accounting for other specified arguments. The lower bound can either be an
-#' integer or integer vector length two. If a single integer is specified, all
-#' pixels are square and the number of them is calculated relative to the lower
-#' bound in the smallest dimension. This is the default. If an integer vector of
-#' length two is specified, pixels are rectangular and the number of them is
-#' calculated relative to the lower bounds in both directions x and y.
+#' integer or integer vector length two. If a single integer is specified, the
+#' number of pixel is calculated relative to the lower bound in the smallest
+#' dimension. This is the default. If an integer vector of length two is
+#' specified, pixels are rectangular and the number of them is calculated
+#' relative to the lower bounds in both directions x and y.
 #'
 #' Average uncertainties are classified as high, intermediate (with bigk-2
 #' subdivisions), or low, according to the quantile interval they fall into,
@@ -38,7 +38,7 @@
 #' \eqn{opp_1 = 1} always, and \eqn{opp_2} is calculated internally to best
 #' match the specified parameters. imult specifies scaling by iterative
 #' multiplication (i.e. a geometric series): \deqn{opp_k = opp_2 * (2 *
-#' scale_factor)^(bigk-2).} iexpn specifies scaling by iterative exponentiation:
+#' scale_factor)^(bigk-2).}. iexpn specifies scaling by iterative exponentiation:
 #' \deqn{opp_k = opp_2 ^ ((2 * scale_factor)^(bigk-2)).} The factor 2 is
 #' necessary to ensure pixels nest within one another.
 #'
@@ -59,12 +59,12 @@
 #' @param num_bigk_pix Integer or integer vector length two. Specifies a lower
 #'   bound on the number of large pixels (pixels of the bigk-th size) in the x
 #'   and y direction, which, in turn, determines the dimensions of the pixels.
-#'   If a single integer is specified, pixels are square and the number of them
-#'   is calculated relative to the lower bound in the smallest dimension (while
-#'   accounting for other specified arguments). If an integer vector of length
-#'   two is specified, pixels are rectangular and the number of them is
-#'   calculated relative to the lower bounds in both directions x and y (also
-#'   while accounting for other specified arguments).
+#'   If a single integer is specified, the number of pixels is calculated
+#'   relative to the lower bound in the smallest dimension (while accounting for
+#'   other specified arguments). If an integer vector of length two is
+#'   specified, pixels are rectangular and the number of them is calculated
+#'   relative to the lower bounds in both directions x and y (also while
+#'   accounting for other specified arguments).
 #' @param bigk Integer. Specifies the number of average uncertainty quantile
 #'   intervals and thus different pixel sizes.
 #' @param scale Character equal to either "imult" or "iexpn". Specifies whether
@@ -73,6 +73,8 @@
 #' @param scale_factor Integer. Specifies a factor (in units of observations)
 #'   that features in either iterative multiplication or iterative
 #'   exponentiation (see Details)
+#' @param square_pix A logical value indicating whether pixels are square or
+#'   not (in which case they are rectangular).
 #' @return pixelate returns a list.
 #' \describe{
 #'   \item{pix_df}{The original observation data frame with additional
@@ -167,7 +169,8 @@ pixelate <- function(obs_df,
                      num_bigk_pix = 15,
                      bigk = 6,
                      scale = "imult",
-                     scale_factor = 1) {
+                     scale_factor = 1,
+                     square_pix = TRUE) {
 
   # Record arguments for reference
   arguments <- as.list(environment())
@@ -197,12 +200,8 @@ pixelate <- function(obs_df,
   }
 
   # Set num_bigk_pix in both x and y direction if not already
-  # Create a variable to ensure pixels are square
   if (is.na(num_bigk_pix[2])) {
     num_bigk_pix[2] <- num_bigk_pix[1]
-    square_pix = TRUE
-  } else {
-    square_pix = FALSE
   }
 
   # Calculate observation dimensions of observation data frame
@@ -227,7 +226,7 @@ pixelate <- function(obs_df,
   opp_2 <- compute_opp_2(num_bigk_pix, bigk, scale, scale_factor, obs_df_dim)
 
   # Observation data frame compatibility check
-  opp_min <- compute_opp(2, bigk, scale, scale_factor)
+  opp_min <- compute_opp(opp_2 = 2, bigk, scale, scale_factor)
   obs_req <- opp_min[bigk,] * num_bigk_pix
 
   if (any(opp_2 < 2) | any(obs_df_dim < obs_req)) {
@@ -255,7 +254,7 @@ pixelate <- function(obs_df,
   # Expand the observation data frame to enable vectorisation
   expanded_obs_df <- expand_obs_df(opp, obs_df)
 
-  # Calculate observation dimensions of observation data frame
+  # Calculate observation dimensions of the expanded observation data frame
   expanded_obs_df_dim <- apply(expanded_obs_df[, c("x", "y")], 2, function(j) {length(unique(j))})
 
   # Calculate observation pixel membership

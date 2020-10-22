@@ -4,8 +4,14 @@
 \alias{pixelate}
 \title{Pixelate as per average uncertainty}
 \usage{
-pixelate(obs_df, num_bigk_pix = 15, bigk = 6, scale = "imult",
-  scale_factor = 1)
+pixelate(
+  obs_df,
+  num_bigk_pix = 15,
+  bigk = 6,
+  scale = "imult",
+  scale_factor = 1,
+  square_pix = TRUE
+)
 }
 \arguments{
 \item{obs_df}{Data frame. Contains a row per observation with four variables:
@@ -14,12 +20,12 @@ longitude, x; latitude, y; prediction, z; and uncertainty measure u.}
 \item{num_bigk_pix}{Integer or integer vector length two. Specifies a lower
 bound on the number of large pixels (pixels of the bigk-th size) in the x
 and y direction, which, in turn, determines the dimensions of the pixels.
-If a single integer is specified, pixels are square and the number of them
-is calculated relative to the lower bound in the smallest dimension (while
-accounting for other specified arguments). If an integer vector of length
-two is specified, pixels are rectangular and the number of them is
-calculated relative to the lower bounds in both directions x and y (also
-while accounting for other specified arguments).}
+If a single integer is specified, the number of pixels is calculated
+relative to the lower bound in the smallest dimension (while accounting for
+other specified arguments). If an integer vector of length two is
+specified, pixels are rectangular and the number of them is calculated
+relative to the lower bounds in both directions x and y (also while
+accounting for other specified arguments).}
 
 \item{bigk}{Integer. Specifies the number of average uncertainty quantile
 intervals and thus different pixel sizes.}
@@ -31,6 +37,9 @@ by iterative multiplication or iterative exponentiation (see Details).}
 \item{scale_factor}{Integer. Specifies a factor (in units of observations)
 that features in either iterative multiplication or iterative
 exponentiation (see Details)}
+
+\item{square_pix}{A logical value indicating whether pixels are square or
+not (in which case they are rectangular).}
 }
 \value{
 pixelate returns a list.
@@ -73,11 +82,11 @@ the bigk-th size). We specify a lower bound on the number of large pixels.
 The function pixelate internally calculates the smallest number of large
 pixels greater than or equal to the specified lower bound, while also
 accounting for other specified arguments. The lower bound can either be an
-integer or integer vector length two. If a single integer is specified, all
-pixels are square and the number of them is calculated relative to the lower
-bound in the smallest dimension. This is the default. If an integer vector of
-length two is specified, pixels are rectangular and the number of them is
-calculated relative to the lower bounds in both directions x and y.
+integer or integer vector length two. If a single integer is specified, the
+number of pixel is calculated relative to the lower bound in the smallest
+dimension. This is the default. If an integer vector of length two is
+specified, pixels are rectangular and the number of them is calculated
+relative to the lower bounds in both directions x and y.
 
 Average uncertainties are classified as high, intermediate (with bigk-2
 subdivisions), or low, according to the quantile interval they fall into,
@@ -93,7 +102,7 @@ imult and iexpn. Both scale over k = 3,...,bigk for bigk > 2, because
 \eqn{opp_1 = 1} always, and \eqn{opp_2} is calculated internally to best
 match the specified parameters. imult specifies scaling by iterative
 multiplication (i.e. a geometric series): \deqn{opp_k = opp_2 * (2 *
-scale_factor)^(bigk-2).} iexpn specifies scaling by iterative exponentiation:
+scale_factor)^(bigk-2).}. iexpn specifies scaling by iterative exponentiation:
 \deqn{opp_k = opp_2 ^ ((2 * scale_factor)^(bigk-2)).} The factor 2 is
 necessary to ensure pixels nest within one another.
 
