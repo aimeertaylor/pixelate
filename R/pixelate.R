@@ -217,7 +217,7 @@ pixelate <- function(obs_df,
   opp_2 <- compute_opp_2(num_bigk_pix, bigk, scale, scale_factor, obs_df_dim)
 
   # Observation data frame compatibility check
-  opp_min <- compute_opp(opp_2 = 2, bigk, scale, scale_factor)
+  opp_min <- compute_opp(opp_2 = c(2,2), bigk, scale, scale_factor)
   obs_req <- opp_min[bigk,] * num_bigk_pix
 
   if (any(opp_2 < 2)) {
@@ -234,7 +234,7 @@ pixelate <- function(obs_df,
 
   # Determine whether to use one or both elements of opp
   if (square_pix) {
-    opp_2_to_use = min(opp_2)
+    opp_2_to_use = rep(min(opp_2), 2)
   } else {
     opp_2_to_use = opp_2
   }

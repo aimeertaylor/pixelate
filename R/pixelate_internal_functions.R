@@ -41,10 +41,9 @@ compute_opp_2 <- function(num_bigk_pix, # bigk pixels in x and y direction
 # returns opp for k = 1,...,bigk.
 #
 # The opp for pixel size k = 1 is one in both the x and y direction by design.
-# The opp for pixel size k = 2 is specified by opp_2, which is
-# either an integer or an integer vector length two. If the former, pixels will
-# be square. This function does not depend on the input observation data frame. To ensure
-# that all opps are compatible with a specified observation data frame, use compute_opp_2 to
+# The opp for pixel size k = 2 is specified by opp_2. This function does not
+# depend on the input observation data frame. To ensure that all opps are
+# compatible with a specified observation data frame, use compute_opp_2 to
 # compute the opp for pixel size k = 2. Given the opp for pixel size k = 2, the
 # opps for k = 3,...,bigk are computed.
 #=================================================================================
@@ -52,8 +51,6 @@ compute_opp <- function(opp_2, # Observations per pixel for k = 2
                         bigk, # Number of different pixel sizes, e.g. 3L
                         scale, # scale i.e. 'imult' or 'iexpn'
                         scale_factor) { # scale_factor e.g. 1L
-
-  if (is.null(opp_2[2])) {opp_2[2] <- opp_2[1]} # Set opp_2 in y direction if not already
 
   # Compute opp for k = 1,...,bigk
   opp <- array(NA, dim = c(bigk, 2), dimnames = list(1:bigk, c("x", "y"))) # Create array
