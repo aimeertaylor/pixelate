@@ -57,14 +57,12 @@
 #' @param obs_df Data frame. Contains a row per observation with four variables:
 #'   longitude, x; latitude, y; prediction, z; and uncertainty measure u.
 #' @param num_bigk_pix Integer or integer vector length two. Specifies a lower
-#'   bound on the number of large pixels (pixels of the bigk-th size) in the x
-#'   and y direction, which, in turn, determines the dimensions of the pixels.
-#'   If a single integer is specified, the number of pixels is calculated
-#'   relative to the lower bound in the smallest dimension (while accounting for
-#'   other specified arguments). If an integer vector of length two is
-#'   specified, pixels are rectangular and the number of them is calculated
-#'   relative to the lower bounds in both directions x and y (also while
-#'   accounting for other specified arguments).
+#'   bound on the number of large pixels (pixels of the bigk-th size). If a
+#'   single integer is specified, there will be at least num_bigk_pix large
+#'   pixels along the smallest dimension. If an integer vector of length two is
+#'   specified, there will be at least num_bigk_pix[1] large pixels in
+#'   the x direction (the first dimension) and at least num_bigk_pix[2] large
+#'   pixels in the y direction (the second dimension).
 #' @param bigk Integer. Specifies the number of average uncertainty quantile
 #'   intervals and thus different pixel sizes.
 #' @param scale Character equal to either "imult" or "iexpn". Specifies whether
@@ -201,7 +199,7 @@ pixelate <- function(obs_df,
 
   # Set num_bigk_pix in both x and y direction if not already
   if (is.na(num_bigk_pix[2])) {
-    num_bigk_pix[2] <- num_bigk_pix[1]
+    num_bigk_pix[2] <- 1
   }
 
   # Calculate observation dimensions of observation data frame
