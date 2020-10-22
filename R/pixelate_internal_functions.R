@@ -37,7 +37,8 @@ compute_opp_2 <- function(num_bigk_pix, # bigk pixels in x and y direction
 #=================================================================================
 # Compute observations per pixel (opp)
 #
-# This function computes and returns opp for k = 3,...,bigk different pixel sizes.
+# This function computes opp for k = 3,...,bigk different pixel sizes and
+# returns opp for k = 1,...,bigk.
 #
 # The opp for pixel size k = 1 is one in both the x and y direction by design.
 # The opp for pixel size k = 2 is specified by opp_2, which is
@@ -110,11 +111,12 @@ compute_num_pix_xy <- function(opp, obs_df_dim) {
 # This function expands the dimension of the observation data frame with NA
 # observations
 #
-# The observation data frame is expanded such that, for pixel sizes k = 1,...,bigk, an integer
-# number of pixels fit along both the x and y directions. Despite enlarging the
-# data set, expansion enables vectorised pixelation (since the expanded data set
-# has no partial pixels on the borders, whereas the original observation data frame may
-# have), which is considerably faster than looping over pixels.
+# The observation data frame is expanded such that, for pixel sizes k =
+# 1,...,bigk, an integer number of pixels fit along both the x and y directions.
+# Despite enlarging the data set, expansion increases the speed of pixelation.
+# This is because it enables vectorised pixelation (since the expanded data set
+# has no partial pixels on the borders, whereas the original observation data
+# frame may have), which is considerably faster than looping over pixels.
 #=================================================================================
 expand_obs_df <- function(opp, obs_df) {
 
