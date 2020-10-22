@@ -6,7 +6,7 @@
 \usage{
 pixelate(
   obs_df,
-  num_bigk_pix = 15,
+  num_bigk_pix = c(15, 15),
   bigk = 6,
   scale = "imult",
   scale_factor = 1,
@@ -17,13 +17,11 @@ pixelate(
 \item{obs_df}{Data frame. Contains a row per observation with four variables:
 longitude, x; latitude, y; prediction, z; and uncertainty measure u.}
 
-\item{num_bigk_pix}{Integer or integer vector length two. Specifies a lower
-bound on the number of large pixels (pixels of the bigk-th size). If a
-single integer is specified, there will be at least num_bigk_pix large
-pixels along the smallest dimension. If an integer vector of length two is
-specified, there will be at least num_bigk_pix[1] large pixels in
-the x direction (the first dimension) and at least num_bigk_pix[2] large
-pixels in the y direction (the second dimension).}
+\item{num_bigk_pix}{Integer vector length two. Specifies a lower bound on the
+number of complete large pixels (pixels of the bigk-th size) in the x and y
+directions i.e. pixelate try to fit at least num_bigk_pix[1] large pixels
+in the x direction and at least num_bigk_pix[2] large pixels in the y
+direction.}
 
 \item{bigk}{Integer. Specifies the number of average uncertainty quantile
 intervals and thus different pixel sizes.}
@@ -132,7 +130,7 @@ head(px_def$pix_df[uncertain_ind, ])
 
 # Pixelate using alternative parameters
 px_alt <- pixelate(SubSaharanAfrica_Pf_incidence,
-                   num_bigk_pix = 25, bigk = 5)
+                   num_bigk_pix = c(25,25), bigk = 5)
 
 # Pixelate as little as possible by allowing
 # rectangular pixels and by using only two

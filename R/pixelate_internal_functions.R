@@ -1,24 +1,24 @@
 #=================================================================================
-# Compute observations per pixel (opp) for pixel size k = 2 (smallest, most resolved,
-# multi-observation pixel size)
+# Compute observations per pixel (opp) for pixel size k = 2 (smallest, most
+# resolved, multi-observation pixel size)
 #
-# This function essentially back calculates the observations per pixel for pixel size k =
-# 2 given a target number of pixels of the bigk-th size (largest, least resolved
-# pixel size) in the x and y direction, which is specified by num_bigk_pix.
-# Note that we use bigk rather than K to avoid problems with case insensitivity.
+# This function essentially back calculates the observations per pixel for pixel
+# size k = 2 given a target number of complete pixels of the bigk-th size
+# (largest, least resolved pixel size) in the x and y direction, which is
+# specified by num_bigk_pix. Note that we use bigk rather than K to avoid
+# problems with case insensitivity.
 #
-# Rationale: for a given data frame of observations, it is easy to envision a target number of
-# least resolved large pixels. We thus specify this target, then back
-# calculate the opp for pixel size k = 2, which is the smallest, most resolved,
-# multi-observation pixel size.
+# Rationale: for a given data frame of observations, it is easy to envision a
+# target number of least resolved large pixels. We thus specify this target,
+# then back calculate the opp for pixel size k = 2, which is the smallest, most
+# resolved, multi-observation pixel size.
 #=================================================================================
 compute_opp_2 <- function(num_bigk_pix, # bigk pixels in x and y direction
                           bigk, scale, scale_factor, # pixelate arguments
                           obs_df_dim) { # observation data frame dimensions
 
   # Compute the opp for k = bigk in the x and y direction
-  # Use floor to allow for some partial pixels at edges
-  opp_bigk <- ceiling(obs_df_dim / num_bigk_pix)
+  opp_bigk <- obs_df_dim / num_bigk_pix # floor not needed since features below
 
   # Compute the opp for k = 2 in the x and y direction
   if (scale == "imult") {

@@ -56,13 +56,11 @@
 #'
 #' @param obs_df Data frame. Contains a row per observation with four variables:
 #'   longitude, x; latitude, y; prediction, z; and uncertainty measure u.
-#' @param num_bigk_pix Integer or integer vector length two. Specifies a lower
-#'   bound on the number of large pixels (pixels of the bigk-th size). If a
-#'   single integer is specified, there will be at least num_bigk_pix large
-#'   pixels along the smallest dimension. If an integer vector of length two is
-#'   specified, there will be at least num_bigk_pix[1] large pixels in
-#'   the x direction (the first dimension) and at least num_bigk_pix[2] large
-#'   pixels in the y direction (the second dimension).
+#' @param num_bigk_pix Integer vector length two. Specifies a lower bound on the
+#'   number of complete large pixels (pixels of the bigk-th size) in the x and y
+#'   directions i.e. pixelate try to fit at least num_bigk_pix[1] large pixels
+#'   in the x direction and at least num_bigk_pix[2] large pixels in the y
+#'   direction.
 #' @param bigk Integer. Specifies the number of average uncertainty quantile
 #'   intervals and thus different pixel sizes.
 #' @param scale Character equal to either "imult" or "iexpn". Specifies whether
@@ -109,7 +107,7 @@
 #'
 #' # Pixelate using alternative parameters
 #' px_alt <- pixelate(SubSaharanAfrica_Pf_incidence,
-#'                    num_bigk_pix = 25, bigk = 5)
+#'                    num_bigk_pix = c(25,25), bigk = 5)
 #'
 #' # Pixelate as little as possible by allowing
 #' # rectangular pixels and by using only two
@@ -164,7 +162,7 @@
 #'
 #' @export
 pixelate <- function(obs_df,
-                     num_bigk_pix = 15,
+                     num_bigk_pix = c(15,15),
                      bigk = 6,
                      scale = "imult",
                      scale_factor = 1,
@@ -197,23 +195,18 @@ pixelate <- function(obs_df,
     stop("The observation data frame must contain variables 'u', 'x', 'y', and 'z' only.")
   }
 
-  # Set num_bigk_pix in both x and y direction if not already
-  if (is.na(num_bigk_pix[2])) {
-    num_bigk_pix[2] <- 1
-  }
-
   # Calculate observation dimensions of observation data frame
   obs_df_dim <- apply(obs_df[, c("x", "y")], 2, function(j) {length(unique(j))})
 
   # Additional checks
   errors = c(dmat = ifelse (all(obs_df_dim >= c(2,4)) | all(obs_df_dim >= c(4,2)), FALSE, TRUE),
-             npix = ifelse (all(num_bigk_pix < 2) | nz_remainder(num_bigk_pix), TRUE, FALSE),
+             npix = ifelse (all(num_bigk_pix < 2) | nz_remainder(num_bigk_pix) | length(num_bigk_pix) != 2, TRUE, FALSE),
              bigk = ifelse (bigk < 2 | nz_remainder(bigk), TRUE, FALSE),
              scale = ifelse (!scale %in% c("imult", "iexpn"), TRUE, FALSE),
              scale_factor = ifelse(scale_factor < 1 | nz_remainder(scale_factor), TRUE, FALSE))
 
   error_mgs = c(dmat = "\nThe observation data frame must have at least two and four predictions in the x and y direction or vice versa.",
-                npix = "\nThe number of bigK pixels must be integer and exceed one in a least one direction x or y.",
+                npix = "\nThe target number of bigK pixels must be an integer vector and exceed one in a least one direction x or y.",
                 bigk = "\nThe number of pixel sizes, bigK, must be an integer and exceed two.",
                 scale = "\nUnrecognised scale: please provide either 'imult' or 'iexpn'.",
                 scale_factor = "\nThe scale_factor needs to be an integer and exceed zero.")
@@ -227,7 +220,7 @@ pixelate <- function(obs_df,
   opp_min <- compute_opp(opp_2 = 2, bigk, scale, scale_factor)
   obs_req <- opp_min[bigk,] * num_bigk_pix
 
-  if (any(opp_2 < 2) | any(obs_df_dim < obs_req)) {
+  if (any(opp_2 < 2)) {
     stop(sprintf("\n
     Together, arguments num_bigk_pix, bigk, scale and scale_factor are
     incompatible with the observation data frame dimensions.
