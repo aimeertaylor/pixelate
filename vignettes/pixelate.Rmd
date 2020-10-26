@@ -202,7 +202,7 @@ The above call to pixelate implicitly relies on default values for a set of pixe
 
 ```{r, warning = FALSE}
 px_CA <- pixelate(obs_df = CentralAfrica_Pf_incidence,
-                  num_bigk_pix = 12) # Change from default, which is 15
+                  num_bigk_pix = c(12,12)) # Change from default, which is 15
 ```
 
 If the obs_df has more than 480 by 480 predictions, you can increase the number of large pixels and/or the number of different pixel sizes:
@@ -210,7 +210,7 @@ If the obs_df has more than 480 by 480 predictions, you can increase the number 
 
 ```{r, warning = FALSE}
 px_SSA <- pixelate(obs_df = SubSaharanAfrica_Pf_incidence,
-                   num_bigk_pix = 20) # Change from default, which is 15
+                   num_bigk_pix = c(20,20)) # Change from default, which is 15
 ```
 
 It is also possible to explore pixels that scale in size (observations per pixel) more rapidly by increasing the scale_factor argument and changing the scale argument from imult to iexpn. However, because the observations per pixel can scale extremely rapidly when default pixelation arguments are changed, the prediction count required for seemingly modest argument combinations may exceed those available and thus generate an error, e.g. 
