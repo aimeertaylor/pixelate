@@ -223,8 +223,7 @@ pixelate_by_u <- function(obs_df, obs_mem, opp) {
   num_pix <- apply(obs_mem, 2, function(p) {length(unique(p))})
   bigk <- length(num_pix)
 
-  # Temporarily remove observations where the median value is zero with certainty
-  # to prevent bias to the pixelation process
+  # Temporarily remove observations that are zero with certainty
   # Aside, typically there are no z > 0 with u == 0; check by:
   if (any(obs_df$z > 0 & obs_df$u == 0, na.rm = T)) {
     message("Note that there are some certain yet non-zero predictions")
@@ -257,9 +256,11 @@ pixelate_by_u <- function(obs_df, obs_mem, opp) {
 
   # First populate with NA
   obs_df$pix_z <- NA
+  obs_df$pix_u <- NA # For uncertainty averaged over nested pixels
 
-  # For k = 1, use observation estimate. Note that which(.) excludes NA bins
+  # For k = 1, use observation. Note that which(.) excludes NA bins
   obs_df$pix_z[which(obs_df$bins == 1)] <- obs_df$z[which(obs_df$bins == 1)]
+  obs_df$pix_u[which(obs_df$bins == 1)] <- obs_df$u[which(obs_df$bins == 1)]
 
   message("Averaging predictions over differently sized pixels...\n")
 
@@ -267,21 +268,29 @@ pixelate_by_u <- function(obs_df, obs_mem, opp) {
     # Sort by obs_mem: allows vectorisation via temp_df since all pixels have the same opp
     obs_inds_k <- which(obs_df$bins == k) # which() discards NA
     sorted_obs_mem_k <- sort.int(obs_mem[obs_inds_k, k], index.return = T)
+
     # Create a temporary data frame with pixel entries per column
     temp_df <- matrix(obs_df$z[obs_inds_k][sorted_obs_mem_k$ix], nrow = prod(opp[k, ]))
     # temp_df enables calculation of averaged predictions using colMeans, which is fast
     pix_z_temp <- colMeans(temp_df, na.rm = T)
     # Expand us_bigk such that there is one per observation and allocate using indices
     obs_df$pix_z[obs_inds_k][sorted_obs_mem_k$ix] <- rep(pix_z_temp, each = prod(opp[k, ]))
+
+    # Repeat three steps above but for uncertainty
+    temp_df <- matrix(obs_df$u[obs_inds_k][sorted_obs_mem_k$ix], nrow = prod(opp[k, ]))
+    pix_u_temp <- colMeans(temp_df, na.rm = T)
+    obs_df$pix_u[obs_inds_k][sorted_obs_mem_k$ix] <- rep(pix_u_temp, each = prod(opp[k, ]))
   }
 
   # Reset NAs. Otherwise, some NA observations will have non NA values due to mean(us, na.rm = T)
   obs_df$pix_z[is.na(obs_df$z)] <- NA
+  obs_df$pix_u[is.na(obs_df$u)] <- NA
 
   # Re-addition of certain zeros
   obs_df$z[obs_certain_zero] <- 0
   obs_df$u[obs_certain_zero] <- 0
   obs_df$pix_z[obs_certain_zero] <- 0
+  obs_df$pix_u[obs_certain_zero] <- 0
 
   # Return uncertainty breaks as well as pixelated data frame
   to_return <- list(pix_df = obs_df,
