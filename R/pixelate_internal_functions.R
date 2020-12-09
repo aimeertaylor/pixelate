@@ -209,12 +209,35 @@ allocate_obs_mem <- function(opp, obs_df_dim) {
   return(obs_mem)
 }
 
+#============================================================
+# Function to compute uncertainty breaks
+#============================================================
+compute_breaks <- function(sample, interval_count, type = "equally_occupied")  {
+  if (type == "equally_occupied") {
+
+    breaks <- quantile(sample, na.rm = TRUE,
+                       probs = seq(0, 1, length.out = interval_count + 1))
+
+  } else if (type == "equally_spaced") {
+
+    breaks <- seq(min(sample, na.rm = TRUE),
+                  max(sample, na.rm = TRUE), length.out = interval_count + 1)
+
+  } else {
+
+    stop("type must be either 'equally_occupied' or 'equally_spaced'")
+
+  }
+
+  return(breaks)
+}
+
 
 #============================================================
 # Function to pixelate as per average uncertainty averaged over
 # large pixels (pixels of the bigk-th size)
 #============================================================
-pixelate_by_u <- function(obs_df, obs_mem, opp) {
+pixelate_by_u <- function(obs_df, obs_mem, opp, interval_type) {
 
   # Arrange s.t. compatible with membership allocation
   obs_df <- dplyr::arrange(obs_df, y, x)
@@ -246,9 +269,9 @@ pixelate_by_u <- function(obs_df, obs_mem, opp) {
   obs_df$u_bigk[sorted_obs_mem_bigk$ix] <- rep(us_bigk, each = prod(opp[bigk, ]))
 
   # Compute breaks based on quantiles of average uncertainty
-  uncertainty_breaks <- quantile(obs_df$u_bigk,
-                                 probs = seq(0, 1, length.out = bigk + 1),
-                                 na.rm = TRUE)
+  uncertainty_breaks <- compute_breaks(sample = obs_df$u_bigk,
+                                       interval_count = bigk,
+                                       type = interval_type)
 
   message("Allocating observations to different pixel sizes...")
   # Allocate pixel types (.bincode is fast for assigning numeric bins)

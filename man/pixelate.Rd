@@ -10,7 +10,8 @@ pixelate(
   bigk = 6,
   scale = "imult",
   scale_factor = 1,
-  square_pix = TRUE
+  square_pix = TRUE,
+  interval_type = "equally_occupied"
 )
 }
 \arguments{
@@ -36,6 +37,16 @@ exponentiation (see Details)}
 
 \item{square_pix}{A logical value indicating whether pixels are square or
 not (in which case they are rectangular).}
+
+\item{interval_type}{A string that specifies the computation of breaks used
+to bin average uncertainty values into intervals that align with different
+pixel sizes. Options include either "equally_occupied" or "equally_spaced".
+The former results in an equal number (give or take one) of large pixels
+being allocated to each of the bigK pixel sizes, but pixel sizes align to
+unequally spaced transitions over the range of average uncertainty values.
+The latter results in an unequal number of large pixels being allocated to
+each of the bigK pixel sizes, but pixel sizes align with equally spaced
+transitions over the range of average uncertainty values.}
 }
 \value{
 pixelate returns a list.
@@ -140,6 +151,7 @@ px_min <- pixelate(SubSaharanAfrica_Pf_incidence,
 
 # Inspect the observations per pixel
 px_min$opp
+
 #=================================================
 # Plotting pixelate's output
 #=================================================

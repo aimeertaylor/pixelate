@@ -71,6 +71,15 @@
 #'   exponentiation (see Details)
 #' @param square_pix A logical value indicating whether pixels are square or
 #'   not (in which case they are rectangular).
+#' @param interval_type A string that specifies the computation of breaks used
+#'   to bin average uncertainty values into intervals that align with different
+#'   pixel sizes. Options include either "equally_occupied" or "equally_spaced".
+#'   The former results in an equal number (give or take one) of large pixels
+#'   being allocated to each of the bigK pixel sizes, but pixel sizes align to
+#'   unequally spaced transitions over the range of average uncertainty values.
+#'   The latter results in an unequal number of large pixels being allocated to
+#'   each of the bigK pixel sizes, but pixel sizes align with equally spaced
+#'   transitions over the range of average uncertainty values.
 #' @return pixelate returns a list.
 #' \describe{
 #'   \item{pix_df}{The original observation data frame with additional
@@ -117,6 +126,7 @@
 #'
 #' # Inspect the observations per pixel
 #' px_min$opp
+#'
 #' #=================================================
 #' # Plotting pixelate's output
 #' #=================================================
@@ -166,7 +176,8 @@ pixelate <- function(obs_df,
                      bigk = 6,
                      scale = "imult",
                      scale_factor = 1,
-                     square_pix = TRUE) {
+                     square_pix = TRUE,
+                     interval_type = "equally_occupied") {
 
   # Record arguments for reference
   arguments <- as.list(environment())
@@ -252,7 +263,7 @@ pixelate <- function(obs_df,
   obs_mem <- allocate_obs_mem(opp, expanded_obs_df_dim)
 
   # Pixelate
-  pix_output <- pixelate_by_u(expanded_obs_df, obs_mem, opp)
+  pix_output <- pixelate_by_u(expanded_obs_df, obs_mem, opp, interval_type)
 
   # Unpackage results
   pix_df <- pix_output$pix_df
