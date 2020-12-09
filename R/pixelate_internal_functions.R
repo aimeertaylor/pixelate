@@ -224,7 +224,7 @@ compute_breaks <- function(sample, interval_count, type = "equally_occupied")  {
                   max(sample, na.rm = TRUE), length.out = interval_count + 1)
 
     # Add probability names (for consistency with equally_occupied)
-    names(breaks) <- paste0(round(stats::ecdf(sample)(breaks)*100,5),0)
+    names(breaks) <- paste0(round(stats::ecdf(sample)(breaks)*100,5),"%")
 
   } else {
 
