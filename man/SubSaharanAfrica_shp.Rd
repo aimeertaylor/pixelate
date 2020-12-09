@@ -4,7 +4,9 @@
 \name{SubSaharanAfrica_shp}
 \alias{SubSaharanAfrica_shp}
 \title{Shape files for sub-Saharan Africa}
-\format{An object of class \code{SpatialPolygonsDataFrame} with 55 rows and 16 columns.}
+\format{
+
+}
 \source{
 Obtained using malariaAtlas::getShp; see \url{https://github.com/artaylor85/pixelate/blob/master/data-raw/get_shape_files.R}.
 }

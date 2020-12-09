@@ -4,13 +4,15 @@
 \name{CentralAfrica_Pf_incidence}
 \alias{CentralAfrica_Pf_incidence}
 \title{\emph{Plasmodium falciparum} predicted incidence}
-\format{An data frame with 270083 observations and four variables:
+\format{
+An data frame with 270083 observations and four variables:
 \describe{
   \item{x}{Longitude in decimal degrees}
   \item{y}{Latitude in decimal degrees}
   \item{z}{Median predicted incidence at location x y}
   \item{u}{Width of the 95\% predicted incidence credible interval at location x y}
-}}
+}
+}
 \source{
 These data are available at the Malaria Atlas Project (MAP) website \url{https://map.ox.ac.uk/}.
    Specifically, they were obtained by selecting
