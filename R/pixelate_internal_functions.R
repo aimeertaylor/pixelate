@@ -223,6 +223,9 @@ compute_breaks <- function(sample, interval_count, type = "equally_occupied")  {
     breaks <- seq(min(sample, na.rm = TRUE),
                   max(sample, na.rm = TRUE), length.out = interval_count + 1)
 
+    # Add probability names (for consistency with equally_occupied)
+    names(breaks) <- paste0(round(stats::ecdf(sample)(breaks)*100,5),0)
+
   } else {
 
     stop("type must be either 'equally_occupied' or 'equally_spaced'")
