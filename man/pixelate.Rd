@@ -40,13 +40,13 @@ not (in which case they are rectangular).}
 
 \item{interval_type}{A string that specifies the computation of breaks used
 to bin average uncertainty values into intervals that align with different
-pixel sizes. Options include either "equally_occupied" or "equally_spaced".
-The former results in an equal number (give or take one) of large pixels
-being allocated to each of the bigK pixel sizes, but pixel sizes align to
-unequally spaced transitions over the range of average uncertainty values.
-The latter results in an unequal number of large pixels being allocated to
-each of the bigK pixel sizes, but pixel sizes align with equally spaced
-transitions over the range of average uncertainty values.}
+pixel sizes. Options include either "equally_occupied" or "equally_spaced"
+see Examples. The former results in an equal number (give or take one) of
+large pixels being allocated to each of the bigK pixel sizes, but pixel
+sizes align to unequally spaced transitions over the range of average
+uncertainty values. The latter results in an unequal number of large pixels
+being allocated to each of the bigK pixel sizes, but pixel sizes align with
+equally spaced transitions over the range of average uncertainty values.}
 }
 \value{
 pixelate returns a list.
@@ -195,4 +195,56 @@ plot_sp_pred(px_def$pix_df)
 plot_sp_pred(px_alt$pix_df)
 plot_sp_pred(px_min$pix_df)
 
+#=================================================
+# Understanding interval_type
+#=================================================
+
+Define a function that extracts unique average uncertainty values and plots
+and annotates the corresponding empirical cumulative density function
+extract_plot_annotate <- function(px){
+
+  # Extract unique average uncertainties from expanded data frame
+  bigKmem <- px$obs_mem[,px$arguments$bigk] # large pixel membership
+  av_uncerts <- sapply(1:max(bigKmem), function(i){
+    unique(px$pix_df_expanded$u_bigk[bigKmem == i])
+  })
+
+  # Extract probabilities associated with avererage uncertainty interval breaks
+  probabilities <- as.numeric(gsub("\%", "",names(px$uncertainty_breaks)))/100
+
+  # Plot the empirical distribution function of average uncertainties
+  plot(ecdf(av_uncerts), yaxt = "n", xaxt = "n", cex = 0.5, col = "darkgray", main = "",
+       ylab = "Empirical cumulative density",
+       xlab = "Uncertainty averaged over large pixels")
+  axis(side = 2, at = probabilities,
+       labels = round(probabilities,2))
+  axis(side = 1, at = px$uncertainty_breaks, labels = round(px$uncertainty_breaks,2), las = 2)
+
+  # Plot probabilities:
+  segments(y0 = probabilities,
+           y1 = probabilities,
+           x0 = rep(min(px$uncertainty_breaks),length(px$uncertainty_breaks)),
+           x1 = px$uncertainty_breaks)
+
+  # Plot average uncertainty intervals:
+  segments(y0 = rep(0,length(px$uncertainty_breaks)),
+           y1 = probabilities,
+           x0 = px$uncertainty_breaks,
+           x1 = px$uncertainty_breaks)
+
+  # Compute the number of large pixels allocated to each interval and annotate
+  occupation <- .bincode(av_uncerts, breaks = px$uncertainty_breaks, include.lowest = T)
+  text(x = px$uncertainty_breaks[1],
+       y = probabilities[-(px$arguments$bigk+1)] + diff(probabilities)/2,
+       labels = paste0(table(occupation), " large pixels allocated to pixel size ", 1:px$arguments$bigk),
+       cex = 0.75, pos = 4, offset = -0.7)
+}
+
+# Equally occupied average uncertainty intervals
+px <- pixelate(SubSaharanAfrica_Pf_incidence, interval_type = "equally_occupied")
+extract_plot_annotate(px)
+
+# Equally spaced average uncertainty intervals
+px <- pixelate(SubSaharanAfrica_Pf_incidence, interval_type = "equally_spaced")
+extract_plot_annotate(px)
 }
