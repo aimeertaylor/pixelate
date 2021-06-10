@@ -24,7 +24,8 @@ LazyData: true
 Imports:
     dplyr (>= 0.8.3)
 Suggests:
-    ggplot2 (>= 3.2.1), 
+    ggplot2 (>= 3.2.1),
+    markdown,
     knitr (>= 1.24),
     rmarkdown (>= 1.15)
 RoxygenNote: 7.1.0
