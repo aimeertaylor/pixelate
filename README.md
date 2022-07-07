@@ -51,7 +51,7 @@ if (!require("devtools")) { # If devtools is not intalled
 
 
 # Step 2) install pixelate from GitHub 
-devtools::install_github("artaylor85/pixelate", build_vignettes = TRUE, dependencies = TRUE)
+devtools::install_github("aimeertaylor/pixelate", build_vignettes = TRUE, dependencies = TRUE)
 ```
 
 ## Usage
